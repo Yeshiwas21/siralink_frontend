@@ -11,6 +11,7 @@ function CreateUser() {
     password: "",
     password_2: "",
     user_type: "",
+    is_active: "",
   });
 
   const [errors, setErrors] = useState({});
@@ -53,6 +54,10 @@ function CreateUser() {
 
     if (!form.user_type) {
       newErrors.user_type = "Select user type";
+    }
+
+    if (!form.is_active) {
+      newErrors.is_active = "Select a status";
     }
 
     return newErrors;
@@ -177,6 +182,21 @@ function CreateUser() {
         />
         {errors.password_2 && (
           <p className="text-red-500 text-sm">{errors.password_2}</p>
+        )}
+
+        {/* STATUS */}
+        <select
+          name="is_active"
+          value={form.is_active}
+          onChange={handleChange}
+          className={inputClass("is_active")}
+        >
+          <option value="">Select A Status</option>
+          <option value="true">Active</option>
+          <option value="false">Inactive</option>
+        </select>
+        {errors.is_active && (
+          <p className="text-red-500 text-sm">{errors.is_active}</p>
         )}
 
         {/* GENERAL ERROR */}

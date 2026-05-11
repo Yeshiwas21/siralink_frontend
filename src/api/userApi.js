@@ -64,8 +64,12 @@ export const listClientApi = () => {
 };
 
 /* WORKER CREATE */
-export const workerCreateApi = (payload) => {
-  return api.post("/users/create/worker/", payload);
+export const workerCreateApi = (data) => {
+  return api.post("/users/create/worker/", data, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
 };
 
 /* CLIENT CREATE */

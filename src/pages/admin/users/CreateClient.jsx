@@ -15,10 +15,11 @@ function CreateClient() {
   const [loading, setLoading] = useState(false);
 
   const [form, setForm] = useState({
-    company_name: "",
-    phone: "",
-    location: "",
     email: "",
+    phone: "",
+    company_name: "",
+    verified: "",
+    location: "",
   });
 
   /* FETCH USERS */
@@ -39,13 +40,6 @@ function CreateClient() {
     fetchUsers();
   }, []);
 
-  /* CAPITALIZE */
-  const capitalizeWords = (value) => {
-    return value
-      .toLowerCase()
-      .replace(/(^|\s|[-'])\w/g, (char) => char.toUpperCase());
-  };
-
   /* USER SELECT */
   const handleUserChange = (e) => {
     const userId = e.target.value;
@@ -64,28 +58,16 @@ function CreateClient() {
 
   /* INPUT CHANGE */
   const handleChange = (e) => {
+    const { name, value } = e.target;
+
     setForm({
       ...form,
-      [e.target.name]: e.target.value,
+      [name]: name === "verified" ? value === "true" : value,
     });
 
     setErrors({
       ...errors,
       [e.target.name]: "",
-    });
-  };
-
-  const handleCompanyChange = (e) => {
-    const value = capitalizeWords(e.target.value);
-
-    setForm((prev) => ({
-      ...prev,
-      company_name: value,
-    }));
-
-    setErrors({
-      ...errors,
-      company_name: "",
     });
   };
 
@@ -116,6 +98,11 @@ function CreateClient() {
     // COMPANY NAME
     const companyError = validateTextField(form.company_name);
     if (companyError) newErrors.company_name = companyError;
+
+    // VERIFICATION STATUS
+    if (!form.verified) {
+      newErrors.verified = "Please select a verification status";
+    }
 
     // LOCATION
     const locationError = validateTextField(form.location);
@@ -156,6 +143,7 @@ function CreateClient() {
       await createClient({
         user: selectedUserId,
         company_name: form.company_name,
+        verified: form.verified,
         location: form.location,
       });
 
@@ -221,11 +209,26 @@ function CreateClient() {
           placeholder="Company Name"
           autoComplete="off"
           value={form.company_name}
-          onChange={handleCompanyChange}
+          onChange={handleChange}
           className={inputClass("company_name")}
         />
         {errors.company_name && (
           <p className="text-red-500 text-sm">{errors.company_name}</p>
+        )}
+
+        {/* VERIFICATION */}
+        <select
+          name="verified"
+          value={form.verified}
+          onChange={handleChange}
+          className={inputClass("verified")}
+        >
+          <option value="">Select Status</option>
+          <option value="true">Verified</option>
+          <option value="false">Not Verified</option>
+        </select>
+        {errors.verified && (
+          <p className="text-red-500 text-sm">{errors.verified}</p>
         )}
 
         {/* LOCATION */}
