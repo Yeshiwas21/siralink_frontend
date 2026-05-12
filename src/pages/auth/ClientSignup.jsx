@@ -160,6 +160,32 @@ function ClientSignup() {
       )}
 
       <form onSubmit={handleSubmit} className="space-y-3">
+        {/* COMPANY NAME */}
+        <input
+          name="company_name"
+          placeholder="Company Name"
+          autoComplete="off"
+          required
+          className={inputClass("company_name")}
+          onChange={handleChange}
+        />
+        {errors.company_name && (
+          <p className="text-red-500 text-sm">{errors.company_name}</p>
+        )}
+
+        {/* LOCATION */}
+        <input
+          name="location"
+          placeholder="Location"
+          autoComplete="off"
+          required
+          className={inputClass("location")}
+          onChange={handleChange}
+        />
+        {errors.location && (
+          <p className="text-red-500 text-sm">{errors.location}</p>
+        )}
+
         {/* EMAIL */}
         <input
           name="email"
@@ -208,32 +234,6 @@ function ClientSignup() {
         />
         {errors.password_2 && (
           <p className="text-red-500 text-sm">{errors.password_2}</p>
-        )}
-
-        {/* COMPANY NAME */}
-        <input
-          name="company_name"
-          placeholder="Company Name"
-          autoComplete="off"
-          required
-          className={inputClass("company_name")}
-          onChange={handleChange}
-        />
-        {errors.company_name && (
-          <p className="text-red-500 text-sm">{errors.company_name}</p>
-        )}
-
-        {/* LOCATION */}
-        <input
-          name="location"
-          placeholder="Location"
-          autoComplete="off"
-          required
-          className={inputClass("location")}
-          onChange={handleChange}
-        />
-        {errors.location && (
-          <p className="text-red-500 text-sm">{errors.location}</p>
         )}
 
         {/* SUBMIT */}
