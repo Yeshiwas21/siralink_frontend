@@ -181,56 +181,6 @@ function WorkerSignup() {
         <p className="text-red-500 text-sm mb-3 text-center">{errors.form}</p>
       )}
       <form onSubmit={handleSubmit} className="space-y-3">
-        {/* EMAIL */}
-        <input
-          name="email"
-          placeholder="Email"
-          autoComplete="off"
-          required
-          className={inputClass("email")}
-          onChange={handleChange}
-        />
-        {errors.email && <p className="text-red-500 text-sm">{errors.email}</p>}
-
-        {/* PHONE */}
-        <input
-          name="phone"
-          placeholder="Phone (+2519XXXXXXXX or 09XXXXXXXX)"
-          autoComplete="off"
-          required
-          className={inputClass("phone")}
-          onChange={handleChange}
-        />
-        {errors.phone && <p className="text-red-500 text-sm">{errors.phone}</p>}
-
-        {/* PASSWORD */}
-        <input
-          type="password"
-          name="password"
-          placeholder="Password"
-          autoComplete="off"
-          required
-          className={inputClass("password")}
-          onChange={handleChange}
-        />
-        {errors.password && (
-          <p className="text-red-500 text-sm">{errors.password}</p>
-        )}
-
-        {/* CONFIRM PASSWORD */}
-        <input
-          type="password"
-          name="password_2"
-          placeholder="Confirm Password"
-          autoComplete="off"
-          required
-          className={inputClass("password_2")}
-          onChange={handleChange}
-        />
-        {errors.password_2 && (
-          <p className="text-red-500 text-sm">{errors.password_2}</p>
-        )}
-
         {/* FIRST NAME */}
         <input
           name="first_name"
@@ -285,6 +235,56 @@ function WorkerSignup() {
         />
         {errors.location && (
           <p className="text-red-500 text-sm">{errors.location}</p>
+        )}
+
+        {/* EMAIL */}
+        <input
+          name="email"
+          placeholder="Email"
+          autoComplete="off"
+          required
+          className={inputClass("email")}
+          onChange={handleChange}
+        />
+        {errors.email && <p className="text-red-500 text-sm">{errors.email}</p>}
+
+        {/* PHONE */}
+        <input
+          name="phone"
+          placeholder="Phone (+2519XXXXXXXX or 09XXXXXXXX)"
+          autoComplete="off"
+          required
+          className={inputClass("phone")}
+          onChange={handleChange}
+        />
+        {errors.phone && <p className="text-red-500 text-sm">{errors.phone}</p>}
+
+        {/* PASSWORD */}
+        <input
+          type="password"
+          name="password"
+          placeholder="Password"
+          autoComplete="off"
+          required
+          className={inputClass("password")}
+          onChange={handleChange}
+        />
+        {errors.password && (
+          <p className="text-red-500 text-sm">{errors.password}</p>
+        )}
+
+        {/* CONFIRM PASSWORD */}
+        <input
+          type="password"
+          name="password_2"
+          placeholder="Confirm Password"
+          autoComplete="off"
+          required
+          className={inputClass("password_2")}
+          onChange={handleChange}
+        />
+        {errors.password_2 && (
+          <p className="text-red-500 text-sm">{errors.password_2}</p>
         )}
 
         {/* SUBMIT */}
