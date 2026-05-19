@@ -11,12 +11,8 @@ export const logoutUser = (refresh) => {
 };
 
 /* CURRENT USER */
-export const getMe = (token) => {
-  return api.get("/users/me/", {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
+export const getMe = () => {
+  return api.get("/users/me/");
 };
 
 /* USERS LIST */

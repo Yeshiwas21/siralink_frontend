@@ -108,7 +108,7 @@ function ClientSignup() {
       setLoading(true);
 
       await signupClient(form);
-      toast.success("Account created successfully");
+      toast.success("Your account created successfully. You can login");
       navigate("/login");
     } catch (err) {
       const backendErrors = err.response?.data;

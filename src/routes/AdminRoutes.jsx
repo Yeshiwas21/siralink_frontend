@@ -5,14 +5,13 @@ import { Routes, Route } from "react-router-dom";
 import AllUsers from "../pages/admin/users/AllUsers";
 import Clients from "../pages/admin/users/Clients";
 import Workers from "../pages/admin/users/Workers";
-import Admins from "../pages/admin/users/Admins";
 
 import Jobs from "../pages/admin/Jobs";
 import Applications from "../pages/admin/Applications";
 import Payments from "../pages/admin/Payments";
 import Reviews from "../pages/admin/Reviews";
 import Reports from "../pages/admin/Reports";
-import AdminDashboard from "../pages/admin/AdminDashboard";
+import AdminOverview from "../pages/admin/AdminOverview";
 import NotFound from "../pages/common/NotFound";
 import CreateUser from "../pages/admin/users/CreateUser";
 import CreateClient from "../pages/admin/users/CreateClient";
@@ -26,7 +25,6 @@ function AdminRoutes() {
       <Route path="create/user" element={<CreateUser />} />
       <Route path="clients" element={<Clients />} />
       <Route path="workers" element={<Workers />} />
-      <Route path="admins" element={<Admins />} />
       <Route path="create/client" element={<CreateClient />} />
       <Route path="create/worker" element={<CreateWorker />} />
 
@@ -36,7 +34,7 @@ function AdminRoutes() {
       <Route path="payments" element={<Payments />} />
       <Route path="reviews" element={<Reviews />} />
       <Route path="reports" element={<Reports />} />
-      <Route path="dashboard" element={<AdminDashboard />} />
+      <Route path="overview" element={<AdminOverview />} />
       <Route path="*" element={<NotFound />} />
     </Routes>
   );

@@ -1,60 +1,96 @@
-/**
- * Determine which storage is currently being used (local vs session)
- */
-export const getStorage = () => {
-  return localStorage.getItem("access") ? localStorage : sessionStorage;
-};
+const ACCESS_KEY = "access";
+const REFRESH_KEY = "refresh";
+const MODE_KEY = "auth_mode";
 
 /**
- * Store access & refresh tokens based on "remember me"
+ * Store tokens based on remember flag
+ * remember=true  → localStorage (persistent, multi-tab, restart safe)
+ * remember=false → sessionStorage (still fallback-enabled for multi-tab UX)
  */
 export const storeTokens = (access, refresh, remember) => {
   const storage = remember ? localStorage : sessionStorage;
 
-  storage.setItem("access", access);
-  storage.setItem("refresh", refresh);
+  storage.setItem(ACCESS_KEY, access);
+  storage.setItem(REFRESH_KEY, refresh);
+  storage.setItem(MODE_KEY, remember ? "persistent" : "session");
+
+  /**
+   * Always mirror access token in localStorage for cross-tab support
+   * but we still respect session mode via MODE_KEY
+   */
+  localStorage.setItem(ACCESS_KEY, access);
+  localStorage.setItem(REFRESH_KEY, refresh);
 };
 
 /**
- * Get access token from available storage
+ * Get access token (cross-tab safe)
  */
 export const getAccessToken = () => {
   return (
-    localStorage.getItem("access") ||
-    sessionStorage.getItem("access")
+    localStorage.getItem(ACCESS_KEY) ||
+    sessionStorage.getItem(ACCESS_KEY)
   );
 };
 
 /**
- * Get refresh token from available storage
+ * Get refresh token
  */
 export const getRefreshToken = () => {
   return (
-    localStorage.getItem("refresh") ||
-    sessionStorage.getItem("refresh")
+    localStorage.getItem(REFRESH_KEY) ||
+    sessionStorage.getItem(REFRESH_KEY)
   );
 };
 
 /**
- * Update access token in the active storage
+ * Detect auth mode
+ */
+export const getAuthMode = () => {
+  return (
+    localStorage.getItem(MODE_KEY) ||
+    sessionStorage.getItem(MODE_KEY)
+  );
+};
+
+/**
+ * Active storage (for updates)
+ */
+export const getActiveStorage = () => {
+  if (localStorage.getItem(ACCESS_KEY)) return localStorage;
+  if (sessionStorage.getItem(ACCESS_KEY)) return sessionStorage;
+  return null;
+};
+
+/**
+ * Update access token
  */
 export const setAccessToken = (token) => {
-  const storage = getStorage();
-  storage.setItem("access", token);
+  const storage = getActiveStorage();
+  if (storage) storage.setItem(ACCESS_KEY, token);
+
+  // keep sync for multi-tab
+  localStorage.setItem(ACCESS_KEY, token);
 };
 
 /**
- * Update refresh token in the active storage
+ * Update refresh token
  */
 export const setRefreshToken = (token) => {
-  const storage = getStorage();
-  storage.setItem("refresh", token);
+  const storage = getActiveStorage();
+  if (storage) storage.setItem(REFRESH_KEY, token);
+
+  localStorage.setItem(REFRESH_KEY, token);
 };
 
 /**
- * Clear all stored authentication tokens
+ * Clear all auth data
  */
 export const clearTokens = () => {
-  localStorage.clear();
-  sessionStorage.clear();
+  localStorage.removeItem(ACCESS_KEY);
+  localStorage.removeItem(REFRESH_KEY);
+  localStorage.removeItem(MODE_KEY);
+
+  sessionStorage.removeItem(ACCESS_KEY);
+  sessionStorage.removeItem(REFRESH_KEY);
+  sessionStorage.removeItem(MODE_KEY);
 };

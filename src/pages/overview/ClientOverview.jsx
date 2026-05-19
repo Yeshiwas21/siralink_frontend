@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { useAuth } from "../../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 
-function Dashboard() {
+function ClientOverview() {
   const { user } = useAuth();
   const navigate = useNavigate();
 
@@ -18,9 +18,9 @@ function Dashboard() {
 
   return (
     <div>
-      <h1 className="text-xl font-bold">Dashboard</h1>
+      <h1 className="text-xl font-bold">Client Overview</h1>
     </div>
   );
 }
 
-export default Dashboard;
+export default ClientOverview;

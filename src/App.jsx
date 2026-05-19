@@ -52,13 +52,14 @@ export default function App() {
       location.pathname.startsWith("/account") ||
       location.pathname.startsWith("/") ||
       location.pathname.startsWith("/ca"));
+
   const isAuthenticatedRoute =
     location.pathname.startsWith("/admin") ||
     location.pathname.startsWith("/client") ||
     location.pathname.startsWith("/worker") ||
     location.pathname.startsWith("/account") ||
-    location.pathname.startsWith("/ca");
-
+    location.pathname.startsWith("/ca") ||
+    location.pathname.startsWith("/jobs");
   const hideFooter = user?.isAuthenticated && isAuthenticatedRoute;
 
   return (

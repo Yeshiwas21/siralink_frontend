@@ -2,7 +2,7 @@ import React from "react";
 import { Routes, Route } from "react-router-dom";
 
 /* Client Pages */
-import Dashboard from "../pages/dashboard/Dashboard";
+import ClientOverview from "../pages/overview/ClientOverview";
 import MyJobs from "../pages/jobs/MyJobs";
 import PostJob from "../pages/jobs/PostJob";
 import ClientPayments from "../pages/payments/ClientPayments";
@@ -13,7 +13,7 @@ import NotFound from "../pages/common/NotFound";
 function ClientRoutes() {
   return (
     <Routes>
-      <Route path="dashboard" element={<Dashboard />} />
+      <Route path="overview" element={<ClientOverview />} />
       <Route path="jobs/my" element={<MyJobs />} />
       <Route path="jobs/post" element={<PostJob />} />
       <Route path="payments" element={<ClientPayments />} />

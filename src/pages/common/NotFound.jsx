@@ -20,7 +20,7 @@ function NotFound() {
         to={homeRoute}
         className="mt-6 inline-block bg-amber-300 text-black font-semibold px-5 py-2 rounded-lg hover:bg-amber-400 transition"
       >
-        {user?.isAuthenticated ? "Go to Dashboard" : "Go to Home"}
+        {user?.isAuthenticated ? "Go to Overview" : "Go to Home"}
       </Link>
     </div>
   );

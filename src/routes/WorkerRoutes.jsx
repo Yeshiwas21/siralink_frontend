@@ -2,7 +2,7 @@ import React from "react";
 import { Routes, Route } from "react-router-dom";
 
 /* Worker Pages */
-import Dashboard from "../pages/dashboard/Dashboard";
+import WorkerOverview from "../pages/overview/WorkerOverview";
 import AvailableJobs from "../pages/jobs/AvailableJobs";
 import AppliedJobs from "../pages/jobs/AppliedJobs";
 import WorkerEarnings from "../pages/payments/WorkerEarnings";
@@ -15,7 +15,7 @@ import NotFound from "../pages/common/NotFound";
 function WorkerRoutes() {
   return (
     <Routes>
-      <Route path="dashboard" element={<Dashboard />} />
+      <Route path="overview" element={<WorkerOverview />} />
       <Route path="jobs/available" element={<AvailableJobs />} />
       <Route path="jobs/applied" element={<AppliedJobs />} />
       <Route path="earnings" element={<WorkerEarnings />} />

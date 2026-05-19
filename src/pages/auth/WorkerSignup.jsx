@@ -131,7 +131,7 @@ function WorkerSignup() {
     try {
       setLoading(true);
       await signupWorker(form);
-      toast.success("Account created successfully");
+      toast.success("Your account created successfully. You can login");
       navigate("/login");
     } catch (err) {
       const backendErrors = err.response?.data;
