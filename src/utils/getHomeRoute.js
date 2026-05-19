@@ -11,13 +11,13 @@ export const getHomeRoute = (user) => {
 
   switch (user?.user_type) {
     case "admin":
-      return "/admin/dashboard";
+      return "/admin/overview";
 
     case "client":
-      return "/client/dashboard";
+      return "/client/overview";
 
     case "worker":
-      return "/worker/dashboard";
+      return "/worker/overview";
 
     default:
       return "/";

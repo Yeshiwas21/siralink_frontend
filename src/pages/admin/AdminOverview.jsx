@@ -13,7 +13,7 @@ import {
   RefreshCw,
 } from "lucide-react";
 
-function AdminDashboard() {
+function AdminOverview() {
   const [users, setUsers] = useState([]);
 
   const [loading, setLoading] = useState(true);
@@ -129,7 +129,7 @@ function AdminDashboard() {
       <div className="mb-8 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         {/* LEFT SIDE */}
         <div>
-          <h1 className="text-3xl font-bold text-gray-800">Admin Dashboard</h1>
+          <h1 className="text-3xl font-bold text-gray-800">Admin Overview</h1>
           <p className="text-gray-500 mt-1">
             Overview of platform activity and management tools
           </p>
@@ -200,4 +200,4 @@ function AdminDashboard() {
   );
 }
 
-export default AdminDashboard;
+export default AdminOverview;

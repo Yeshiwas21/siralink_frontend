@@ -1,10 +1,11 @@
 import React, { useState } from "react";
 import { User, Lock, Eye, EyeOff } from "lucide-react";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate, Link, Navigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
+import { getHomeRoute } from "../../utils/getHomeRoute";
 
 function Login() {
-  const { login } = useAuth();
+  const { user, login } = useAuth();
   const navigate = useNavigate();
 
   const [form, setForm] = useState({
@@ -39,11 +40,11 @@ function Login() {
 
       const userType = data.user.user_type;
       if (userType === "admin") {
-        navigate("/admin/dashboard");
+        navigate("/admin/overview");
       } else if (userType === "client") {
-        navigate("/client/dashboard");
+        navigate("/client/overview");
       } else if (userType === "worker") {
-        navigate("/worker/dashboard");
+        navigate("/worker/overview");
       }
     } catch (err) {
       const data = err?.response?.data;
@@ -71,7 +72,10 @@ function Login() {
       setLoading(false);
     }
   };
-
+  // if logged in → redirect to dashboard
+  if (user?.isAuthenticated) {
+    return <Navigate to={getHomeRoute(user)} replace />;
+  }
   return (
     <div className="flex items-center justify-center py-16 px-4">
       {/* CARD */}

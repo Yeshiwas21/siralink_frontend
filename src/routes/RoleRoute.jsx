@@ -14,12 +14,12 @@ function RoleRoute({ children, allowedRoles }) {
 
   // role mapping for safe redirects
   const homeRoute = {
-    admin: "/admin/dashboard",
-    client: "/client/dashboard",
-    worker: "/worker/dashboard",
+    admin: "/admin/overview",
+    client: "/client/overview",
+    worker: "/worker/overview",
   };
 
-  // wrong role → redirect to THEIR dashboard, not generic one
+  // wrong role → redirect to THEIR overview, not generic one
   if (!allowedRoles.includes(user.user_type)) {
     return <Navigate to={homeRoute[user.user_type] || "/login"} replace />;
   }

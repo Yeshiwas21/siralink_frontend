@@ -1,204 +1,465 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
-import { Menu, X } from "lucide-react";
+import React, { useState, useEffect, useRef } from "react";
+import { Link, NavLink, useLocation } from "react-router-dom";
+import { Menu, X, Search, Bell, HelpCircle, ChevronDown } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 
 function Navbar() {
   const [open, setOpen] = useState(false);
   const [dropdown, setDropdown] = useState(false);
+  const [mobileProfileOpen, setMobileProfileOpen] = useState(false);
+  const [search, setSearch] = useState("");
+  const [category, setCategory] = useState("jobs");
+  const [openCategory, setOpenCategory] = useState(false);
+
+  const location = useLocation();
+  const dropdownRef = useRef(null);
 
   const { user } = useAuth();
   const isAuth = user?.isAuthenticated;
 
-  // Resolve name based on role
+  const navLinkClass = ({ isActive }) =>
+    `relative flex items-center h-16 text-sm transition-colors duration-200
+  ${
+    isActive
+      ? "text-black font-medium after:absolute after:left-0 after:right-0 after:bottom-[10px] after:h-[2px] after:bg-black"
+      : "text-gray-600 hover:text-black"
+  }`;
   const getDisplayName = () => {
-    if (!user) return "";
+    if (!user) return "U";
 
-    // ADMIN FIRST (highest priority)
     if (user.is_staff) {
-      const name = `${user.first_name || ""} ${user.last_name || ""}`.trim();
-      return name || "Admin";
+      const first = user.first_name?.trim();
+      const last = user.last_name?.trim();
+
+      const fullName = [first, last].filter(Boolean).join(" ");
+
+      return fullName || "Admin";
     }
 
-    // CLIENT
     if (user.user_type === "client") {
-      return user.client?.company_name || "No Client";
+      return user.client?.company_name || "Client";
     }
 
-    // WORKER
     if (user.user_type === "worker") {
-      const name =
-        `${user.worker?.first_name || ""} ${user.worker?.last_name || ""}`.trim();
-      return name || "Worker";
+      const first = user.worker?.first_name?.trim();
+      const last = user.worker?.last_name?.trim();
+
+      const fullName = [first, last].filter(Boolean).join(" ");
+
+      return fullName || "Worker";
     }
 
     return "User";
   };
 
+  const getProfileImage = () => {
+    if (!user) return null;
+
+    return (
+      user.profile_image ||
+      user.user_image ||
+      user.worker?.profile_image ||
+      user.client?.company_logo ||
+      null
+    );
+  };
+
+  const profileImage = getProfileImage();
   const displayName = getDisplayName();
-  const email = user?.email;
+
+  const closeMobile = () => {
+    setOpen(false);
+    setMobileProfileOpen(false);
+  };
+
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
+        setOpenCategory(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  // For profile dropdowns
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      setDropdown(false);
+      setMobileProfileOpen(false);
+    }, 0);
+
+    return () => clearTimeout(timeout);
+  }, [location.pathname]);
 
   return (
-    <header className="bg-white border-b shadow-sm sticky top-0 z-50">
-      <div className="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
-        {/* LOGO */}
-        <Link to="/" className="text-xl font-bold text-blue-600">
-          EthioWorks
-        </Link>
+    <header className="bg-white border-b sticky top-0 z-50">
+      {/* TOP BAR */}
+      <div className="max-w-7xl mx-auto px-4 h-16 flex items-center">
+        {/* LEFT */}
+        <div className="flex items-center gap-3 shrink-0">
+          <button className="md:hidden" onClick={() => setOpen(!open)}>
+            {open ? <X /> : <Menu />}
+          </button>
 
-        {/* DESKTOP MENU */}
-        <nav className="hidden md:flex items-center gap-6 text-sm font-medium text-gray-700">
-          {!isAuth && (
-            <>
-              <Link className="hover:text-blue-600" to="/jobs">
-                Find Jobs
-              </Link>
-
-              <Link className="hover:text-blue-600" to="/hire">
-                Hire Talent
-              </Link>
-            </>
-          )}
-
-          {isAuth && user.user_type === "worker" && (
-            <Link className="hover:text-blue-600" to="/jobs">
-              Find Jobs
-            </Link>
-          )}
-
-          {isAuth && user.user_type === "client" && (
-            <Link className="hover:text-blue-600" to="/hire">
-              Hire Talent
-            </Link>
-          )}
-
-          <Link className="hover:text-blue-600" to="/how-it-works">
-            How it Works
+          <Link to="/" className="text-xl font-bold text-blue-600">
+            EthioWorks
           </Link>
-        </nav>
+        </div>
 
-        {/* RIGHT ACTIONS */}
-        <div className="hidden md:flex items-center gap-4 relative">
-          {!isAuth ? (
-            <>
-              <Link to="/login" className="text-gray-700 hover:text-blue-600">
-                Login
-              </Link>
-
-              <Link
-                to="/signup"
-                className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
-              >
-                Get Started
-              </Link>
-            </>
-          ) : (
-            <div className="relative">
-              {/* USER BUTTON */}
+        {/* SEARCH */}
+        <div className="hidden md:flex flex-1 justify-center">
+          <div className="flex items-center w-80 bg-gray-50 border border-gray-200 rounded-full px-3 shadow-sm hover:shadow-md transition-all duration-200 focus-within:ring-2 focus-within:ring-blue-500">
+            {" "}
+            <Search size={16} className="text-gray-500 mr-2" />
+            <input
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder="Search"
+              className="flex-1 py-2 text-sm bg-transparent outline-none placeholder-gray-500"
+            />
+            <div className="relative border-l" ref={dropdownRef}>
               <button
-                onClick={() => setDropdown(!dropdown)}
-                className="flex items-center gap-2 bg-gray-100 px-3 py-2 rounded-lg hover:bg-gray-200"
+                type="button"
+                onClick={() => setOpenCategory((prev) => !prev)}
+                className="px-3 py-2 text-sm flex items-center gap-1 text-gray-600 hover:text-black transition whitespace-nowrap border-l border-gray-200"
               >
-                <div className="w-8 h-8 bg-blue-600 text-white rounded-full flex items-center justify-center text-sm font-bold">
-                  {displayName?.charAt(0)}
-                </div>
-                <span className="text-sm font-medium">{displayName}</span>
+                {category === "jobs" ? "Jobs" : "Workers"}
+
+                <span
+                  className={`text-[10px] transition-transform duration-200 ${
+                    openCategory ? "rotate-180" : ""
+                  }`}
+                >
+                  <ChevronDown
+                    size={14}
+                    className={`transition-transform duration-200 ${
+                      openCategory ? "rotate-0" : ""
+                    }`}
+                  />
+                </span>
               </button>
 
-              {/* DROPDOWN */}
-              {dropdown && (
-                <div className="absolute right-0 mt-2 w-64 bg-white border rounded-lg shadow-lg z-50">
-                  <div className="p-4 border-b">
-                    <p className="font-semibold text-sm">{displayName}</p>
-                    <p className="text-xs text-gray-500">{email}</p>
+              {openCategory && (
+                <div className="absolute right-0 mt-2 w-40 bg-white border border-gray-200 rounded-xl shadow-lg z-50 overflow-hidden animate-fade-in">
+                  {" "}
+                  <button
+                    onClick={() => {
+                      setCategory("jobs");
+                      setOpenCategory(false);
+                    }}
+                    className="w-full text-left px-3 py-2 text-sm hover:bg-gray-100"
+                  >
+                    Jobs
+                  </button>
+                  <button
+                    onClick={() => {
+                      setCategory("workers");
+                      setOpenCategory(false);
+                    }}
+                    className="w-full text-left px-3 py-2 text-sm hover:bg-gray-100"
+                  >
+                    Workers
+                  </button>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+
+        {/* RIGHT SIDE */}
+        <div className="flex items-center gap-6 ml-auto">
+          {/* NAV */}
+          <nav className="hidden md:flex items-center gap-5">
+            {!isAuth && (
+              <>
+                <NavLink to="/jobs" className={navLinkClass}>
+                  Find Work
+                </NavLink>
+
+                <NavLink to="/workers" className={navLinkClass}>
+                  Hire Workers
+                </NavLink>
+              </>
+            )}
+
+            {isAuth && (
+              <>
+                {user?.user_type === "worker" ? (
+                  <>
+                    <NavLink to="/jobs" className={navLinkClass}>
+                      Find Work
+                    </NavLink>
+
+                    <NavLink to="/worker/jobs/applied" className={navLinkClass}>
+                      Deliver Work
+                    </NavLink>
+                  </>
+                ) : user?.user_type === "client" ? (
+                  <>
+                    <NavLink to="/workers" className={navLinkClass}>
+                      Find Workers
+                    </NavLink>
+
+                    <NavLink className={navLinkClass} to="/client/jobs/post">
+                      Post Job
+                    </NavLink>
+                  </>
+                ) : null}
+
+                {/* COMMON */}
+                <NavLink to="/ca/messages" className={navLinkClass}>
+                  Messages
+                </NavLink>
+
+                <NavLink to="/ca/notifications" className={navLinkClass}>
+                  <Bell size={20} />
+                </NavLink>
+
+                <NavLink to="/ca/help" className={navLinkClass}>
+                  <HelpCircle size={20} />
+                </NavLink>
+              </>
+            )}
+
+            {!isAuth && (
+              <NavLink to="/how-it-works" className={navLinkClass}>
+                How it Works
+              </NavLink>
+            )}
+          </nav>
+
+          {/* PROFILE */}
+          <div className="hidden md:flex items-center">
+            {!isAuth ? (
+              <div className="flex items-center gap-4">
+                <NavLink to="/login" className={navLinkClass}>
+                  Login
+                </NavLink>
+
+                <Link
+                  className="bg-blue-600 text-white px-4 py-2 rounded-lg"
+                  to="/signup"
+                >
+                  Get Started
+                </Link>
+              </div>
+            ) : (
+              <div className="relative">
+                <button
+                  onClick={() => setDropdown(!dropdown)}
+                  className="flex items-center hover:bg-gray-100 p-1.5 rounded-full transition"
+                >
+                  <div className="w-9 h-9 rounded-full overflow-hidden bg-gray-200 flex items-center justify-center border">
+                    {profileImage ? (
+                      <img
+                        src={profileImage}
+                        alt="profile"
+                        className="w-full h-full object-cover"
+                      />
+                    ) : (
+                      <span className="text-sm font-semibold text-gray-600">
+                        {displayName?.charAt(0)}
+                      </span>
+                    )}
+                  </div>
+                </button>
+
+                {dropdown && (
+                  <div className="absolute right-0 mt-2 w-64 bg-white border rounded-xl shadow-lg overflow-hidden z-50">
+                    <div className="px-4 py-3 border-b bg-gray-50">
+                      <p className="text-sm font-semibold">{displayName}</p>
+
+                      <p className="text-xs text-gray-500">{user?.email}</p>
+                    </div>
+
+                    <div className="flex flex-col text-sm">
+                      <Link
+                        to="/account/profile"
+                        className="px-4 py-2 hover:bg-gray-100"
+                      >
+                        Profile
+                      </Link>
+
+                      <Link
+                        to="/account/settings"
+                        className="px-4 py-2 hover:bg-gray-100"
+                      >
+                        Settings
+                      </Link>
+
+                      <Link
+                        to="/logout"
+                        className="px-4 py-2 text-red-500 hover:bg-red-50"
+                      >
+                        Logout
+                      </Link>
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+
+      {/* MOBILE */}
+      {open && (
+        <div className="md:hidden border-t bg-white px-4 py-3 space-y-3 text-sm">
+          {/* SEARCH */}
+          <div className="flex items-center border rounded-lg px-2">
+            <Search size={16} className="text-gray-500" />
+
+            <input
+              placeholder="Search"
+              className="flex-1 px-2 py-2 outline-none"
+            />
+          </div>
+
+          <div className="flex flex-col gap-3">
+            {/* PROFILE */}
+            {isAuth && (
+              <>
+                <button
+                  onClick={() => setMobileProfileOpen((prev) => !prev)}
+                  className="w-full flex items-center justify-between border-t pt-3"
+                >
+                  <div className="flex items-center gap-2">
+                    <div className="w-9 h-9 rounded-full overflow-hidden bg-gray-200 flex items-center justify-center">
+                      {profileImage ? (
+                        <img
+                          src={profileImage}
+                          alt="profile"
+                          className="w-full h-full object-cover"
+                        />
+                      ) : (
+                        <span className="text-sm font-semibold">
+                          {displayName?.charAt(0)}
+                        </span>
+                      )}
+                    </div>
+
+                    <div className="text-left">
+                      <p className="text-sm font-semibold">{displayName}</p>
+
+                      <p className="text-xs text-gray-500">{user?.email}</p>
+                    </div>
                   </div>
 
-                  <div className="flex flex-col text-sm">
-                    <Link
-                      to="/account/profile"
-                      className="px-4 py-2 hover:bg-gray-100"
-                    >
+                  <span
+                    className={`text-xs transition-transform ${
+                      mobileProfileOpen ? "rotate-180" : ""
+                    }`}
+                  >
+                    <ChevronDown
+                      size={14}
+                      className={`transition-transform duration-200 ${
+                        mobileProfileOpen ? "rotate-0" : ""
+                      }`}
+                    />
+                  </span>
+                </button>
+
+                {mobileProfileOpen && (
+                  <div className="flex flex-col ml-11 border-l pl-3 space-y-1">
+                    <Link to="/account/profile" onClick={closeMobile}>
                       Profile
                     </Link>
 
-                    <Link
-                      to="/account/settings"
-                      className="px-4 py-2 hover:bg-gray-100"
-                    >
+                    <Link to="/account/settings" onClick={closeMobile}>
                       Settings
                     </Link>
 
                     <Link
-                      to="/account/change-password"
-                      className="px-4 py-2 hover:bg-gray-100"
-                    >
-                      Change Password
-                    </Link>
-
-                    <Link
                       to="/logout"
-                      className="px-4 py-2 text-red-500 hover:bg-red-50"
+                      onClick={closeMobile}
+                      className="text-red-500"
                     >
                       Logout
                     </Link>
                   </div>
-                </div>
-              )}
-            </div>
-          )}
-        </div>
+                )}
+              </>
+            )}
 
-        {/* MOBILE MENU BUTTON */}
-        <button className="md:hidden" onClick={() => setOpen(!open)}>
-          {open ? <X /> : <Menu />}
-        </button>
-      </div>
+            {/* GUEST */}
+            {!isAuth && (
+              <>
+                <Link onClick={closeMobile} to="/jobs">
+                  Find Work
+                </Link>
 
-      {/* MOBILE MENU */}
-      {open && (
-        <div className="md:hidden bg-white border-t px-4 py-3 space-y-3 text-sm">
-          <Link to="/jobs" className="block">
-            Find Jobs
-          </Link>
+                <Link onClick={closeMobile} to="/workers">
+                  Hire Workers
+                </Link>
 
-          <Link to="/hire" className="block">
-            Hire Talent
-          </Link>
+                <Link onClick={closeMobile} to="/login">
+                  Login
+                </Link>
 
-          <Link to="/how-it-works" className="block">
-            How it Works
-          </Link>
+                <Link onClick={closeMobile} to="/signup">
+                  Get Started
+                </Link>
+              </>
+            )}
 
-          {!isAuth ? (
-            <>
-              <Link to="/login" className="block">
-                Login
-              </Link>
-              <Link to="/register" className="block">
-                Get Started
-              </Link>
-            </>
-          ) : (
-            <>
-              <div className="border-t pt-2">
-                <p className="font-semibold">{displayName}</p>
-                <p className="text-xs text-gray-500">{email}</p>
-              </div>
+            {/* AUTH */}
+            {isAuth && (
+              <>
+                {user?.user_type === "worker" ? (
+                  <>
+                    <Link onClick={closeMobile} to="/jobs">
+                      Find Work
+                    </Link>
 
-              <Link to="/account/profile" className="block">
-                Profile
+                    <Link onClick={closeMobile} to="/worker/jobs/applied">
+                      Deliver Work
+                    </Link>
+                  </>
+                ) : user?.user_type === "client" ? (
+                  <>
+                    <Link onClick={closeMobile} to="/workers">
+                      Find Workers
+                    </Link>
+
+                    <Link onClick={closeMobile} to="/client/jobs/post">
+                      Post Job
+                    </Link>
+                  </>
+                ) : null}
+
+                <Link onClick={closeMobile} to="/ca/messages">
+                  Messages
+                </Link>
+
+                <Link
+                  onClick={closeMobile}
+                  to="/ca/notifications"
+                  className="flex items-center gap-2"
+                >
+                  <Bell size={14} />
+                  <span>Notifications</span>
+                </Link>
+
+                <Link
+                  onClick={closeMobile}
+                  to="/ca/help"
+                  className="flex items-center gap-2"
+                >
+                  <HelpCircle size={14} />
+                  <span>Help</span>
+                </Link>
+              </>
+            )}
+
+            {!isAuth && (
+              <Link onClick={closeMobile} to="/how-it-works">
+                How it Works
               </Link>
-              <Link to="/account/settings" className="block">
-                Settings
-              </Link>
-              <Link to="/account/change-password" className="block">
-                Change Password
-              </Link>
-              <Link to="/logout" className="block text-red-500">
-                Logout
-              </Link>
-            </>
-          )}
+            )}
+          </div>
         </div>
       )}
     </header>

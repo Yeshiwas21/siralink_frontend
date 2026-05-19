@@ -33,11 +33,14 @@ function Sidebar() {
     const handleResize = () => {
       if (window.innerWidth < 768) {
         setCollapsed(true);
+      } else {
+        setCollapsed(false);
       }
     };
 
-    handleResize();
+    handleResize(); // run once on mount
     window.addEventListener("resize", handleResize);
+
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
@@ -91,8 +94,8 @@ function Sidebar() {
 
             <SidebarItem
               icon={<LayoutDashboard size={18} />}
-              label="Dashboard"
-              to="/admin/dashboard"
+              label="Overview"
+              to="/admin/overview"
               collapsed={isCollapsed}
             />
 
@@ -115,13 +118,6 @@ function Sidebar() {
               to="/admin/workers"
               collapsed={isCollapsed}
             />
-            <SidebarItem
-              icon={<UserCog size={18} />}
-              label="Admins"
-              to="/admin/admins"
-              collapsed={isCollapsed}
-            />
-
             <SidebarItem
               icon={<Briefcase size={18} />}
               label="Jobs"
@@ -160,22 +156,17 @@ function Sidebar() {
           <>
             <SidebarItem
               icon={<LayoutDashboard size={18} />}
-              label="Dashboard"
-              to="/client/dashboard"
+              label="Overview"
+              to="/client/overview"
               collapsed={isCollapsed}
             />
             <SidebarItem
               icon={<ClipboardList size={18} />}
-              label="My Jobs"
+              label="Job Posted"
               to="/client/jobs/my"
               collapsed={isCollapsed}
             />
-            <SidebarItem
-              icon={<PlusCircle size={18} />}
-              label="Post Job"
-              to="/client/jobs/post"
-              collapsed={isCollapsed}
-            />
+
             <SidebarItem
               icon={<CreditCard size={18} />}
               label="Payments"
@@ -202,22 +193,17 @@ function Sidebar() {
           <>
             <SidebarItem
               icon={<LayoutDashboard size={18} />}
-              label="Dashboard"
-              to="/worker/dashboard"
+              label="Overview"
+              to="/worker/overview"
               collapsed={isCollapsed}
             />
             <SidebarItem
               icon={<Briefcase size={18} />}
-              label="Available Jobs"
-              to="/worker/jobs/available"
+              label="Work Completed"
+              to="/worker/wokrs-completed"
               collapsed={isCollapsed}
             />
-            <SidebarItem
-              icon={<ClipboardList size={18} />}
-              label="Jobs Applied"
-              to="/worker/jobs/applied"
-              collapsed={isCollapsed}
-            />
+
             <SidebarItem
               icon={<TrendingUp size={18} />}
               label="Earnings"
@@ -238,16 +224,6 @@ function Sidebar() {
             />
           </>
         )}
-
-        {/* COMMON */}
-        <div className="mt-4 pt-4 border-t border-gray-700">
-          <SidebarItem
-            icon={<MessageCircle size={18} />}
-            label="Messages"
-            to="/ca/messages"
-            collapsed={isCollapsed}
-          />
-        </div>
       </nav>
     </aside>
   );
