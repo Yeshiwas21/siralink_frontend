@@ -82,7 +82,9 @@ function Login() {
       <div className="w-full max-w-md bg-white rounded-2xl shadow-lg p-8 border">
         {/* HEADER */}
         <div className="text-center mb-6">
-          <h1 className="text-2xl font-semibold text-gray-900">Welcome back</h1>
+          <h1 className="text-2xl font-semibold text-gray-900">
+            Login to EthioWorks
+          </h1>{" "}
           <p className="text-sm text-gray-500 mt-1">
             Enter your credentials to continue
           </p>

@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
+
 import {
   fetchUsers,
   deleteUser,
@@ -23,6 +24,7 @@ import {
   UserX,
   RefreshCw,
   CircleCheck,
+  MoreHorizontal,
 } from "lucide-react";
 
 function AllUsers() {
@@ -41,6 +43,9 @@ function AllUsers() {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [editForm, setEditForm] = useState(null);
 
+  const [selectedRows, setSelectedRows] = useState([]);
+  const [openMenu, setOpenMenu] = useState(null);
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -54,7 +59,8 @@ function AllUsers() {
       data = data.filter(
         (u) =>
           u.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          String(u.id).includes(searchTerm),
+          String(u.id).includes(searchTerm) ||
+          String(u.phone).includes(searchTerm),
       );
     }
 
@@ -64,6 +70,18 @@ function AllUsers() {
 
     setFilteredUsers(data);
   }, [users, searchTerm, roleFilter]);
+
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (!e.target.closest(".action-menu")) {
+        setOpenMenu(null);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   const loadUsers = async () => {
     try {
@@ -76,6 +94,57 @@ function AllUsers() {
     } finally {
       setLoading(false);
     }
+  };
+
+  const toggleRow = (id) => {
+    setSelectedRows((prev) =>
+      prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id],
+    );
+  };
+
+  const toggleAll = () => {
+    if (selectedRows.length === filteredUsers.length) {
+      setSelectedRows([]);
+    } else {
+      setSelectedRows(filteredUsers.map((u) => u.id));
+    }
+  };
+
+  const allSelected =
+    selectedRows.length === filteredUsers.length && filteredUsers.length > 0;
+
+  const someSelected =
+    selectedRows.length > 0 && selectedRows.length < filteredUsers.length;
+
+  const handleBulkDelete = async () => {
+    if (!window.confirm("Delete selected users?")) return;
+
+    try {
+      await Promise.all(selectedRows.map((id) => deleteUser(id)));
+
+      setUsers((prev) => prev.filter((u) => !selectedRows.includes(u.id)));
+
+      setSelectedRows([]);
+
+      toast.success("Selected users deleted");
+    } catch {
+      toast.error("Failed to delete selected users");
+    }
+  };
+
+  const handleExport = () => {
+    const data = users.filter((u) => selectedRows.includes(u.id));
+
+    const blob = new Blob([JSON.stringify(data, null, 2)], {
+      type: "application/json",
+    });
+
+    const url = URL.createObjectURL(blob);
+
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "users-export.json";
+    a.click();
   };
 
   // ================= VIEW USER =================
@@ -158,32 +227,6 @@ function AllUsers() {
     };
   }, [users]);
 
-  const badgeStyle = (type) => {
-    switch (type) {
-      case "admin":
-        return "bg-purple-100 text-purple-700";
-      case "client":
-        return "bg-blue-100 text-blue-700";
-      case "worker":
-        return "bg-green-100 text-green-700";
-      default:
-        return "bg-gray-100 text-gray-700";
-    }
-  };
-
-  const roleIcon = (type) => {
-    switch (type) {
-      case "admin":
-        return <Shield size={16} />;
-      case "client":
-        return <UserCheck size={16} />;
-      case "worker":
-        return <Briefcase size={16} />;
-      default:
-        return <Users size={16} />;
-    }
-  };
-
   if (loading) {
     return (
       <div className="p-8">
@@ -255,7 +298,7 @@ function AllUsers() {
 
             <input
               type="text"
-              placeholder="Search by email or ID..."
+              placeholder="Search by ID, email, phone..."
               className="w-full pl-10 pr-4 py-2 border rounded-lg focus:ring-2 focus:ring-amber-400 outline-none"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
@@ -273,128 +316,182 @@ function AllUsers() {
             <option value="admin">Admins</option>
           </select>
 
-          <button className="px-4 py-2 border rounded-lg hover:bg-gray-50 flex items-center gap-2">
-            <Filter size={18} />
-            Filter
-          </button>
-
-          <button className="px-4 py-2 border rounded-lg hover:bg-gray-50 flex items-center gap-2">
+          <button
+            onClick={handleExport}
+            className="px-4 py-2 border rounded-lg hover:bg-gray-50 flex items-center gap-2"
+          >
             <Download size={18} />
             Export
           </button>
         </div>
       </div>
+
+      {/* ACTION BAR */}
+      {selectedRows.length > 0 && (
+        <div className="flex justify-between items-center bg-white p-3 rounded-xl mb-4 shadow">
+          <span className="font-medium text-sm">
+            {selectedRows.length} selected
+          </span>
+
+          <div className="flex gap-2">
+            <button
+              onClick={handleExport}
+              className="px-3 py-2 bg-gray-200 rounded-lg flex items-center gap-2"
+            >
+              <Download size={14} />
+              Export
+            </button>
+
+            <button
+              onClick={handleBulkDelete}
+              className="px-3 py-2 bg-red-500 text-white rounded-lg"
+            >
+              Delete Selected
+            </button>
+          </div>
+        </div>
+      )}
       {/* TABLE */}
-      <section className="bg-white rounded-xl shadow border overflow-hidden max-w-full">
-        <div className="overflow-x-auto w-full">
-          <table className="w-full table-fixed min-w-225">
-            <thead className="bg-amber-300">
-              <tr>
-                <th className="px-6 py-3 text-left text-xs font-bold uppercase">
-                  ID
+      <section className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
+        <div className="overflow-x-auto">
+          <table className="w-full min-w-225">
+            {/* HEADER */}
+            <thead>
+              <tr className="bg-linear-to-r text-xs uppercase tracking-wider">
+                <th className="px-4 py-4 text-left">
+                  <input
+                    type="checkbox"
+                    className="w-4 h-4"
+                    checked={allSelected}
+                    ref={(el) => {
+                      if (el) el.indeterminate = someSelected;
+                    }}
+                    onChange={toggleAll}
+                  />
                 </th>
-                <th className="px-2 py-3 text-left text-xs font-bold uppercase">
-                  Email
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-bold uppercase">
-                  Phone
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-bold uppercase">
-                  Role
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-bold uppercase">
-                  Status
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-bold uppercase">
-                  Linked Profile
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-bold uppercase">
-                  Actions
-                </th>
+
+                <th className="px-6 py-4 text-left">ID</th>
+                <th className="px-6 py-4 text-left">Email</th>
+                <th className="px-6 py-4 text-left">Phone</th>
+                <th className="px-6 py-4 text-left">Role</th>
+                <th className="px-6 py-4 text-left">Status</th>
+                <th className="px-6 py-4 text-left">Linked Profile</th>
+                <th className="px-6 py-4 text-center">Actions</th>
               </tr>
             </thead>
 
-            <tbody className="divide-y divide-gray-200">
-              {filteredUsers.filter(Boolean).map((user) => (
+            {/* BODY */}
+            <tbody className="divide-y divide-gray-100">
+              {filteredUsers.filter(Boolean).map((user, index) => (
                 <tr
                   key={user?.id}
                   onClick={() => openViewModal(user)}
-                  className="hover:bg-gray-50 cursor-pointer transition"
+                  className={`cursor-pointer transition
+              hover:bg-blue-50
+              ${index % 2 === 0 ? "bg-white" : "bg-gray-50/40"}
+            `}
                 >
-                  <td className="px-4 py-6">#{user?.id}</td>
-                  <td className="px-2 py-4 max-w-55 truncate text-blue-600">
+                  {/* checkbox */}
+                  <td
+                    className="px-4 py-4"
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    <input
+                      type="checkbox"
+                      checked={selectedRows.includes(user.id)}
+                      onChange={() => toggleRow(user.id)}
+                      className="w-4 h-4"
+                    />
+                  </td>
+
+                  {/* ID */}
+                  <td className="px-6 py-4 text-gray-700">{user?.id || "—"}</td>
+
+                  {/* EMAIL */}
+                  <td className="px-6 py-4 text-gray-700">
                     {user?.email || "—"}
                   </td>
 
-                  <td className="px-6 py-4 max-w-37.5 truncate">
+                  {/* PHONE */}
+                  <td className="px-6 py-4 text-gray-700">
                     {user?.phone || "—"}
                   </td>
-                  <td className="px-6 py-4">
-                    <span
-                      className={`inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold capitalize ${badgeStyle(user.user_type)}`}
-                    >
-                      {roleIcon(user.user_type)}
-                      {user.user_type}
-                    </span>
+
+                  {/* ROLE */}
+                  <td className="px-6 py-4 capitalize text-gray-700">
+                    {user.user_type}
                   </td>
 
+                  {/* STATUS */}
                   <td className="px-6 py-4">
                     {user.is_active ? (
-                      <span className="px-3 py-1 bg-green-100 text-green-700 rounded-full text-xs font-semibold">
-                        Active
-                      </span>
+                      <span className="text-green-600">Active</span>
                     ) : (
-                      <span className="px-3 py-1 bg-red-100 text-red-700 rounded-full text-xs font-semibold">
-                        Inactive
-                      </span>
+                      <span className="text-red-600">Inactive</span>
                     )}
                   </td>
-                  <td className="px-6 py-4">
-                    {user.user_type === "admin" ? (
-                      <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-purple-100 text-purple-700">
-                        System Admin
-                      </span>
-                    ) : user?.client ? (
-                      <div>
-                        <div className="text-blue-700 font-semibold">
-                          Client #{user?.client?.id}
-                        </div>
-                        <div className="text-xs text-gray-500">
-                          {user?.client?.company_name || "No Company Name"}
-                        </div>
-                      </div>
-                    ) : user?.worker ? (
-                      <div>
-                        <div className="text-green-700 font-semibold">
-                          Worker #{user?.worker?.id}
-                        </div>
-                        <div className="text-xs text-gray-500">
-                          {[user?.worker?.first_name, user?.worker?.last_name]
-                            .filter(Boolean)
-                            .join(" ") || "No Name"}
-                        </div>
-                      </div>
-                    ) : (
-                      <span className="text-gray-400">Not linked</span>
-                    )}
+
+                  {/* LINKED PROFILE */}
+                  <td className="px-6 py-4 text-gray-600">
+                    {user.user_type === "admin"
+                      ? "System Admin"
+                      : user?.client
+                        ? `Client #${user.client.id}`
+                        : user?.worker
+                          ? `Worker #${user.worker.id}`
+                          : "Not linked"}
                   </td>
+
+                  {/* ACTIONS */}
                   <td
-                    className="px-6 py-4 flex gap-2"
+                    className="px-6 py-4 relative"
                     onClick={(e) => e.stopPropagation()}
                   >
                     <button
-                      onClick={() => handleEditUser(user)}
-                      className="text-blue-500 hover:text-blue-700 cursor-pointer"
+                      onClick={() =>
+                        setOpenMenu(openMenu === user.id ? null : user.id)
+                      }
+                      className="p-1 rounded hover:bg-gray-100"
                     >
-                      <Edit size={16} />
+                      <MoreHorizontal />
                     </button>
 
-                    <button
-                      onClick={() => handleDeleteUser(user.id)}
-                      className="text-red-500 hover:text-red-700 cursor-pointer"
-                    >
-                      <Trash2 size={16} />
-                    </button>
+                    {openMenu === user.id && (
+                      <div
+                        className="action-menu absolute right-0 mt-2 w-44 bg-white rounded-xl border border-gray-200 shadow-2xl overflow-hidden z-50"
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        <button
+                          onClick={() => {
+                            openViewModal(user);
+                            setOpenMenu(null);
+                          }}
+                          className="w-full text-left px-4 py-2 text-sm hover:bg-blue-50 hover:text-blue-700 transition-all duration-150"
+                        >
+                          View
+                        </button>
+
+                        <button
+                          onClick={() => {
+                            handleEditUser(user);
+                            setOpenMenu(null);
+                          }}
+                          className="w-full text-left px-4 py-2 text-sm hover:bg-green-50 hover:text-green-700 transition-all duration-150"
+                        >
+                          Edit
+                        </button>
+
+                        <button
+                          onClick={() => {
+                            handleDeleteUser(user.id);
+                            setOpenMenu(null);
+                          }}
+                          className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 hover:text-red-700 transition-all duration-150"
+                        >
+                          Delete
+                        </button>
+                      </div>
+                    )}
                   </td>
                 </tr>
               ))}
@@ -412,16 +509,11 @@ function AllUsers() {
             className="w-full max-w-[95%] sm:max-w-md bg-white rounded-xl shadow-xl p-4 sm:p-6 max-h-[85vh] overflow-y-auto mt-16 md:mt-20"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="bg-amber-300 px-6 py-4">
+            <div className="px-6 py-4">
               <h2 className="font-bold text-lg">User Details</h2>
             </div>
 
             <div className="p-6 space-y-4">
-              {/* Avatar */}
-              <div className="w-16 h-16 rounded-full bg-gray-200 mx-auto flex items-center justify-center text-xl font-bold">
-                {selectedUser?.email?.charAt(0)?.toUpperCase() || "U"}
-              </div>
-
               {/* BASIC USER INFO */}
               <div className="space-y-3 text-sm text-gray-700">
                 <div className="flex items-center gap-2">
