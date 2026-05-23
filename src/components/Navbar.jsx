@@ -1,6 +1,16 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Link, NavLink, useLocation } from "react-router-dom";
-import { Menu, X, Search, Bell, HelpCircle, ChevronDown } from "lucide-react";
+import {
+  Menu,
+  X,
+  Search,
+  Bell,
+  HelpCircle,
+  ChevronDown,
+  Sun,
+  Moon,
+} from "lucide-react";
+import { useTheme } from "../context/ThemeContext";
 import { useAuth } from "../context/AuthContext";
 
 function Navbar() {
@@ -14,16 +24,22 @@ function Navbar() {
   const location = useLocation();
   const dropdownRef = useRef(null);
 
+  const { theme, toggleTheme } = useTheme();
+
   const { user } = useAuth();
   const isAuth = user?.isAuthenticated;
 
   const navLinkClass = ({ isActive }) =>
     `relative flex items-center h-16 text-sm transition-colors duration-200
-  ${
-    isActive
-      ? "text-black font-medium after:absolute after:left-0 after:right-0 after:bottom-[10px] after:h-[2px] after:bg-black"
-      : "text-gray-600 hover:text-black"
-  }`;
+    ${
+      isActive
+        ? "text-black dark:text-white font-medium after:absolute after:left-0 after:right-0 after:bottom-[10px] after:h-[2px] after:bg-black dark:after:bg-white"
+        : "text-gray-600 dark:text-gray-300 hover:text-black dark:hover:text-white"
+    }`;
+
+  const mobileLinkClass =
+    "relative inline-flex items-center gap-2 w-fit px-2 py-1.5 text-gray-800 dark:text-gray-200 after:absolute after:left-2 after:bottom-0 after:h-[2px] after:w-0 after:bg-current after:transition-all after:duration-200 hover:after:w-[calc(100%-1rem)]";
+
   const getDisplayName = () => {
     if (!user) return "U";
 
@@ -95,71 +111,91 @@ function Navbar() {
   }, [location.pathname]);
 
   return (
-    <header className="bg-white border-b sticky top-0 z-50">
+    <header className="bg-white dark:bg-gray-950 border-b border-gray-200 dark:border-gray-800 sticky top-0 z-50 transition-colors duration-300">
+      {" "}
       {/* TOP BAR */}
       <div className="max-w-7xl mx-auto px-4 h-16 flex items-center">
         {/* LEFT */}
         <div className="flex items-center gap-3 shrink-0">
-          <button className="md:hidden" onClick={() => setOpen(!open)}>
+          <button
+            className="md:hidden text-gray-800 dark:text-gray-200"
+            onClick={() => setOpen(!open)}
+          >
             {open ? <X /> : <Menu />}
           </button>
 
-          <Link to="/" className="text-xl font-bold text-blue-600">
+          <Link
+            to="/"
+            className="text-xl font-bold text-blue-600 dark:text-blue-400"
+          >
             EthioWorks
           </Link>
         </div>
 
+        {/* THEME IN MOBILE VIEW*/}
+        <div className="flex items-center gap-3 md:hidden ml-auto">
+          <button
+            onClick={toggleTheme}
+            className="flex items-center justify-center w-9 h-9 rounded-full text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 transition"
+          >
+            {theme === "light" ? <Moon size={18} /> : <Sun size={18} />}
+          </button>
+        </div>
+
         {/* SEARCH */}
         <div className="hidden md:flex flex-1 justify-center">
-          <div className="flex items-center w-80 bg-gray-50 border border-gray-200 rounded-full px-3 shadow-sm hover:shadow-md transition-all duration-200 focus-within:ring-2 focus-within:ring-blue-500">
-            {" "}
-            <Search size={16} className="text-gray-500 mr-2" />
+          <div className="flex items-center w-80 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-full px-3 shadow-sm hover:shadow-md transition-all duration-200 focus-within:ring-2 focus-within:ring-blue-500 dark:focus-within:ring-blue-300">
+            <Search
+              size={16}
+              className="text-gray-500 dark:text-gray-400 mr-2"
+            />
+
             <input
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Search"
-              className="flex-1 py-2 text-sm bg-transparent outline-none placeholder-gray-500"
+              className="flex-1 py-2 text-sm bg-transparent outline-none text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400"
             />
-            <div className="relative border-l" ref={dropdownRef}>
+
+            <div
+              className="relative border-l border-gray-200 dark:border-gray-700"
+              ref={dropdownRef}
+            >
               <button
                 type="button"
                 onClick={() => setOpenCategory((prev) => !prev)}
-                className="px-3 py-2 text-sm flex items-center gap-1 text-gray-600 hover:text-black transition whitespace-nowrap border-l border-gray-200"
+                className="px-3 py-2 text-sm flex items-center gap-1 text-gray-600 dark:text-gray-300 hover:text-black dark:hover:text-white transition whitespace-nowrap"
               >
                 {category === "jobs" ? "Jobs" : "Workers"}
 
                 <span
-                  className={`text-[10px] transition-transform duration-200 ${
-                    openCategory ? "rotate-180" : ""
-                  }`}
+                  className={`text-[10px] transition-transform duration-200 ${openCategory ? "rotate-180" : ""}`}
                 >
                   <ChevronDown
                     size={14}
-                    className={`transition-transform duration-200 ${
-                      openCategory ? "rotate-0" : ""
-                    }`}
+                    className="text-gray-500 dark:text-gray-300"
                   />
                 </span>
               </button>
 
               {openCategory && (
-                <div className="absolute right-0 mt-2 w-40 bg-white border border-gray-200 rounded-xl shadow-lg z-50 overflow-hidden animate-fade-in">
-                  {" "}
+                <div className="absolute right-0 mt-2 w-40 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl shadow-lg z-50 overflow-hidden animate-fade-in">
                   <button
                     onClick={() => {
                       setCategory("jobs");
                       setOpenCategory(false);
                     }}
-                    className="w-full text-left px-3 py-2 text-sm hover:bg-gray-100"
+                    className="w-full text-left px-3 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-800 dark:text-gray-200"
                   >
                     Jobs
                   </button>
+
                   <button
                     onClick={() => {
                       setCategory("workers");
                       setOpenCategory(false);
                     }}
-                    className="w-full text-left px-3 py-2 text-sm hover:bg-gray-100"
+                    className="w-full text-left px-3 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-800 dark:text-gray-200"
                   >
                     Workers
                   </button>
@@ -229,6 +265,14 @@ function Navbar() {
                 How it Works
               </NavLink>
             )}
+
+            {/* THEME */}
+            <button
+              onClick={toggleTheme}
+              className="flex items-center justify-center w-9 h-9 rounded-full text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 transition"
+            >
+              {theme === "light" ? <Moon size={18} /> : <Sun size={18} />}
+            </button>
           </nav>
 
           {/* PROFILE */}
@@ -250,9 +294,9 @@ function Navbar() {
               <div className="relative">
                 <button
                   onClick={() => setDropdown(!dropdown)}
-                  className="flex items-center hover:bg-gray-100 p-1.5 rounded-full transition"
+                  className="flex items-center hover:bg-gray-100 dark:hover:bg-gray-800 p-1.5 rounded-full transition"
                 >
-                  <div className="w-9 h-9 rounded-full overflow-hidden bg-gray-200 flex items-center justify-center border">
+                  <div className="w-9 h-9 rounded-full overflow-hidden bg-gray-200 dark:bg-gray-700 flex items-center justify-center border">
                     {profileImage ? (
                       <img
                         src={profileImage}
@@ -260,7 +304,7 @@ function Navbar() {
                         className="w-full h-full object-cover"
                       />
                     ) : (
-                      <span className="text-sm font-semibold text-gray-600">
+                      <span className="text-sm font-semibold text-gray-700 dark:text-gray-200">
                         {displayName?.charAt(0)}
                       </span>
                     )}
@@ -268,31 +312,35 @@ function Navbar() {
                 </button>
 
                 {dropdown && (
-                  <div className="absolute right-0 mt-2 w-64 bg-white border rounded-xl shadow-lg overflow-hidden z-50">
-                    <div className="px-4 py-3 border-b bg-gray-50">
-                      <p className="text-sm font-semibold">{displayName}</p>
+                  <div className="absolute right-0 mt-2 w-64 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl shadow-lg overflow-hidden z-50">
+                    <div className="px-4 py-3 border-b bg-gray-50 dark:bg-gray-800 dark:border-gray-700">
+                      <p className="text-sm font-semibold text-gray-900 dark:text-white">
+                        {displayName}
+                      </p>
 
-                      <p className="text-xs text-gray-500">{user?.email}</p>
+                      <p className="text-xs text-gray-500 dark:text-gray-400">
+                        {user?.email}
+                      </p>
                     </div>
 
                     <div className="flex flex-col text-sm">
                       <Link
                         to="/account/profile"
-                        className="px-4 py-2 hover:bg-gray-100"
+                        className="px-4 py-2 text-gray-800 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
                       >
                         Profile
                       </Link>
 
                       <Link
                         to="/account/settings"
-                        className="px-4 py-2 hover:bg-gray-100"
+                        className="px-4 py-2 text-gray-800 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
                       >
                         Settings
                       </Link>
 
                       <Link
                         to="/logout"
-                        className="px-4 py-2 text-red-500 hover:bg-red-50"
+                        className="px-4 py-2  text-gray-800 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
                       >
                         Logout
                       </Link>
@@ -304,30 +352,29 @@ function Navbar() {
           </div>
         </div>
       </div>
-
       {/* MOBILE */}
       {open && (
-        <div className="md:hidden border-t bg-white px-4 py-3 space-y-3 text-sm">
+        <div className="md:hidden border-t bg-white dark:bg-gray-950 dark:border-gray-800 px-4 py-3 space-y-3 text-sm transition-colors duration-300">
           {/* SEARCH */}
-          <div className="flex items-center border rounded-lg px-2">
-            <Search size={16} className="text-gray-500" />
+          <div className="flex items-center border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 rounded-lg px-2">
+            <Search size={16} className="text-gray-500 dark:text-gray-400" />
 
             <input
               placeholder="Search"
-              className="flex-1 px-2 py-2 outline-none"
+              className="flex-1 px-2 py-2 outline-none bg-transparent text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500"
             />
           </div>
 
-          <div className="flex flex-col gap-3">
+          <div className="flex flex-col gap-1">
             {/* PROFILE */}
             {isAuth && (
               <>
                 <button
                   onClick={() => setMobileProfileOpen((prev) => !prev)}
-                  className="w-full flex items-center justify-between border-t pt-3"
+                  className="w-full flex items-center justify-between border-t border-gray-200 dark:border-gray-800 pt-3"
                 >
                   <div className="flex items-center gap-2">
-                    <div className="w-9 h-9 rounded-full overflow-hidden bg-gray-200 flex items-center justify-center">
+                    <div className="w-9 h-9 rounded-full overflow-hidden bg-gray-200 dark:bg-gray-700 flex items-center justify-center">
                       {profileImage ? (
                         <img
                           src={profileImage}
@@ -335,16 +382,20 @@ function Navbar() {
                           className="w-full h-full object-cover"
                         />
                       ) : (
-                        <span className="text-sm font-semibold">
+                        <span className="text-sm font-semibold text-gray-700 dark:text-gray-200">
                           {displayName?.charAt(0)}
                         </span>
                       )}
                     </div>
 
                     <div className="text-left">
-                      <p className="text-sm font-semibold">{displayName}</p>
+                      <p className="text-sm font-semibold text-gray-900 dark:text-gray-100">
+                        {displayName}
+                      </p>
 
-                      <p className="text-xs text-gray-500">{user?.email}</p>
+                      <p className="text-xs text-gray-500 dark:text-gray-400">
+                        {user?.email}
+                      </p>
                     </div>
                   </div>
 
@@ -355,27 +406,33 @@ function Navbar() {
                   >
                     <ChevronDown
                       size={14}
-                      className={`transition-transform duration-200 ${
-                        mobileProfileOpen ? "rotate-0" : ""
-                      }`}
+                      className="text-gray-600 dark:text-gray-300 transition-transform duration-200"
                     />
                   </span>
                 </button>
 
                 {mobileProfileOpen && (
-                  <div className="flex flex-col ml-11 border-l pl-3 space-y-1">
-                    <Link to="/account/profile" onClick={closeMobile}>
+                  <div className="flex flex-col ml-11 border-l border-gray-200 dark:border-gray-800 pl-3 space-y-1">
+                    <Link
+                      to="/account/profile"
+                      onClick={closeMobile}
+                      className={mobileLinkClass}
+                    >
                       Profile
                     </Link>
 
-                    <Link to="/account/settings" onClick={closeMobile}>
+                    <Link
+                      to="/account/settings"
+                      onClick={closeMobile}
+                      className={mobileLinkClass}
+                    >
                       Settings
                     </Link>
 
                     <Link
                       to="/logout"
                       onClick={closeMobile}
-                      className="text-red-500"
+                      className={mobileLinkClass}
                     >
                       Logout
                     </Link>
@@ -387,19 +444,38 @@ function Navbar() {
             {/* GUEST */}
             {!isAuth && (
               <>
-                <Link onClick={closeMobile} to="/jobs">
+                <Link
+                  onClick={closeMobile}
+                  to="/jobs"
+                  className={mobileLinkClass}
+                >
                   Find Work
                 </Link>
 
-                <Link onClick={closeMobile} to="/workers">
+                <Link
+                  onClick={closeMobile}
+                  to="/workers"
+                  className={mobileLinkClass}
+                >
                   Hire Workers
                 </Link>
 
-                <Link onClick={closeMobile} to="/login">
+                <Link
+                  onClick={closeMobile}
+                  to="/login"
+                  className={mobileLinkClass}
+                >
                   Login
                 </Link>
 
-                <Link onClick={closeMobile} to="/signup">
+                <Link
+                  onClick={closeMobile}
+                  to="/signup"
+                  className={
+                    mobileLinkClass +
+                    "text-blue-600 dark:text-blue-400 font-medium"
+                  }
+                >
                   Get Started
                 </Link>
               </>
@@ -410,34 +486,54 @@ function Navbar() {
               <>
                 {user?.user_type === "worker" ? (
                   <>
-                    <Link onClick={closeMobile} to="/jobs">
+                    <Link
+                      onClick={closeMobile}
+                      to="/jobs"
+                      className={mobileLinkClass}
+                    >
                       Find Work
                     </Link>
 
-                    <Link onClick={closeMobile} to="/worker/jobs/applied">
+                    <Link
+                      onClick={closeMobile}
+                      to="/worker/jobs/applied"
+                      className={mobileLinkClass}
+                    >
                       Deliver Work
                     </Link>
                   </>
                 ) : user?.user_type === "client" ? (
                   <>
-                    <Link onClick={closeMobile} to="/workers">
+                    <Link
+                      onClick={closeMobile}
+                      to="/workers"
+                      className={mobileLinkClass}
+                    >
                       Find Workers
                     </Link>
 
-                    <Link onClick={closeMobile} to="/client/jobs/post">
+                    <Link
+                      onClick={closeMobile}
+                      to="/client/jobs/post"
+                      className={mobileLinkClass}
+                    >
                       Post Job
                     </Link>
                   </>
                 ) : null}
 
-                <Link onClick={closeMobile} to="/ca/messages">
+                <Link
+                  onClick={closeMobile}
+                  to="/ca/messages"
+                  className={mobileLinkClass}
+                >
                   Messages
                 </Link>
 
                 <Link
                   onClick={closeMobile}
                   to="/ca/notifications"
-                  className="flex items-center gap-2"
+                  className={mobileLinkClass}
                 >
                   <Bell size={14} />
                   <span>Notifications</span>
@@ -446,7 +542,7 @@ function Navbar() {
                 <Link
                   onClick={closeMobile}
                   to="/ca/help"
-                  className="flex items-center gap-2"
+                  className={mobileLinkClass}
                 >
                   <HelpCircle size={14} />
                   <span>Help</span>
@@ -454,8 +550,13 @@ function Navbar() {
               </>
             )}
 
+            {/* HOW IT WORKS */}
             {!isAuth && (
-              <Link onClick={closeMobile} to="/how-it-works">
+              <Link
+                onClick={closeMobile}
+                to="/how-it-works"
+                className={mobileLinkClass}
+              >
                 How it Works
               </Link>
             )}

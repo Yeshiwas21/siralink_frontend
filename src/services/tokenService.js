@@ -5,25 +5,21 @@ const MODE_KEY = "auth_mode";
 /**
  * Store tokens based on remember flag
  * remember=true  → localStorage (persistent, multi-tab, restart safe)
- * remember=false → sessionStorage (still fallback-enabled for multi-tab UX)
+ * remember=false → sessionStorage
  */
 export const storeTokens = (access, refresh, remember) => {
+  // clear old tokens first
+  clearTokens();
+
   const storage = remember ? localStorage : sessionStorage;
 
   storage.setItem(ACCESS_KEY, access);
   storage.setItem(REFRESH_KEY, refresh);
   storage.setItem(MODE_KEY, remember ? "persistent" : "session");
-
-  /**
-   * Always mirror access token in localStorage for cross-tab support
-   * but we still respect session mode via MODE_KEY
-   */
-  localStorage.setItem(ACCESS_KEY, access);
-  localStorage.setItem(REFRESH_KEY, refresh);
 };
 
 /**
- * Get access token (cross-tab safe)
+ * Get access token
  */
 export const getAccessToken = () => {
   return (
@@ -66,10 +62,10 @@ export const getActiveStorage = () => {
  */
 export const setAccessToken = (token) => {
   const storage = getActiveStorage();
-  if (storage) storage.setItem(ACCESS_KEY, token);
 
-  // keep sync for multi-tab
-  localStorage.setItem(ACCESS_KEY, token);
+  if (storage) {
+    storage.setItem(ACCESS_KEY, token);
+  }
 };
 
 /**
@@ -77,9 +73,10 @@ export const setAccessToken = (token) => {
  */
 export const setRefreshToken = (token) => {
   const storage = getActiveStorage();
-  if (storage) storage.setItem(REFRESH_KEY, token);
 
-  localStorage.setItem(REFRESH_KEY, token);
+  if (storage) {
+    storage.setItem(REFRESH_KEY, token);
+  }
 };
 
 /**

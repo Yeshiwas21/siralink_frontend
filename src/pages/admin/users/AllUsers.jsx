@@ -369,14 +369,13 @@ function AllUsers() {
                     onChange={toggleAll}
                   />
                 </th>
-
                 <th className="px-6 py-4 text-left">ID</th>
                 <th className="px-6 py-4 text-left">Email</th>
                 <th className="px-6 py-4 text-left">Phone</th>
                 <th className="px-6 py-4 text-left">Role</th>
                 <th className="px-6 py-4 text-left">Status</th>
                 <th className="px-6 py-4 text-left">Linked Profile</th>
-                <th className="px-6 py-4 text-center">Actions</th>
+                <th className="px-6 py-4 text-left">Actions</th>{" "}
               </tr>
             </thead>
 
@@ -444,54 +443,56 @@ function AllUsers() {
 
                   {/* ACTIONS */}
                   <td
-                    className="px-6 py-4 relative"
+                    className="px-6 py-4"
                     onClick={(e) => e.stopPropagation()}
                   >
-                    <button
-                      onClick={() =>
-                        setOpenMenu(openMenu === user.id ? null : user.id)
-                      }
-                      className="p-1 rounded hover:bg-gray-100"
-                    >
-                      <MoreHorizontal />
-                    </button>
-
-                    {openMenu === user.id && (
-                      <div
-                        className="action-menu absolute right-0 mt-2 w-44 bg-white rounded-xl border border-gray-200 shadow-2xl overflow-hidden z-50"
-                        onClick={(e) => e.stopPropagation()}
+                    <div className="flex items-center justify-start relative">
+                      <button
+                        onClick={() =>
+                          setOpenMenu(openMenu === user.id ? null : user.id)
+                        }
+                        className="p-1 rounded hover:bg-gray-100"
                       >
-                        <button
-                          onClick={() => {
-                            openViewModal(user);
-                            setOpenMenu(null);
-                          }}
-                          className="w-full text-left px-4 py-2 text-sm hover:bg-blue-50 hover:text-blue-700 transition-all duration-150"
-                        >
-                          View
-                        </button>
+                        <MoreHorizontal />
+                      </button>
 
-                        <button
-                          onClick={() => {
-                            handleEditUser(user);
-                            setOpenMenu(null);
-                          }}
-                          className="w-full text-left px-4 py-2 text-sm hover:bg-green-50 hover:text-green-700 transition-all duration-150"
+                      {openMenu === user.id && (
+                        <div
+                          className="action-menu absolute left-0 top-full mt-2 w-44 bg-white rounded-xl border border-gray-200 shadow-2xl overflow-hidden z-50"
+                          onClick={(e) => e.stopPropagation()}
                         >
-                          Edit
-                        </button>
+                          <button
+                            onClick={() => {
+                              openViewModal(user);
+                              setOpenMenu(null);
+                            }}
+                            className="w-full text-left px-4 py-2 text-sm hover:bg-blue-50 hover:text-blue-700 transition-all duration-150"
+                          >
+                            View
+                          </button>
 
-                        <button
-                          onClick={() => {
-                            handleDeleteUser(user.id);
-                            setOpenMenu(null);
-                          }}
-                          className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 hover:text-red-700 transition-all duration-150"
-                        >
-                          Delete
-                        </button>
-                      </div>
-                    )}
+                          <button
+                            onClick={() => {
+                              handleEditUser(user);
+                              setOpenMenu(null);
+                            }}
+                            className="w-full text-left px-4 py-2 text-sm hover:bg-green-50 hover:text-green-700 transition-all duration-150"
+                          >
+                            Edit
+                          </button>
+
+                          <button
+                            onClick={() => {
+                              handleDeleteUser(user.id);
+                              setOpenMenu(null);
+                            }}
+                            className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 hover:text-red-700 transition-all duration-150"
+                          >
+                            Delete
+                          </button>
+                        </div>
+                      )}
+                    </div>
                   </td>
                 </tr>
               ))}

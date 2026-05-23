@@ -51,34 +51,41 @@ function Sidebar() {
   return (
     <aside
       className={`
-        ${isCollapsed ? "w-20" : "w-64"}
-        min-h-screen sticky top-0 bg-[#0f172a] text-white flex flex-col
-        border-r border-gray-800 transition-all duration-300
-      `}
+                ${isCollapsed ? "w-20" : "w-64"}
+                min-h-screen sticky top-0
+                bg-white dark:bg-[#0f172a]
+                text-gray-900 dark:text-white
+                flex flex-col
+                border-r border-gray-200 dark:border-gray-800
+                transition-all duration-300
+              `}
     >
       {/* HEADER */}
-      <div className="p-4 border-b border-gray-800">
+      <div className="p-4 border-b border-gray-200 dark:border-gray-800">
         <div className="flex items-center justify-between">
           {!isCollapsed && (
-            <h1 className="text-xl font-bold text-blue-400">EthioWorks</h1>
+            <div className="px-3 py-2">
+              <p className="text-sm font-semibold text-gray-900 dark:text-white tracking-tight truncate leading-5 capitalize">
+                {user.name}
+              </p>
+
+              <div className="flex items-center gap-2 mt-1">
+                <span className="w-1.5 h-1.5 rounded-full bg-green-500"></span>
+
+                <p className="text-sm font-semibold text-gray-900 dark:text-white tracking-tight truncate leading-5 capitalize">
+                  {user.user_type} account
+                </p>
+              </div>
+            </div>
           )}
 
           <button
             onClick={() => setCollapsed(!collapsed)}
-            className="text-gray-400 hover:text-white"
+            className="text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"
           >
             {isCollapsed ? <ChevronRight /> : <ChevronLeft />}
           </button>
         </div>
-
-        {!isCollapsed && (
-          <div className="mt-3 text-sm">
-            <p className="font-semibold">{user.name}</p>
-            <p className="text-xs text-gray-400 capitalize">
-              {user.user_type} Account
-            </p>
-          </div>
-        )}
       </div>
 
       {/* NAV */}
@@ -235,15 +242,14 @@ function SidebarItem({ icon, label, to, collapsed, danger = false }) {
     <NavLink
       to={to}
       className={({ isActive }) =>
-        `flex items-center ${
-          collapsed ? "justify-center" : "gap-3"
-        } px-3 py-2 rounded-lg transition
+        `flex items-center ${collapsed ? "justify-center" : "gap-3"}
+        px-3 py-2 rounded-lg transition
         ${
           danger
-            ? "text-red-400 hover:bg-red-500/10"
+            ? "text-red-500 hover:bg-red-100 dark:hover:bg-red-500/10"
             : isActive
-              ? "bg-gray-800 text-white"
-              : "text-gray-200 hover:bg-gray-800"
+              ? "bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-white"
+              : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"
         }`
       }
     >
