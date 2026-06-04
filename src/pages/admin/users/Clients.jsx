@@ -850,6 +850,7 @@ function Clients() {
 
 export default Clients;
 
+/* Status Filter*/
 export function StatusFilter({ statusFilter, setStatusFilter }) {
   const [open, setOpen] = useState(false);
   const wrapperRef = useRef(null);
