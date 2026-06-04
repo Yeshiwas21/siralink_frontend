@@ -24,13 +24,18 @@ export const signupClient = async (form) => {
   const payload = {
     email: form.email,
     phone: form.phone,
+    first_name: form.first_name,
+    last_name: form.last_name,
     password: form.password,
     password_2: form.password_2,
     client: {
+      client_type: form.client_type,
+      national_id: form.national_id ,
       company_name: form.company_name,
       location: form.location,
     },
   };
+  
 
   const res = await clientSignupApi(payload);
   return res.data;
@@ -41,13 +46,14 @@ export const signupWorker = async (form) => {
   const payload = {
     email: form.email,
     phone: form.phone,
+    first_name: form.first_name,
+    last_name: form.last_name,
     password: form.password,
     password_2: form.password_2,
     worker: {
-      first_name: form.first_name,
-      last_name: form.last_name,
       national_id: form.national_id,
       location: form.location,
+      
     },
   };
 

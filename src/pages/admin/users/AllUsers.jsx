@@ -251,27 +251,32 @@ function AllUsers() {
   return (
     <div className="p-8 bg-gray-100 min-h-screen">
       {/* HEADER */}
-      <header className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-8">
+      <header className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
         <div>
-          <h1 className="text-3xl font-bold text-gray-800">User Management</h1>
-          <p className="text-gray-500 mt-1">
-            Manage all users registered on this platform
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">
+            Clients Management
+          </h1>
+          <p className="text-gray-500 text-sm mt-0.5">
+            Manage all registered clients
           </p>
         </div>
 
-        <button
-          onClick={loadUsers}
-          className="bg-amber-300 text-black font-semibold px-4 py-2 rounded-lg hover:bg-amber-400 transition flex items-center gap-2 cursor-pointer"
-        >
-          <RefreshCw size={18} />
-          Refresh
-        </button>
-        <button
-          onClick={() => navigate("/admin/create/user")}
-          className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 cursor-pointer"
-        >
-          + Add User
-        </button>
+        <div className="flex gap-2 flex-wrap">
+          <button
+            onClick={fetchUsers}
+            className="px-3 py-2 bg-yellow-300 hover:bg-yellow-400 rounded-lg flex items-center gap-1.5 text-sm font-medium transition-colors"
+          >
+            <RefreshCw size={14} />
+            <span className="hidden xs:inline">Refresh</span>
+          </button>
+
+          <button
+            onClick={() => navigate("/admin/create/user")}
+            className="px-3 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm font-medium transition-colors"
+          >
+            + Add User
+          </button>
+        </div>
       </header>
       {/* STATS */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-5 mb-6">
@@ -290,40 +295,35 @@ function AllUsers() {
           icon={<UserX />}
         />
       </div>
-      {/* FILTER */}
-      <div className="bg-white p-4 rounded-xl shadow border mb-6">
-        <div className="flex flex-col md:flex-row gap-4">
-          <div className="flex-1 relative">
-            <Search size={18} className="absolute left-3 top-3 text-gray-400" />
-
-            <input
-              type="text"
-              placeholder="Search by ID, email, phone..."
-              className="w-full pl-10 pr-4 py-2 border rounded-lg focus:ring-2 focus:ring-amber-400 outline-none"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
-          </div>
-
-          <select
-            className="px-4 py-2 border rounded-lg"
-            value={roleFilter}
-            onChange={(e) => setRoleFilter(e.target.value)}
-          >
-            <option value="all">All Roles</option>
-            <option value="client">Clients</option>
-            <option value="worker">Workers</option>
-            <option value="admin">Admins</option>
-          </select>
-
-          <button
-            onClick={handleExport}
-            className="px-4 py-2 border rounded-lg hover:bg-gray-50 flex items-center gap-2"
-          >
-            <Download size={18} />
-            Export
-          </button>
+      {/* SEARCH + FILTER */}
+      <div className="bg-white p-3 sm:p-4 rounded-xl shadow border border-gray-200 mb-4 flex flex-col sm:flex-row gap-4 sm:items-end">
+        {/* SEARCH */}
+        <div className="relative w-full sm:w-64">
+          <Search
+            className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
+            size={16}
+          />
+          <input
+            className="w-full pl-9 pr-4 py-2 rounded-lg text-sm border border-gray-200 
+                       focus:outline-none focus:ring-2 focus:ring-blue-300"
+            placeholder="Search..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
         </div>
+
+        {/* FILTER */}
+        {/* <RoleFilter
+          roleFilter={RoleFilter}
+          setRoleFilter={setStatusFilter}
+        /> */}
+        <button
+          onClick={handleExport}
+          className="px-4 py-2 border rounded-lg hover:bg-gray-50 flex items-center gap-2"
+        >
+          <Download size={18} />
+          Export
+        </button>
       </div>
 
       {/* ACTION BAR */}
@@ -443,56 +443,54 @@ function AllUsers() {
 
                   {/* ACTIONS */}
                   <td
-                    className="px-6 py-4"
+                    className="px-6 py-4 relative"
                     onClick={(e) => e.stopPropagation()}
                   >
-                    <div className="flex items-center justify-start relative">
-                      <button
-                        onClick={() =>
-                          setOpenMenu(openMenu === user.id ? null : user.id)
-                        }
-                        className="p-1 rounded hover:bg-gray-100"
+                    <button
+                      onClick={() =>
+                        setOpenMenu(openMenu === user.id ? null : user.id)
+                      }
+                      className="p-1 rounded hover:bg-gray-100"
+                    >
+                      <MoreHorizontal />
+                    </button>
+
+                    {openMenu === user.id && (
+                      <div
+                        className="action-menu absolute right-0 mt-2 w-44 bg-white rounded-xl border border-gray-200 shadow-2xl overflow-hidden z-50"
+                        onClick={(e) => e.stopPropagation()}
                       >
-                        <MoreHorizontal />
-                      </button>
-
-                      {openMenu === user.id && (
-                        <div
-                          className="action-menu absolute left-0 top-full mt-2 w-44 bg-white rounded-xl border border-gray-200 shadow-2xl overflow-hidden z-50"
-                          onClick={(e) => e.stopPropagation()}
+                        <button
+                          onClick={() => {
+                            openViewModal(user);
+                            setOpenMenu(null);
+                          }}
+                          className="w-full text-left px-4 py-2 text-sm hover:bg-blue-50 hover:text-blue-700 transition-all duration-150"
                         >
-                          <button
-                            onClick={() => {
-                              openViewModal(user);
-                              setOpenMenu(null);
-                            }}
-                            className="w-full text-left px-4 py-2 text-sm hover:bg-blue-50 hover:text-blue-700 transition-all duration-150"
-                          >
-                            View
-                          </button>
+                          View
+                        </button>
 
-                          <button
-                            onClick={() => {
-                              handleEditUser(user);
-                              setOpenMenu(null);
-                            }}
-                            className="w-full text-left px-4 py-2 text-sm hover:bg-green-50 hover:text-green-700 transition-all duration-150"
-                          >
-                            Edit
-                          </button>
+                        <button
+                          onClick={() => {
+                            handleEditUser(user);
+                            setOpenMenu(null);
+                          }}
+                          className="w-full text-left px-4 py-2 text-sm hover:bg-green-50 hover:text-green-700 transition-all duration-150"
+                        >
+                          Edit
+                        </button>
 
-                          <button
-                            onClick={() => {
-                              handleDeleteUser(user.id);
-                              setOpenMenu(null);
-                            }}
-                            className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 hover:text-red-700 transition-all duration-150"
-                          >
-                            Delete
-                          </button>
-                        </div>
-                      )}
-                    </div>
+                        <button
+                          onClick={() => {
+                            handleDeleteUser(user.id);
+                            setOpenMenu(null);
+                          }}
+                          className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 hover:text-red-700 transition-all duration-150"
+                        >
+                          Delete
+                        </button>
+                      </div>
+                    )}
                   </td>
                 </tr>
               ))}
@@ -761,14 +759,17 @@ function AllUsers() {
   );
 }
 
-export function StatCard({ title, value, icon }) {
+export function StatCard({ title, value, icon, color = "amber" }) {
   return (
-    <div className="bg-white rounded-xl shadow border p-5 flex items-center justify-between">
+    <div className="w-full bg-white rounded-xl shadow p-5 flex items-center justify-between">
       <div>
         <p className="text-sm text-gray-500">{title}</p>
         <h2 className="text-2xl font-bold text-gray-800">{value}</h2>
       </div>
-      <div className="bg-amber-100 text-amber-700 p-3 rounded-xl">{icon}</div>
+
+      <div className={`p-3 rounded-xl bg-${color}-100 text-${color}-700`}>
+        {icon}
+      </div>
     </div>
   );
 }

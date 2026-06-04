@@ -19,9 +19,10 @@ function Login() {
   const [showPassword, setShowPassword] = useState(false);
 
   const handleChange = (e) => {
+    const { name, value, type, checked } = e.target;
     setForm({
       ...form,
-      [e.target.name]: e.target.value,
+      [name]: type === "checkbox" ? checked : value,
     });
   };
 
@@ -30,38 +31,38 @@ function Login() {
     setError("");
 
     if (!form.email || !form.password) {
-      setError("Please fill  both email and password");
+      setError("Please fill both email and password");
       return;
     }
+
     try {
       setLoading(true);
 
-      const data = await login(form);
-
-      const userType = data.user.user_type;
-      if (userType === "admin") {
-        navigate("/admin/overview");
-      } else if (userType === "client") {
-        navigate("/client/overview");
-      } else if (userType === "worker") {
-        navigate("/worker/overview");
-      }
+      await login(form);
+      navigate(getHomeRoute(user), { replace: true });
     } catch (err) {
-      const data = err?.response?.data;
+      const data = err?.response?.data || {};
 
-      if (data?.error_code === "USER_DISABLED") {
-        setError(
-          "Your account has been disabled. Please contact EthioWorks support to reactivate your account.",
-        );
-      } else if (data?.error_code === "PROFILE_MISSING") {
-        setError("Your account setup is incomplete. Please contact support.");
+      const errorCode = Array.isArray(data.error_code)
+        ? data.error_code[0]
+        : data.error_code;
+
+      const message = Array.isArray(data.message)
+        ? data.message[0]
+        : data.message;
+
+      if (errorCode === "USER_DISABLED") {
+        setError("Your account has been disabled. Please contact support.");
+      } else if (errorCode === "PROFILE_MISSING") {
+        setError("Your account setup is incomplete.");
+      } else if (errorCode === "ACCOUNT_PENDING") {
+        setError("Your account is still under review.");
+      } else if (errorCode === "ACCOUNT_SUSPENDED") {
+        setError("Your account has been suspended.");
+      } else if (errorCode === "ACCOUNT_REJECTED") {
+        setError("Your account has been rejected. Please contact support.");
       } else {
-        setError(
-          data?.message ||
-            data?.error ||
-            data?.detail ||
-            "Invalid email or password",
-        );
+        setError(message || data?.detail || "Invalid email or password");
       }
 
       setForm((prev) => ({
@@ -83,7 +84,7 @@ function Login() {
         {/* HEADER */}
         <div className="text-center mb-6">
           <h1 className="text-2xl font-semibold text-gray-900">
-            Login to EthioWorks
+            Login to EthioWorks Hub
           </h1>{" "}
           <p className="text-sm text-gray-500 mt-1">
             Enter your credentials to continue
@@ -148,16 +149,14 @@ function Login() {
                 type="checkbox"
                 name="remember"
                 checked={form.remember}
-                onChange={(e) =>
-                  setForm({ ...form, remember: e.target.checked })
-                }
+                onChange={handleChange}
               />
               Remember me
             </label>
 
             <button
               type="button"
-              className="text-sm text-blue-600 hover:underline"
+              className="text-sm text-blue-600 hover:underline cursor-pointer"
               onClick={() => navigate("/forgot-password")}
             >
               Forgot password?
@@ -165,8 +164,8 @@ function Login() {
           </div>
           <button
             type="submit"
-            disabled={loading}
-            className="w-full bg-blue-600 text-white py-3 rounded-lg font-medium hover:bg-blue-700 transition disabled:bg-gray-400"
+            disabled={loading || !form.email || !form.password}
+            className="w-full bg-blue-600 text-white py-3 rounded-lg font-medium hover:bg-blue-700 transition disabled:bg-gray-400 cursor-pointer disabled:cursor-not-allowed"
           >
             {loading ? "Logging in..." : "Login"}
           </button>
