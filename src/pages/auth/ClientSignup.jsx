@@ -11,6 +11,10 @@ function ClientSignup() {
     phone: "",
     password: "",
     password_2: "",
+    client_type: "individual",
+    first_name: "",
+    last_name: "",
+    national_id: "",
     company_name: "",
     location: "",
   });
@@ -18,233 +22,247 @@ function ClientSignup() {
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
 
-  /* =========================
-     HANDLE INPUT CHANGE
-  ========================== */
-  const handleChange = (e) => {
-    setForm({
-      ...form,
-      [e.target.name]: e.target.value,
-    });
+  const isCompany = form.client_type === "company";
+  const isIndividual = form.client_type === "individual";
 
-    // clear field error while typing
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+
+    setForm((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+
     setErrors((prev) => ({
       ...prev,
-      [e.target.name]: "",
+      [name]: "",
       form: "",
     }));
   };
 
-  /* =========================
-     HANDLE SUBMIT
-  ========================== */
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const validate = () => {
+    let e = {};
 
-    let newErrors = {};
+    if (!form.email) e.email = "Email is required";
+    if (!form.phone) e.phone = "Phone is required";
 
-    // FRONTEND VALIDATION
-    // PHONE VALIDATION
-    const phone = form.phone?.trim();
+    if (!form.first_name) e.first_name = "First name is required";
+    if (!form.last_name) e.last_name = "Last name is required";
 
-    if (/^\+2519\d{8}$/.test(phone)) {
-      delete newErrors.phone; // valid international format
-    } else if (/^\d{10}$/.test(phone)) {
-      delete newErrors.phone; // valid local format
-    } else {
-      newErrors.phone =
-        "Phone must be +2519XXXXXXXX (14 chars) or 10 digit local number";
-    }
     if (!form.password || form.password.length < 8) {
-      // PASSWORDS VALIDATION
-      newErrors.password = "Minimum 8 characters required";
-    } else {
-      delete newErrors.password;
+      e.password = "Minimum 8 characters required";
     }
 
     if (form.password !== form.password_2) {
-      newErrors.password_2 = "Passwords do not match";
-    } else {
-      delete newErrors.password_2;
+      e.password_2 = "Passwords do not match";
     }
 
-    // REUSABLE TEXT VALIDATOR
-    const validateTextField = (value) => {
-      const val = value?.trim();
-
-      if (!val || val.length < 2) {
-        return "Minimum 2 characters required";
-      } else if (!/^[A-Za-z]/.test(val)) {
-        return "Must start with a letter";
-      } else if (!/^[A-Za-z\s]+$/.test(val)) {
-        return "Only letters are allowed";
-      }
-
-      return null;
-    };
-
-    // COMPANY NAME VALIDATION
-    const companyError = validateTextField(form.company_name);
-    if (companyError) {
-      newErrors.company_name = companyError;
-    } else {
-      delete newErrors.company_name;
+    if (!form.location) {
+      e.location = "Location is required";
     }
 
-    // LOCATION VALIDATION
-    const locationError = validateTextField(form.location);
-    if (locationError) {
-      newErrors.location = locationError;
-    } else {
-      delete newErrors.location;
+    if (isIndividual && !form.national_id) {
+      e.national_id = "National ID is required";
     }
 
-    setErrors(newErrors);
+    if (isCompany && !form.company_name) {
+      e.company_name = "Company name is required";
+    }
 
-    if (Object.keys(newErrors).length > 0) return;
+    return e;
+  };
 
-    /*  API CALL */
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    const eObj = validate();
+    setErrors(eObj);
+
+    if (Object.keys(eObj).length > 0) return;
+
     try {
       setLoading(true);
 
       await signupClient(form);
-      toast.success("Your account created successfully. You can login");
+
+      toast.success("Account created successfully");
       navigate("/login");
     } catch (err) {
-      const backendErrors = err.response?.data;
+      const backend = err?.response?.data || {};
+      let formatted = {};
 
-      let formattedErrors = {};
+      // user-level errors
+      Object.entries(backend).forEach(([key, value]) => {
+        if (key === "client") return;
+        formatted[key] = Array.isArray(value) ? value[0] : value;
+      });
 
-      if (backendErrors) {
-        // Handle nested client errors
-        if (backendErrors.client) {
-          Object.entries(backendErrors.client).forEach(([key, value]) => {
-            formattedErrors[key] = value[0]; // take first error message
-          });
-        }
-
-        // Handle top-level errors
-        Object.entries(backendErrors).forEach(([key, value]) => {
-          if (key !== "client") {
-            formattedErrors[key] = Array.isArray(value) ? value[0] : value;
-          }
+      // nested client errors
+      if (backend.client) {
+        Object.entries(backend.client).forEach(([key, value]) => {
+          formatted[key] = Array.isArray(value) ? value[0] : value;
         });
       }
 
-      // fallback
-      if (Object.keys(formattedErrors).length === 0) {
-        formattedErrors.form = "Signup failed";
-      }
-
-      setErrors(formattedErrors);
+      setErrors(formatted);
     } finally {
       setLoading(false);
     }
   };
 
-  /* =========================
-     INPUT STYLE HELPER
-  ========================== */
   const inputClass = (field) =>
     `w-full border p-2 rounded ${
       errors[field] ? "border-red-500" : "border-gray-300"
     }`;
 
   return (
-    <div className="max-w-md mx-auto mt-16 p-6 border rounded-xl shadow">
-      <h2 className="text-2xl font-bold mb-5 text-center">Join as Client</h2>
+    <div className="max-w-md mx-auto mt-10 p-6 border rounded-xl shadow">
+      <h2 className="text-2xl font-bold mb-5 text-center">Client Signup</h2>
 
-      {/* GLOBAL ERROR */}
-      {errors.form && (
-        <p className="text-red-500 text-sm mb-3 text-center">{errors.form}</p>
+      {/* CLIENT TYPE */}
+      <select
+        name="client_type"
+        value={form.client_type}
+        onChange={handleChange}
+        className={inputClass("client_type")}
+      >
+        <option value="individual">Individual</option>
+        <option value="company">Company</option>
+      </select>
+      {errors.client_type && (
+        <p className="text-red-500 text-sm">{errors.client_type}</p>
       )}
 
-      <form onSubmit={handleSubmit} className="space-y-3">
-        {/* COMPANY NAME */}
-        <input
-          name="company_name"
-          placeholder="Company Name"
-          autoComplete="off"
-          required
-          className={inputClass("company_name")}
-          onChange={handleChange}
-        />
-        {errors.company_name && (
-          <p className="text-red-500 text-sm">{errors.company_name}</p>
-        )}
+      {/* NAME */}
+      <input
+        name="first_name"
+        autoComplete="off"
+        placeholder={isCompany ? "Contact First Name" : "First Name"}
+        value={form.first_name}
+        onChange={handleChange}
+        className={inputClass("first_name")}
+      />
+      {errors.first_name && (
+        <p className="text-red-500 text-sm">{errors.first_name}</p>
+      )}
 
-        {/* LOCATION */}
-        <input
-          name="location"
-          placeholder="Location"
-          autoComplete="off"
-          required
-          className={inputClass("location")}
-          onChange={handleChange}
-        />
-        {errors.location && (
-          <p className="text-red-500 text-sm">{errors.location}</p>
-        )}
+      <input
+        name="last_name"
+        autoComplete="off"
+        placeholder={isCompany ? "Contact Last Name" : "Last Name"}
+        value={form.last_name}
+        onChange={handleChange}
+        className={inputClass("last_name")}
+      />
+      {errors.last_name && (
+        <p className="text-red-500 text-sm">{errors.last_name}</p>
+      )}
 
-        {/* EMAIL */}
-        <input
-          name="email"
-          placeholder="Email"
-          autoComplete="off"
-          required
-          className={inputClass("email")}
-          onChange={handleChange}
-        />
-        {errors.email && <p className="text-red-500 text-sm">{errors.email}</p>}
+      {/* NATIONAL ID */}
+      {isIndividual && (
+        <>
+          <input
+            name="national_id"
+            autoComplete="off"
+            placeholder="National ID"
+            value={form.national_id}
+            onChange={handleChange}
+            className={inputClass("national_id")}
+          />
+          {errors.national_id && (
+            <p className="text-red-500 text-sm">{errors.national_id}</p>
+          )}
+        </>
+      )}
 
-        {/* PHONE */}
-        <input
-          name="phone"
-          placeholder="Phone (+2519XXXXXXXX or 09XXXXXXXX)"
-          autoComplete="off"
-          required
-          className={inputClass("phone")}
-          onChange={handleChange}
-        />
-        {errors.phone && <p className="text-red-500 text-sm">{errors.phone}</p>}
+      {/* COMPANY NAME */}
+      {isCompany && (
+        <>
+          <input
+            name="company_name"
+            autoComplete="off"
+            placeholder="Company Name"
+            value={form.company_name}
+            onChange={handleChange}
+            className={inputClass("company_name")}
+          />
+          {errors.company_name && (
+            <p className="text-red-500 text-sm">{errors.company_name}</p>
+          )}
+        </>
+      )}
 
-        {/* PASSWORD */}
-        <input
-          type="password"
-          name="password"
-          placeholder="Password"
-          autoComplete="off"
-          required
-          className={inputClass("password")}
-          onChange={handleChange}
-        />
-        {errors.password && (
-          <p className="text-red-500 text-sm">{errors.password}</p>
-        )}
+      {/* LOCATION */}
+      <input
+        name="location"
+        autoComplete="off"
+        placeholder="Location"
+        value={form.location}
+        onChange={handleChange}
+        className={inputClass("location")}
+      />
+      {errors.location && (
+        <p className="text-red-500 text-sm">{errors.location}</p>
+      )}
 
-        {/* CONFIRM PASSWORD */}
-        <input
-          type="password"
-          name="password_2"
-          required
-          placeholder="Confirm Password"
-          autoComplete="off"
-          className={inputClass("password_2")}
-          onChange={handleChange}
-        />
-        {errors.password_2 && (
-          <p className="text-red-500 text-sm">{errors.password_2}</p>
-        )}
+      {/* EMAIL */}
+      <input
+        name="email"
+        placeholder="Email"
+        autoComplete="off"
+        value={form.email}
+        onChange={handleChange}
+        className={inputClass("email")}
+      />
+      {errors.email && <p className="text-red-500 text-sm">{errors.email}</p>}
 
-        {/* SUBMIT */}
-        <button
-          type="submit"
-          disabled={loading}
-          className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 disabled:bg-gray-400"
-        >
-          {loading ? "Creating..." : "Create Account"}
-        </button>
-      </form>
+      {/* PHONE */}
+      <input
+        name="phone"
+        placeholder="Phone"
+        autoComplete="off"
+        value={form.phone}
+        onChange={handleChange}
+        className={inputClass("phone")}
+      />
+      {errors.phone && <p className="text-red-500 text-sm">{errors.phone}</p>}
+
+      {/* PASSWORD */}
+      <input
+        type="password"
+        name="password"
+        placeholder="Password"
+        autoComplete="off"
+        value={form.password}
+        onChange={handleChange}
+        className={inputClass("password")}
+      />
+      {errors.password && (
+        <p className="text-red-500 text-sm">{errors.password}</p>
+      )}
+
+      {/* CONFIRM PASSWORD */}
+      <input
+        type="password"
+        name="password_2"
+        placeholder="Confirm Password"
+        autoComplete="off"
+        value={form.password_2}
+        onChange={handleChange}
+        className={inputClass("password_2")}
+      />
+      {errors.password_2 && (
+        <p className="text-red-500 text-sm">{errors.password_2}</p>
+      )}
+
+      {/* SUBMIT */}
+      <button
+        onClick={handleSubmit}
+        disabled={loading}
+        className="w-full bg-blue-600 text-white py-2 rounded mt-4 hover:bg-blue-700 disabled:bg-gray-400"
+      >
+        {loading ? "Creating..." : "Create Account"}
+      </button>
 
       <p className="text-sm text-center mt-4">
         Already have an account?{" "}

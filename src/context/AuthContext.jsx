@@ -1,14 +1,27 @@
-import React, { createContext, useContext, useState, useEffect } from "react";
+import React, {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  useMemo,
+} from "react";
 import { loginApi, logoutApi, getMeApi } from "../services/authService";
-import { getAccessToken } from "../services/tokenService";
+import { getAccessToken, clearTokens } from "../services/tokenService";
 
 const AuthContext = createContext();
 
 const defaultUser = {
   isAuthenticated: false,
+  id: null,
+  email: null,
+  first_name: null,
+  last_name: null,
   user_type: null,
+  account_status: null,
   is_staff: false,
-  name: null,
+  is_active: false,
+  client: null,
+  worker: null,
 };
 
 export function AuthProvider({ children }) {
@@ -16,14 +29,12 @@ export function AuthProvider({ children }) {
   const [loading, setLoading] = useState(true);
 
   /**
-   * Initialize auth state on app load
-   * Only calls /me if token exists
+   * INIT AUTH
    */
   useEffect(() => {
-    const fetchUser = async () => {
+    const initAuth = async () => {
       const token = getAccessToken();
 
-      // If No token → skip API call
       if (!token) {
         setUser(defaultUser);
         setLoading(false);
@@ -38,31 +49,36 @@ export function AuthProvider({ children }) {
           ...data,
           isAuthenticated: true,
         });
-      } catch {
-        // token invalid or expired
+      } catch (err) {
+        clearTokens();
         setUser(defaultUser);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchUser();
+    initAuth();
   }, []);
 
-  // LOGIN
+  /**
+   * LOGIN
+   */
   const login = async (form) => {
-    const data = await loginApi(form);
+    await loginApi(form);
+    const userData = await getMeApi();
 
     setUser({
       ...defaultUser,
-      ...data.user,
+      ...userData,
       isAuthenticated: true,
     });
 
-    return data;
+    return userData;
   };
 
-  // LOGOUT
+  /**
+   * LOGOUT
+   */
   const logout = async () => {
     try {
       await logoutApi();
@@ -70,15 +86,37 @@ export function AuthProvider({ children }) {
       console.log("Logout API failed (ignored)", err);
     }
 
-    // clear everything
-    localStorage.clear();
-    sessionStorage.clear();
-
+    clearTokens();
     setUser(defaultUser);
   };
 
+  /**
+   * DERIVED STATE (optimized)
+   */
+  const full_name = useMemo(() => {
+    if (user.first_name && user.last_name) {
+      return `${user.first_name} ${user.last_name}`;
+    }
+    return user.first_name || "";
+  }, [user.first_name, user.last_name]);
+
+  const isClient = user.user_type === "client";
+  const isWorker = user.user_type === "worker";
+  const isAdmin = user.user_type === "admin";
+
   return (
-    <AuthContext.Provider value={{ user, login, logout, loading }}>
+    <AuthContext.Provider
+      value={{
+        user,
+        login,
+        logout,
+        loading,
+        full_name,
+        isClient,
+        isWorker,
+        isAdmin,
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );

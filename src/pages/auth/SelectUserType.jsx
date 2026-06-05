@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 function SelectUserType() {
   const [role, setRole] = useState("");
@@ -19,7 +19,9 @@ function SelectUserType() {
     <div className="flex items-center justify-center py-20 px-4">
       <div className="w-full max-w-md bg-white p-8 rounded-2xl shadow border">
         {/* TITLE */}
-        <h1 className="text-xl font-bold text-center mb-6">Join EthioWorks</h1>
+        <h1 className="text-xl font-bold text-center mb-6">
+          Join EthioWorks Hub
+        </h1>
 
         <p className="text-sm text-gray-500 text-center mb-6">
           Choose how you want to use the platform
@@ -70,6 +72,15 @@ function SelectUserType() {
         >
           Continue
         </button>
+        <p className="text-sm text-center mt-4">
+          Already have an account?{" "}
+          <Link
+            to="/login"
+            className="text-blue-600 font-medium hover:underline"
+          >
+            Login
+          </Link>
+        </p>
       </div>
     </div>
   );

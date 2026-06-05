@@ -1,12 +1,3 @@
-import React, { useEffect, useState, useMemo } from "react";
-import { useNavigate } from "react-router-dom";
-import toast from "react-hot-toast";
-
-import {
-  fetchUsers,
-  deleteUser,
-  updateUser,
-} from "../../../services/userServices";
 import {
   Eye,
   Edit,
@@ -25,8 +16,18 @@ import {
   RefreshCw,
   CircleCheck,
   MoreHorizontal,
+  Printer,
 } from "lucide-react";
+import React, { useEffect, useState, useMemo, useRef } from "react";
+import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
+import ReactDOM from "react-dom";
 
+import {
+  fetchUsers,
+  deleteUser,
+  updateUser,
+} from "../../../services/userServices";
 function AllUsers() {
   const [users, setUsers] = useState([]);
   const [filteredUsers, setFilteredUsers] = useState([]);
@@ -36,6 +37,7 @@ function AllUsers() {
 
   const [searchTerm, setSearchTerm] = useState("");
   const [roleFilter, setRoleFilter] = useState("all");
+  const [statusFilter, setStatusFilter] = useState("all");
 
   const [selectedUser, setSelectedUser] = useState(null);
   const [isViewModalOpen, setIsViewModalOpen] = useState(false);
@@ -44,7 +46,6 @@ function AllUsers() {
   const [editForm, setEditForm] = useState(null);
 
   const [selectedRows, setSelectedRows] = useState([]);
-  const [openMenu, setOpenMenu] = useState(null);
 
   const navigate = useNavigate();
 
@@ -67,21 +68,12 @@ function AllUsers() {
     if (roleFilter !== "all") {
       data = data.filter((u) => u.user_type === roleFilter);
     }
+    if (statusFilter !== "all") {
+      data = data.filter((u) => u.account_status === statusFilter);
+    }
 
     setFilteredUsers(data);
-  }, [users, searchTerm, roleFilter]);
-
-  useEffect(() => {
-    const handleClickOutside = (e) => {
-      if (!e.target.closest(".action-menu")) {
-        setOpenMenu(null);
-      }
-    };
-
-    document.addEventListener("mousedown", handleClickOutside);
-
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
+  }, [users, searchTerm, roleFilter, statusFilter]);
 
   const loadUsers = async () => {
     try {
@@ -251,27 +243,32 @@ function AllUsers() {
   return (
     <div className="p-8 bg-gray-100 min-h-screen">
       {/* HEADER */}
-      <header className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-8">
+      <header className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
         <div>
-          <h1 className="text-3xl font-bold text-gray-800">User Management</h1>
-          <p className="text-gray-500 mt-1">
-            Manage all users registered on this platform
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">
+            Users Management
+          </h1>
+          <p className="text-gray-500 text-sm mt-0.5">
+            Manage all registered clients
           </p>
         </div>
 
-        <button
-          onClick={loadUsers}
-          className="bg-amber-300 text-black font-semibold px-4 py-2 rounded-lg hover:bg-amber-400 transition flex items-center gap-2 cursor-pointer"
-        >
-          <RefreshCw size={18} />
-          Refresh
-        </button>
-        <button
-          onClick={() => navigate("/admin/create/user")}
-          className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 cursor-pointer"
-        >
-          + Add User
-        </button>
+        <div className="flex gap-2 flex-wrap">
+          <button
+            onClick={fetchUsers}
+            className="px-3 py-2 bg-yellow-300 hover:bg-yellow-400 rounded-lg flex items-center gap-1.5 text-sm font-medium transition-colors"
+          >
+            <RefreshCw size={14} />
+            <span className="hidden xs:inline">Refresh</span>
+          </button>
+
+          <button
+            onClick={() => navigate("/admin/create/user")}
+            className="px-3 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm font-medium transition-colors"
+          >
+            + Add User
+          </button>
+        </div>
       </header>
       {/* STATS */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-5 mb-6">
@@ -290,40 +287,39 @@ function AllUsers() {
           icon={<UserX />}
         />
       </div>
-      {/* FILTER */}
-      <div className="bg-white p-4 rounded-xl shadow border mb-6">
-        <div className="flex flex-col md:flex-row gap-4">
-          <div className="flex-1 relative">
-            <Search size={18} className="absolute left-3 top-3 text-gray-400" />
-
-            <input
-              type="text"
-              placeholder="Search by ID, email, phone..."
-              className="w-full pl-10 pr-4 py-2 border rounded-lg focus:ring-2 focus:ring-amber-400 outline-none"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
-          </div>
-
-          <select
-            className="px-4 py-2 border rounded-lg"
-            value={roleFilter}
-            onChange={(e) => setRoleFilter(e.target.value)}
-          >
-            <option value="all">All Roles</option>
-            <option value="client">Clients</option>
-            <option value="worker">Workers</option>
-            <option value="admin">Admins</option>
-          </select>
-
-          <button
-            onClick={handleExport}
-            className="px-4 py-2 border rounded-lg hover:bg-gray-50 flex items-center gap-2"
-          >
-            <Download size={18} />
-            Export
-          </button>
+      {/* SEARCH + FILTER */}
+      <div className="bg-white p-3 sm:p-4 rounded-xl shadow border border-gray-200 mb-4 flex flex-col sm:flex-row gap-4 sm:items-end">
+        {/* SEARCH */}
+        <div className="relative w-full sm:w-64">
+          <Search
+            className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
+            size={16}
+          />
+          <input
+            className="w-full pl-9 pr-4 py-2 rounded-lg text-sm border border-gray-200 
+                       focus:outline-none focus:ring-2 focus:ring-blue-300"
+            placeholder="Search..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
         </div>
+
+        {/* FILTER */}
+        <div className="flex gap-3 flex-wrap">
+          <RoleFilter roleFilter={roleFilter} setRoleFilter={setRoleFilter} />
+
+          <StatusFilter
+            statusFilter={statusFilter}
+            setStatusFilter={setStatusFilter}
+          />
+        </div>
+        <button
+          onClick={handleExport}
+          className="px-4 py-2 border rounded-lg hover:bg-gray-50 flex items-center gap-2"
+        >
+          <Download size={18} />
+          Export
+        </button>
       </div>
 
       {/* ACTION BAR */}
@@ -375,7 +371,7 @@ function AllUsers() {
                 <th className="px-6 py-4 text-left">Role</th>
                 <th className="px-6 py-4 text-left">Status</th>
                 <th className="px-6 py-4 text-left">Linked Profile</th>
-                <th className="px-6 py-4 text-left">Actions</th>{" "}
+                <th className="px-6 py-4 text-left">Actions</th>
               </tr>
             </thead>
 
@@ -420,14 +416,20 @@ function AllUsers() {
                   <td className="px-6 py-4 capitalize text-gray-700">
                     {user.user_type}
                   </td>
-
-                  {/* STATUS */}
                   <td className="px-6 py-4">
-                    {user.is_active ? (
-                      <span className="text-green-600">Active</span>
-                    ) : (
-                      <span className="text-red-600">Inactive</span>
-                    )}
+                    <span
+                      className={`px-2 py-1 rounded-full text-xs font-medium ${
+                        user.account_status === "verified"
+                          ? "bg-green-100 text-green-700"
+                          : user.account_status === "pending"
+                            ? "bg-yellow-100 text-yellow-700"
+                            : user.account_status === "rejected"
+                              ? "bg-red-100 text-red-700"
+                              : "bg-gray-100 text-gray-700"
+                      }`}
+                    >
+                      {user.account_status || "N/A"}
+                    </span>
                   </td>
 
                   {/* LINKED PROFILE */}
@@ -443,56 +445,16 @@ function AllUsers() {
 
                   {/* ACTIONS */}
                   <td
-                    className="px-6 py-4"
+                    className="px-6 py-4 text-center"
                     onClick={(e) => e.stopPropagation()}
                   >
-                    <div className="flex items-center justify-start relative">
-                      <button
-                        onClick={() =>
-                          setOpenMenu(openMenu === user.id ? null : user.id)
-                        }
-                        className="p-1 rounded hover:bg-gray-100"
-                      >
-                        <MoreHorizontal />
-                      </button>
-
-                      {openMenu === user.id && (
-                        <div
-                          className="action-menu absolute left-0 top-full mt-2 w-44 bg-white rounded-xl border border-gray-200 shadow-2xl overflow-hidden z-50"
-                          onClick={(e) => e.stopPropagation()}
-                        >
-                          <button
-                            onClick={() => {
-                              openViewModal(user);
-                              setOpenMenu(null);
-                            }}
-                            className="w-full text-left px-4 py-2 text-sm hover:bg-blue-50 hover:text-blue-700 transition-all duration-150"
-                          >
-                            View
-                          </button>
-
-                          <button
-                            onClick={() => {
-                              handleEditUser(user);
-                              setOpenMenu(null);
-                            }}
-                            className="w-full text-left px-4 py-2 text-sm hover:bg-green-50 hover:text-green-700 transition-all duration-150"
-                          >
-                            Edit
-                          </button>
-
-                          <button
-                            onClick={() => {
-                              handleDeleteUser(user.id);
-                              setOpenMenu(null);
-                            }}
-                            className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 hover:text-red-700 transition-all duration-150"
-                          >
-                            Delete
-                          </button>
-                        </div>
-                      )}
-                    </div>
+                    <ActionMenu
+                      user={user}
+                      onView={openViewModal}
+                      onEdit={(user) => handleEditUser(user)}
+                      onDelete={handleDeleteUser}
+                      onPrint={handlePrint}
+                    />
                   </td>
                 </tr>
               ))}
@@ -649,26 +611,23 @@ function AllUsers() {
                 )}
               </div>
               {/* ACTIONS */}
-              <div className="flex justify-end gap-2 pt-4">
+              <div className="flex gap-2 mt-6">
                 <button
-                  onClick={() => handleEditUser(selectedUser)}
-                  className="px-4 py-2 bg-green-100 text-green-700 rounded-lg hover:bg-green-200"
+                  onClick={() => {
+                    handleEditUser(selectedUser);
+                    closeModal();
+                  }}
+                  className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm font-medium transition-colors flex items-center gap-2 cursor-pointer"
                 >
-                  <Edit size={16} className="inline mr-1" />
+                  <Edit size={13} />
+                  Edit
                 </button>
-
                 <button
-                  onClick={() => handleDeleteUser(selectedUser.id)}
-                  className="px-4 py-2 bg-red-100 text-red-600 rounded-lg hover:bg-red-200"
+                  onClick={() => handlePrint(selectedUser)}
+                  className="px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-lg text-sm font-medium transition-colors flex items-center gap-2 cursor-pointer"
                 >
-                  <Trash2 size={16} className="inline mr-1" />
-                </button>
-
-                <button
-                  onClick={closeModal}
-                  className="px-4 py-2 bg-gray-200 rounded-lg cursor-pointer"
-                >
-                  Close
+                  <Printer size={13} />
+                  Print
                 </button>
               </div>
             </div>
@@ -761,16 +720,341 @@ function AllUsers() {
   );
 }
 
-export function StatCard({ title, value, icon }) {
+export function StatCard({ title, value, icon, color = "amber" }) {
   return (
-    <div className="bg-white rounded-xl shadow border p-5 flex items-center justify-between">
+    <div className="w-full bg-white rounded-xl shadow p-5 flex items-center justify-between">
       <div>
         <p className="text-sm text-gray-500">{title}</p>
         <h2 className="text-2xl font-bold text-gray-800">{value}</h2>
       </div>
-      <div className="bg-amber-100 text-amber-700 p-3 rounded-xl">{icon}</div>
+
+      <div className={`p-3 rounded-xl bg-${color}-100 text-${color}-700`}>
+        {icon}
+      </div>
     </div>
   );
 }
 
 export default AllUsers;
+
+/* ─── Action-menu (portal-style fixed positioning) ─────────── */
+function ActionMenu({ user, onView, onEdit, onDelete, onPrint }) {
+  const [open, setOpen] = useState(false);
+  const btnRef = useRef(null);
+  const menuRef = useRef(null);
+  const [pos, setPos] = useState({ top: 0, left: 0 });
+
+  const openMenu = (e) => {
+    e.stopPropagation();
+
+    if (open) {
+      setOpen(false);
+      return;
+    }
+
+    const rect = btnRef.current.getBoundingClientRect();
+
+    const menuWidth = 176;
+    const menuHeight = 173;
+
+    const spaceBelow = window.innerHeight - rect.bottom;
+
+    const top =
+      spaceBelow >= menuHeight
+        ? rect.bottom + 4
+        : Math.max(8, rect.top - menuHeight - 4);
+
+    const left = Math.min(
+      rect.right - menuWidth,
+      window.innerWidth - menuWidth - 8,
+    );
+
+    setPos({
+      top,
+      left: Math.max(8, left),
+    });
+
+    setOpen(true);
+  };
+
+  useEffect(() => {
+    if (!open) return;
+
+    const handler = (e) => {
+      if (
+        !menuRef.current?.contains(e.target) &&
+        !btnRef.current?.contains(e.target)
+      ) {
+        setOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, [open]);
+
+  useEffect(() => {
+    if (!open) return;
+
+    const handler = () => setOpen(false);
+    window.addEventListener("scroll", handler, true);
+    return () => window.removeEventListener("scroll", handler, true);
+  }, [open]);
+
+  const dropdown = open
+    ? ReactDOM.createPortal(
+        <div
+          ref={menuRef}
+          style={{
+            position: "fixed",
+            top: pos.top,
+            left: pos.left,
+            zIndex: 9999,
+          }}
+          className="w-44 bg-white rounded-xl border border-gray-200 shadow-2xl overflow-hidden"
+        >
+          <button
+            onClick={() => {
+              onView(user);
+              setOpen(false);
+            }}
+            className="w-full text-left px-4 py-2.5 text-sm hover:bg-blue-50 flex items-center gap-2"
+          >
+            <Eye size={13} />
+            View
+          </button>
+
+          <button
+            onClick={() => {
+              onEdit(user);
+              setOpen(false);
+            }}
+            className="w-full text-left px-4 py-2.5 text-sm hover:bg-green-50 flex items-center gap-2"
+          >
+            <Edit size={13} />
+            Edit
+          </button>
+
+          <button
+            onClick={() => {
+              onPrint(user);
+              setOpen(false);
+            }}
+            className="w-full text-left px-4 py-2.5 text-sm hover:bg-purple-50 flex items-center gap-2"
+          >
+            <Printer size={13} />
+            Print
+          </button>
+
+          <hr className="border-gray-100" />
+
+          <button
+            onClick={() => {
+              onDelete(user.id);
+              setOpen(false);
+            }}
+            className="w-full text-left px-4 py-2.5 text-sm text-red-600 hover:bg-red-50 flex items-center gap-2"
+          >
+            <Trash2 size={13} />
+            Delete
+          </button>
+        </div>,
+        document.body,
+      )
+    : null;
+
+  return (
+    <>
+      <button
+        ref={btnRef}
+        onClick={openMenu}
+        className="p-1.5 rounded-lg hover:bg-gray-100"
+      >
+        <MoreHorizontal size={18} />
+      </button>
+      {dropdown}
+    </>
+  );
+}
+
+const handlePrint = (user) => {
+  const name = user.first_name || "—";
+  const win = window.open("", "_blank", "width=700,height=600");
+  win.document.write(`
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <title>User — ${name}</title>
+        <style>
+          * { box-sizing: border-box; margin: 0; padding: 0; }
+          body { font-family: 'Segoe UI', sans-serif; color: #1a1a2e; padding: 40px; }
+          .header { border-bottom: 3px solid #2563eb; padding-bottom: 16px; margin-bottom: 24px; display: flex; justify-content: space-between; align-items: flex-end; }
+          .header h1 { font-size: 22px; font-weight: 700; }
+          .header p  { font-size: 12px; color: #6b7280; margin-top: 4px; }
+          .badge { display: inline-block; padding: 3px 10px; border-radius: 999px; font-size: 11px; font-weight: 600;
+            background: #f3f4f6; color: #374151; }
+          table { width: 100%; border-collapse: collapse; margin-top: 8px; }
+          tr { border-bottom: 1px solid #e5e7eb; }
+          td { padding: 10px 8px; font-size: 14px; }
+          td:first-child { width: 160px; font-weight: 600; color: #6b7280; }
+          .footer { margin-top: 32px; font-size: 11px; color: #9ca3af; text-align: center; }
+          @media print { body { padding: 20px; } }
+        </style>
+      </head>
+      <body>
+        <div class="header">
+          <div>
+            <h1>User Profile</h1>
+            <p>Generated ${new Date().toLocaleString()}</p>
+          </div>
+          <span class="badge">${user.account_status || "—"}</span>
+        </div>
+        <table>
+          <tr><td>ID</td><td>#${user.id}</td></tr>
+          <tr><td>Company Name</td><td>${name}</td></tr>
+          <tr><td>Email</td><td>${user.email || "—"}</td></tr>
+          <tr><td>Phone</td><td>${user.phone || "—"}</td></tr>
+          <tr><td>User Type</td><td>${user.user_type || "—"}</td></tr>
+          <tr><td>Status</td><td>${user.account_status || "—"}</td></tr>
+        </table>
+        <div class="footer">Users Management System</div>
+        <script>window.onload = () => { window.print(); window.onafterprint = () => window.close(); }</script>
+      </body>
+      </html>
+    `);
+  win.document.close();
+};
+
+/* Role Filter*/
+export function RoleFilter({ roleFilter, setRoleFilter }) {
+  const [open, setOpen] = useState(false);
+  const wrapperRef = useRef(null);
+
+  const options = [
+    { label: "All Roles", value: "all" },
+    { label: "Admin", value: "admin" },
+    { label: "Client", value: "client" },
+    { label: "Worker", value: "worker" },
+  ];
+
+  const selected = options.find((o) => o.value === roleFilter);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (wrapperRef.current && !wrapperRef.current.contains(event.target)) {
+        setOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  return (
+    <div ref={wrapperRef} className="relative w-full sm:w-44">
+      <label className="text-xs font-medium text-gray-600 mb-1 block">
+        Filter By Role
+      </label>
+
+      <button
+        onClick={() => setOpen(!open)}
+        className="w-full flex items-center justify-between px-3 py-2 text-sm 
+                   border border-gray-200 bg-white rounded-lg
+                   focus:outline-none focus:ring-2 focus:ring-blue-300"
+      >
+        <span className="text-gray-800 flex items-center gap-2">
+          {selected?.label}
+
+          {roleFilter !== "all" && (
+            <span className="w-2 h-2 bg-blue-500 rounded-full"></span>
+          )}
+        </span>
+      </button>
+
+      {open && (
+        <div className="absolute z-50 mt-1 w-full bg-white border rounded-lg shadow-lg overflow-hidden">
+          {options.map((opt) => (
+            <div
+              key={opt.value}
+              onClick={() => {
+                setRoleFilter(opt.value);
+                setOpen(false);
+              }}
+              className={`px-3 py-2 text-sm cursor-pointer hover:bg-gray-100
+                ${roleFilter === opt.value ? "bg-gray-50 font-medium" : ""}`}
+            >
+              {opt.label}
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+export function StatusFilter({ statusFilter, setStatusFilter }) {
+  const [open, setOpen] = useState(false);
+  const wrapperRef = useRef(null);
+
+  const options = [
+    { label: "All Statuses", value: "all" },
+    { label: "Pending", value: "pending" },
+    { label: "Verified", value: "verified" },
+    { label: "Unverified", value: "unverified" },
+    { label: "Rejected", value: "rejected" },
+  ];
+
+  const selected = options.find((o) => o.value === statusFilter);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (wrapperRef.current && !wrapperRef.current.contains(event.target)) {
+        setOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  return (
+    <div ref={wrapperRef} className="relative w-full sm:w-48">
+      <label className="text-xs font-medium text-gray-600 mb-1 block">
+        Filter By Status
+      </label>
+
+      <button
+        onClick={() => setOpen(!open)}
+        className="w-full flex items-center justify-between px-3 py-2 text-sm border border-gray-200 bg-white rounded-lg"
+      >
+        <span className="flex items-center gap-2">
+          {selected?.label}
+
+          {statusFilter !== "all" && (
+            <span className="w-2 h-2 bg-blue-500 rounded-full" />
+          )}
+        </span>
+      </button>
+
+      {open && (
+        <div className="absolute z-50 mt-1 w-full bg-white border rounded-lg shadow-lg overflow-hidden">
+          {options.map((opt) => (
+            <div
+              key={opt.value}
+              onClick={() => {
+                setStatusFilter(opt.value);
+                setOpen(false);
+              }}
+              className={`px-3 py-2 text-sm cursor-pointer hover:bg-gray-100 ${
+                statusFilter === opt.value ? "bg-gray-50 font-medium" : ""
+              }`}
+            >
+              {opt.label}
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}

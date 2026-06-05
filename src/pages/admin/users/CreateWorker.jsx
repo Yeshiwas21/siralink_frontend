@@ -27,7 +27,6 @@ function CreateWorker() {
     experience_years: "",
     portfolio_link: "",
     profile_image: null,
-    verified: "",
   });
 
   /* FETCH USERS */
@@ -50,13 +49,6 @@ function CreateWorker() {
     fetchUsers();
   }, []);
 
-  /* CAPITALIZE */
-  const capitalizeWords = (value) => {
-    return value
-      .toLowerCase()
-      .replace(/(^|\s|[-'])\w/g, (char) => char.toUpperCase());
-  };
-
   /* USER SELECT */
   const handleUserChange = (e) => {
     const userId = e.target.value;
@@ -68,6 +60,8 @@ function CreateWorker() {
       ...prev,
       email: user?.email || "",
       phone: user?.phone || "",
+      first_name: user?.first_name || "",
+      last_name: user?.last_name || "",
     }));
 
     setErrors((prev) => ({ ...prev, user: "" }));
@@ -83,20 +77,6 @@ function CreateWorker() {
     setErrors({
       ...errors,
       [e.target.name]: "",
-    });
-  };
-
-  const handleNameChange = (e) => {
-    const { name, value } = e.target;
-
-    setForm((prev) => ({
-      ...prev,
-      [name]: capitalizeWords(value),
-    }));
-
-    setErrors({
-      ...errors,
-      [name]: "",
     });
   };
 
@@ -123,14 +103,6 @@ function CreateWorker() {
 
       return null;
     };
-
-    // FIRST NAME
-    const firstNameError = validateTextField(form.first_name);
-    if (firstNameError) newErrors.first_name = firstNameError;
-
-    // LAST NAME
-    const lastNameError = validateTextField(form.last_name);
-    if (lastNameError) newErrors.last_name = lastNameError;
 
     // NATIONAL ID
     if (!form.national_id || form.national_id.trim().length < 16) {
@@ -181,11 +153,6 @@ function CreateWorker() {
       }
     }
 
-    // VERIFIED
-    if (form.verified === "") {
-      newErrors.verified = "Please select verification status";
-    }
-
     return newErrors;
   };
 
@@ -206,15 +173,12 @@ function CreateWorker() {
       const formData = new FormData();
 
       formData.append("user", selectedUserId);
-      formData.append("first_name", form.first_name);
-      formData.append("last_name", form.last_name);
       formData.append("national_id", form.national_id);
       formData.append("location", form.location);
       formData.append("skills", form.skills);
       formData.append("bio", form.bio);
       formData.append("experience_years", form.experience_years);
       formData.append("portfolio_link", form.portfolio_link);
-      formData.append("verified", form.verified === "true");
 
       if (form.profile_image) {
         formData.append("profile_image", form.profile_image);
@@ -295,28 +259,19 @@ function CreateWorker() {
         {/* FIRST NAME */}
         <input
           name="first_name"
+          disabled
           placeholder="First Name"
-          autoComplete="off"
-          className={inputClass("first_name")}
+          className={`${inputClass("first_name")} cursor-not-allowed`}
           value={form.first_name}
-          onChange={handleNameChange}
         />
-        {errors.first_name && (
-          <p className="text-red-500 text-sm">{errors.first_name}</p>
-        )}
-
         {/* LAST NAME */}
         <input
           name="last_name"
           placeholder="Last Name"
-          autoComplete="off"
-          className={inputClass("last_name")}
+          disabled
+          className={`${inputClass("last_name")} cursor-not-allowed`}
           value={form.last_name}
-          onChange={handleNameChange}
         />
-        {errors.last_name && (
-          <p className="text-red-500 text-sm">{errors.last_name}</p>
-        )}
 
         {/* NATIONAL ID */}
         <input
@@ -386,21 +341,6 @@ function CreateWorker() {
         />
         {errors.portfolio_link && (
           <p className="text-red-500 text-sm">{errors.portfolio_link}</p>
-        )}
-
-        {/* VERIFICATION */}
-        <select
-          name="verified"
-          value={form.verified}
-          onChange={handleChange}
-          className={inputClass("verified")}
-        >
-          <option value="">Select Status</option>
-          <option value="true">Verified</option>
-          <option value="false">Not Verified</option>
-        </select>
-        {errors.verified && (
-          <p className="text-red-500 text-sm">{errors.verified}</p>
         )}
 
         {/* PROFILE IMAGE */}

@@ -18,12 +18,14 @@ function CreateClient() {
   const [form, setForm] = useState({
     email: "",
     phone: "",
+    client_type: "individual",
     company_name: "",
-    verified: "",
+    national_id: "",
     location: "",
-    company_logo: null,
+    avatar: null,
   });
-
+  const isCompany = form.client_type === "company";
+  const isIndividual = form.client_type === "individual";
   /* FETCH USERS */
   useEffect(() => {
     const fetchUsers = async () => {
@@ -64,7 +66,7 @@ function CreateClient() {
 
     setForm({
       ...form,
-      [name]: name === "verified" ? value === "true" : value,
+      [name]: value,
     });
 
     setErrors({
@@ -97,29 +99,28 @@ function CreateClient() {
       return null;
     };
 
-    // COMPANY NAME
-    const companyError = validateTextField(form.company_name);
-    if (companyError) newErrors.company_name = companyError;
+    if (isIndividual && !form.national_id) {
+      newErrors.national_id = "National ID is required";
+    }
 
-    // VERIFICATION STATUS
-    if (form.verified === "") {
-      newErrors.verified = "Please select a verification status";
+    if (isCompany && !form.company_name) {
+      newErrors.company_name = "Company name is required";
     }
 
     // LOCATION
     const locationError = validateTextField(form.location);
     if (locationError) newErrors.location = locationError;
 
-    // COMPANY LOGO
-    if (form.company_logo) {
-      const file = form.company_logo;
+    // AVATAR
+    if (form.avatar) {
+      const file = form.avatar;
 
       if (!file.type.startsWith("image/")) {
-        newErrors.company_logo = "File must be an image";
+        newErrors.avatar = "File must be an image";
       }
 
       if (file.size > 2 * 1024 * 1024) {
-        newErrors.company_logo = "Max size is 2MB";
+        newErrors.avatar = "Max size is 2MB";
       }
     }
 
@@ -160,12 +161,19 @@ function CreateClient() {
       const formData = new FormData();
 
       formData.append("user", selectedUserId);
-      formData.append("company_name", form.company_name);
+      formData.append("client_type", form.client_type);
       formData.append("location", form.location);
-      formData.append("verified", form.verified);
 
-      if (form.company_logo) {
-        formData.append("company_logo", form.company_logo);
+      if (form.client_type === "company") {
+        formData.append("company_name", form.company_name);
+      }
+
+      if (form.client_type === "individual") {
+        formData.append("national_id", form.national_id);
+      }
+
+      if (form.avatar) {
+        formData.append("avatar", form.avatar);
       }
 
       await createClient(formData);
@@ -228,32 +236,49 @@ function CreateClient() {
           placeholder="Phone"
           className={`${inputClass("email")} cursor-not-allowed bg-gray-100`}
         />
-        {/* COMPANY NAME */}
-        <input
-          name="company_name"
-          placeholder="Company Name"
-          autoComplete="off"
-          value={form.company_name}
-          onChange={handleChange}
-          className={inputClass("company_name")}
-        />
-        {errors.company_name && (
-          <p className="text-red-500 text-sm">{errors.company_name}</p>
+        <div>
+          <label className="text-sm font-semibold">Client Type</label>
+
+          <select
+            name="client_type"
+            value={form.client_type}
+            onChange={handleChange}
+            className={inputClass("client_type")}
+          >
+            <option value="individual">Individual</option>
+            <option value="company">Company</option>
+          </select>
+        </div>
+        {form.client_type === "company" && (
+          <>
+            <input
+              name="company_name"
+              placeholder="Company Name"
+              value={form.company_name}
+              onChange={handleChange}
+              className={inputClass("company_name")}
+            />
+
+            {errors.company_name && (
+              <p className="text-red-500 text-sm">{errors.company_name}</p>
+            )}
+          </>
         )}
 
-        {/* VERIFICATION */}
-        <select
-          name="verified"
-          value={form.verified}
-          onChange={handleChange}
-          className={inputClass("verified")}
-        >
-          <option value="">Select Status</option>
-          <option value="true">Verified</option>
-          <option value="false">Not Verified</option>
-        </select>
-        {errors.verified && (
-          <p className="text-red-500 text-sm">{errors.verified}</p>
+        {form.client_type === "individual" && (
+          <>
+            <input
+              name="national_id"
+              placeholder="National ID"
+              value={form.national_id}
+              onChange={handleChange}
+              className={inputClass("national_id")}
+            />
+
+            {errors.national_id && (
+              <p className="text-red-500 text-sm">{errors.national_id}</p>
+            )}
+          </>
         )}
 
         {/* LOCATION */}
@@ -269,21 +294,22 @@ function CreateClient() {
           <p className="text-red-500 text-sm">{errors.location}</p>
         )}
 
-        {/* COMPANY LOGO */}
+        {/* AVATAR */}
         <input
           type="file"
-          name="company_logo"
+          name="avatar"
           accept="image/*"
-          className={inputClass("company_logo")}
+          className={inputClass("avatar")}
           onChange={(e) =>
             setForm({
               ...form,
-              company_logo: e.target.files[0],
+              avatar: e.target.files[0],
             })
           }
         />
-        {errors.company_logo && (
-          <p className="text-red-500 text-sm">{errors.company_logo}</p>
+
+        {errors.avatar && (
+          <p className="text-red-500 text-sm">{errors.avatar}</p>
         )}
 
         {/* GENERAL ERROR */}

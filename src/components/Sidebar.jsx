@@ -7,6 +7,7 @@ import {
   Briefcase,
   PlusCircle,
   CreditCard,
+  DollarSign,
   ShieldCheck,
   ClipboardList,
   TrendingUp,
@@ -48,6 +49,32 @@ function Sidebar() {
 
   const isCollapsed = collapsed;
 
+  const getDisplayName = () => {
+    if (!user) return "";
+
+    if (user.user_type === "admin") {
+      return [user.first_name, user.last_name].filter(Boolean).join(" ");
+    }
+
+    if (user.user_type === "client") {
+      if (user.client?.client_type === "company") {
+        return user.client?.company_name || "Client";
+      }
+
+      return [user.first_name, user.last_name].filter(Boolean).join(" ");
+    }
+
+    if (user.user_type === "worker") {
+      return [user.worker?.first_name, user.worker?.last_name]
+        .filter(Boolean)
+        .join(" ");
+    }
+
+    return "User";
+  };
+
+  const displayName = getDisplayName();
+
   return (
     <aside
       className={`
@@ -66,7 +93,7 @@ function Sidebar() {
           {!isCollapsed && (
             <div className="px-3 py-2">
               <p className="text-sm font-semibold text-gray-900 dark:text-white tracking-tight truncate leading-5 capitalize">
-                {user.name}
+                {displayName}
               </p>
 
               <div className="flex items-center gap-2 mt-1">
@@ -138,7 +165,7 @@ function Sidebar() {
               collapsed={isCollapsed}
             />
             <SidebarItem
-              icon={<CreditCard size={18} />}
+              icon={<DollarSign size={18} />}
               label="Payments"
               to="/admin/payments"
               collapsed={isCollapsed}
@@ -175,7 +202,7 @@ function Sidebar() {
             />
 
             <SidebarItem
-              icon={<CreditCard size={18} />}
+              icon={<DollarSign size={18} />}
               label="Payments"
               to="/client/payments"
               collapsed={isCollapsed}
@@ -207,12 +234,12 @@ function Sidebar() {
             <SidebarItem
               icon={<Briefcase size={18} />}
               label="Work Completed"
-              to="/worker/wokrs-completed"
+              to="/worker/works-completed"
               collapsed={isCollapsed}
             />
 
             <SidebarItem
-              icon={<TrendingUp size={18} />}
+              icon={<DollarSign size={18} />}
               label="Earnings"
               to="/worker/earnings"
               collapsed={isCollapsed}

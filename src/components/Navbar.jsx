@@ -43,26 +43,39 @@ function Navbar() {
   const getDisplayName = () => {
     if (!user) return "U";
 
+    // ADMIN
     if (user.is_staff) {
-      const first = user.first_name?.trim();
-      const last = user.last_name?.trim();
-
-      const fullName = [first, last].filter(Boolean).join(" ");
+      const fullName = [user.first_name, user.last_name]
+        .filter(Boolean)
+        .join(" ");
 
       return fullName || "Admin";
     }
 
-    if (user.user_type === "client") {
-      return user.client?.company_name || "Client";
-    }
-
+    // WORKER
     if (user.user_type === "worker") {
-      const first = user.worker?.first_name?.trim();
-      const last = user.worker?.last_name?.trim();
-
-      const fullName = [first, last].filter(Boolean).join(" ");
+      const fullName = [user.worker?.first_name, user.worker?.last_name]
+        .filter(Boolean)
+        .join(" ");
 
       return fullName || "Worker";
+    }
+
+    // CLIENT
+    if (user.user_type === "client") {
+      const clientType = user.client?.client_type;
+
+      // company client
+      if (clientType === "company") {
+        return user.client?.company_name || "Client";
+      }
+
+      // individual client → use user names
+      const fullName = [user.first_name, user.last_name]
+        .filter(Boolean)
+        .join(" ");
+
+      return fullName || "Client";
     }
 
     return "User";
@@ -71,13 +84,16 @@ function Navbar() {
   const getProfileImage = () => {
     if (!user) return null;
 
-    return (
-      user.profile_image ||
-      user.user_image ||
-      user.worker?.profile_image ||
-      user.client?.company_logo ||
-      null
-    );
+    // worker image
+    if (user.worker?.profile_image) {
+      return user.worker.profile_image;
+    }
+    // client avatar
+    if (user.client?.avatar) {
+      return user.client.avatar;
+    }
+
+    return null;
   };
 
   const profileImage = getProfileImage();
@@ -128,7 +144,7 @@ function Navbar() {
             to="/"
             className="text-xl font-bold text-blue-600 dark:text-blue-400"
           >
-            EthioWorks
+            EthioWorks Hub
           </Link>
         </div>
 
@@ -266,7 +282,7 @@ function Navbar() {
               </NavLink>
             )}
 
-            {/* THEME */}
+            {/* THEME  FOR MORE THAN MOBILE SCREEN*/}
             <button
               onClick={toggleTheme}
               className="flex items-center justify-center w-9 h-9 rounded-full text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 transition"
@@ -284,7 +300,7 @@ function Navbar() {
                 </NavLink>
 
                 <Link
-                  className="bg-blue-600 text-white px-4 py-2 rounded-lg"
+                  className="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 transition-colors duration-200"
                   to="/signup"
                 >
                   Get Started
@@ -471,10 +487,7 @@ function Navbar() {
                 <Link
                   onClick={closeMobile}
                   to="/signup"
-                  className={
-                    mobileLinkClass +
-                    "text-blue-600 dark:text-blue-400 font-medium"
-                  }
+                  className={mobileLinkClass}
                 >
                   Get Started
                 </Link>
