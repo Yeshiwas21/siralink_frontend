@@ -98,8 +98,8 @@ export const createClient = async (data) => {
 };
 
 /* CREATE Worker */
-export const createWorker = async (data) => {
-  const response = await workerCreateApi(data);
+export const createWorker = async (formData) => {
+  const response = await workerCreateApi(formData);
   return response.data;
 };
 

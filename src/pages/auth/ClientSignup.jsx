@@ -136,6 +136,7 @@ function ClientSignup() {
       {/* NAME */}
       <input
         name="first_name"
+        autoComplete="off"
         placeholder={isCompany ? "Contact First Name" : "First Name"}
         value={form.first_name}
         onChange={handleChange}
@@ -147,6 +148,7 @@ function ClientSignup() {
 
       <input
         name="last_name"
+        autoComplete="off"
         placeholder={isCompany ? "Contact Last Name" : "Last Name"}
         value={form.last_name}
         onChange={handleChange}
@@ -161,6 +163,7 @@ function ClientSignup() {
         <>
           <input
             name="national_id"
+            autoComplete="off"
             placeholder="National ID"
             value={form.national_id}
             onChange={handleChange}
@@ -177,6 +180,7 @@ function ClientSignup() {
         <>
           <input
             name="company_name"
+            autoComplete="off"
             placeholder="Company Name"
             value={form.company_name}
             onChange={handleChange}
@@ -191,6 +195,7 @@ function ClientSignup() {
       {/* LOCATION */}
       <input
         name="location"
+        autoComplete="off"
         placeholder="Location"
         value={form.location}
         onChange={handleChange}
@@ -204,6 +209,7 @@ function ClientSignup() {
       <input
         name="email"
         placeholder="Email"
+        autoComplete="off"
         value={form.email}
         onChange={handleChange}
         className={inputClass("email")}
@@ -214,6 +220,7 @@ function ClientSignup() {
       <input
         name="phone"
         placeholder="Phone"
+        autoComplete="off"
         value={form.phone}
         onChange={handleChange}
         className={inputClass("phone")}
@@ -225,6 +232,7 @@ function ClientSignup() {
         type="password"
         name="password"
         placeholder="Password"
+        autoComplete="off"
         value={form.password}
         onChange={handleChange}
         className={inputClass("password")}
@@ -238,6 +246,7 @@ function ClientSignup() {
         type="password"
         name="password_2"
         placeholder="Confirm Password"
+        autoComplete="off"
         value={form.password_2}
         onChange={handleChange}
         className={inputClass("password_2")}

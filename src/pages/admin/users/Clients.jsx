@@ -192,6 +192,8 @@ function Clients() {
   const [clients, setClients] = useState([]);
   const [filteredClients, setFilteredClients] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedClient, setSelectedClient] = useState(null);
   const [isViewModalOpen, setIsViewModalOpen] = useState(false);
@@ -205,6 +207,8 @@ function Clients() {
       const data = await listClient();
       setClients(data);
       setFilteredClients(data);
+    } catch (err) {
+      setError(err?.response?.data?.detail || "Failed to load Clients");
     } finally {
       setLoading(false);
     }
@@ -378,6 +382,16 @@ function Clients() {
         <div className="bg-white p-8 text-center rounded-xl shadow flex flex-col items-center gap-3">
           <RefreshCw className="animate-spin text-blue-500" size={28} />
           <span className="text-gray-500 text-sm">Loading clients…</span>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="p-8">
+        <div className="bg-red-50 border border-red-200 rounded-xl p-6 text-red-600">
+          {error}
         </div>
       </div>
     );
