@@ -35,10 +35,13 @@ function CreateWorker() {
       try {
         const data = await listUsers();
 
-        const availableUsers = data.filter(
-          (u) =>
-            u.user_type === "worker" && u.worker === null && u.client === null,
-        );
+        const availableUsers = data.filter((u) => {
+          return (
+            u.user_type === "worker" &&
+            (u.worker === null || u.worker === undefined) &&
+            (u.client === null || u.client === undefined)
+          );
+        });
 
         setUsers(availableUsers);
       } catch (err) {
