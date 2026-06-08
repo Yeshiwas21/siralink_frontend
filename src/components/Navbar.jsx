@@ -12,6 +12,8 @@ import {
 } from "lucide-react";
 import { useTheme } from "../context/ThemeContext";
 import { useAuth } from "../context/AuthContext";
+import logoLight from "..//assets/ethioworks_light.png";
+import logoDark from "../assets/ethioworks_dark.png";
 
 function Navbar() {
   const [open, setOpen] = useState(false);
@@ -140,12 +142,16 @@ function Navbar() {
             {open ? <X /> : <Menu />}
           </button>
 
-          <Link
-            to="/"
-            className="text-xl font-bold text-blue-600 dark:text-blue-400"
-          >
-            EthioWorks Hub
-          </Link>
+          {/* Logo */}
+          <div className="flex items-center shrink-0 min-w-45">
+            <Link to="/">
+              <img
+                src={theme === "dark" ? logoDark : logoLight}
+                alt="EthioWorks Hub"
+                className="h-8 md:h-9 w-auto object-contain"
+              />
+            </Link>
+          </div>
         </div>
 
         {/* THEME IN MOBILE VIEW*/}
