@@ -23,285 +23,307 @@ function WorkerSignup() {
   const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
-    setForm({
-      ...form,
-      [e.target.name]: e.target.value,
-    });
-
-    // clear field error while typing
-    setErrors({
-      ...errors,
-      [e.target.name]: "",
-    });
+    setForm({ ...form, [e.target.name]: e.target.value });
+    setErrors({ ...errors, [e.target.name]: "" });
   };
 
-  const capitalizeWords = (value) => {
-    return value
-      .toLowerCase()
-      .replace(/(^|\s|[-'])\w/g, (char) => char.toUpperCase());
-  };
-
-  const handleNameChange = (e) => {
-    const { name, value } = e.target;
-
-    setForm((prev) => ({
-      ...prev,
-      [name]: capitalizeWords(value),
-    }));
+  const validateTextField = (value) => {
+    const val = value?.trim();
+    if (!val || val.length < 2) return "Minimum 2 characters required";
+    if (!/^[A-Za-z]/.test(val)) return "Must start with a letter";
+    if (!/^[A-Za-z\s]+$/.test(val)) return "Only letters are allowed";
+    return null;
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     let newErrors = {};
+
     const phone = form.phone?.trim();
-
-    if (/^\+2519\d{8}$/.test(phone)) {
-      delete newErrors.phone; // valid international format
-    } else if (/^\d{10}$/.test(phone)) {
-      delete newErrors.phone; // valid local format
-    } else {
-      newErrors.phone =
-        "Phone must be +2519XXXXXXXX (14 chars) or 10 digit local number";
+    if (!phone) {
+      newErrors.phone = "Phone is required";
+    } else if (!/^\+2519\d{8}$/.test(phone) && !/^\d{10}$/.test(phone)) {
+      newErrors.phone = "Phone must be +2519XXXXXXXX or 10 digit local number";
     }
-    // PASSWORD
+
     if (!form.password || form.password.length < 8) {
-      newErrors.password = "Password must be at least 8 characters";
-    } else {
-      delete newErrors.password;
+      newErrors.password = "Minimum 8 characters required";
     }
 
-    // CONFIRM PASSWORD
-    if (form.password !== form.password_2) {
+    if (!form.password_2) {
+      newErrors.password_2 = "Please confirm password";
+    } else if (form.password !== form.password_2) {
       newErrors.password_2 = "Passwords do not match";
-    } else {
-      delete newErrors.password_2;
     }
 
-    // TEXT FIELD VALIDATOR (letters + spaces, starts with letter)
-    const validateTextField = (value) => {
-      const val = value?.trim();
-
-      if (!val || val.length < 2) {
-        return "Minimum 2 characters required";
-      } else if (!/^[A-Za-z]/.test(val)) {
-        return "Must start with a letter";
-      } else if (!/^[A-Za-z\s]+$/.test(val)) {
-        return "Only letters are allowed";
-      }
-
-      return null;
-    };
-
-    // FIRST NAME
     const firstNameError = validateTextField(form.first_name);
-    if (firstNameError) {
-      newErrors.first_name = firstNameError;
-    } else {
-      delete newErrors.first_name;
-    }
+    if (firstNameError) newErrors.first_name = firstNameError;
 
-    // LAST NAME
     const lastNameError = validateTextField(form.last_name);
-    if (lastNameError) {
-      newErrors.last_name = lastNameError;
-    } else {
-      delete newErrors.last_name;
+    if (lastNameError) newErrors.last_name = lastNameError;
+
+    const locationError = validateTextField(form.location);
+    if (locationError) newErrors.location = locationError;
+
+    if (!form.email) {
+      newErrors.email = "Email is required";
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) {
+      newErrors.email = "Enter a valid email address";
     }
 
-    // NATIONAL ID
     if (!form.national_id || form.national_id.trim().length < 16) {
       newErrors.national_id = "Minimum 16 characters required";
-    } else {
-      delete newErrors.national_id;
-    }
-
-    // LOCATION
-    const locationError = validateTextField(form.location);
-    if (locationError) {
-      newErrors.location = locationError;
-    } else {
-      delete newErrors.location;
     }
 
     setErrors(newErrors);
-
     if (Object.keys(newErrors).length > 0) return;
 
     try {
       setLoading(true);
       await signupWorker(form);
-      toast.success("Your account created successfully. You can login");
+      toast.success("Account created successfully");
       navigate("/login");
     } catch (err) {
-      const backendErrors = err.response?.data;
+      const backend = err?.response?.data || {};
+      let formatted = {};
 
-      let formattedErrors = {};
+      // user-level errors
+      Object.entries(backend).forEach(([key, value]) => {
+        if (key === "worker") return;
+        formatted[key] = Array.isArray(value) ? value[0] : value;
+      });
 
-      if (backendErrors) {
-        // Handle nested worker errors
-        if (backendErrors.worker) {
-          Object.entries(backendErrors.worker).forEach(([key, value]) => {
-            formattedErrors[key] = value[0]; // take first error message
-          });
-        }
-
-        // Handle top-level errors
-        Object.entries(backendErrors).forEach(([key, value]) => {
-          if (key !== "worker") {
-            formattedErrors[key] = Array.isArray(value) ? value[0] : value;
-          }
+      // nested worker errors
+      if (backend.worker) {
+        Object.entries(backend.worker).forEach(([key, value]) => {
+          formatted[key] = Array.isArray(value) ? value[0] : value;
         });
       }
 
-      // fallback
-      if (Object.keys(formattedErrors).length === 0) {
-        formattedErrors.form = "Signup failed";
-      }
-
-      setErrors(formattedErrors);
+      setErrors(formatted);
     } finally {
       setLoading(false);
     }
   };
 
   const inputClass = (field) =>
-    `w-full border p-2 rounded ${
-      errors[field] ? "border-red-500" : "border-gray-300"
-    }`;
+    `w-full px-3 py-2.5 rounded-lg text-sm sm:text-base
+    bg-white dark:bg-gray-800
+    border border-gray-200 dark:border-gray-700
+    text-gray-900 dark:text-white
+    placeholder-gray-400 dark:placeholder-gray-500
+    focus:outline-none focus:ring-2 focus:ring-black/10 dark:focus:ring-white/10
+    focus:border-gray-400 dark:focus:border-gray-500
+    transition
+    ${errors[field] ? "border-red-400 focus:ring-red-200" : ""}`;
 
   return (
-    <div className="max-w-md mx-auto mt-16 p-6 border rounded-xl shadow">
-      <h2 className="text-2xl font-bold mb-5 text-center">Join as Worker</h2>
-      <p className="text-center text-sm text-gray-500 mb-6">
-        Find jobs and offer services
-      </p>
+    <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-950 px-4 transition-colors">
+      <div className="w-full max-w-xl">
+        {/* HEADER */}
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3 mb-6 text-center md:text-left">
+          <div>
+            <h2 className="text-2xl font-semibold text-gray-900 dark:text-white">
+              Join as Worker
+            </h2>
 
-      {errors.form && (
-        <p className="text-red-500 text-sm mb-3 text-center">{errors.form}</p>
-      )}
-      <form onSubmit={handleSubmit} className="space-y-3">
-        {/* FIRST NAME */}
-        <input
-          name="first_name"
-          placeholder="First Name"
-          autoComplete="off"
-          autoCapitalize="words"
-          required
-          className={inputClass("first_name")}
-          value={form.first_name}
-          onChange={handleNameChange}
-        />
-        {errors.first_name && (
-          <p className="text-red-500 text-sm">{errors.first_name}</p>
-        )}
+            <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+              Find jobs and offer services
+            </p>
+          </div>
 
-        {/* LAST NAME */}
-        <input
-          name="last_name"
-          placeholder="Last Name"
-          autoComplete="off"
-          autoCapitalize="words"
-          required
-          className={inputClass("last_name")}
-          value={form.last_name}
-          onChange={handleNameChange}
-        />
-        {errors.last_name && (
-          <p className="text-red-500 text-sm">{errors.last_name}</p>
-        )}
+          <div className="md:text-right">
+            <p className="text-sm text-gray-600 dark:text-gray-300">
+              Looking for hiring?{" "}
+              <Link
+                to="/signup/client/"
+                className="font-medium text-black dark:text-white hover:opacity-70"
+              >
+                Join as client →
+              </Link>
+            </p>
+          </div>
+        </div>
 
-        {/* NATIONAL ID */}
-        <input
-          name="national_id"
-          placeholder="National ID"
-          autoComplete="off"
-          required
-          className={inputClass("national_id")}
-          onChange={handleChange}
-        />
-        {errors.national_id && (
-          <p className="text-red-500 text-sm">{errors.national_id}</p>
-        )}
+        {/* CARD */}
+        <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl shadow-sm p-6 sm:p-8">
+          {errors.form && (
+            <div className="mb-4 text-sm text-red-500 text-center">
+              {errors.form}
+            </div>
+          )}
 
-        {/* LOCATION */}
-        <input
-          name="location"
-          placeholder="Location"
-          autoComplete="off"
-          required
-          className={inputClass("location")}
-          onChange={handleChange}
-        />
-        {errors.location && (
-          <p className="text-red-500 text-sm">{errors.location}</p>
-        )}
+          <form onSubmit={handleSubmit} className="space-y-6">
+            {/* NAME */}
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="text-sm text-gray-600 dark:text-gray-300">
+                  First name
+                </label>
+                <input
+                  name="first_name"
+                  value={form.first_name}
+                  onChange={handleChange}
+                  className={inputClass("first_name")}
+                />
+                {errors.first_name && (
+                  <p className="text-xs text-red-500 dark:text-red-400 mt-1">
+                    {errors.first_name}
+                  </p>
+                )}
+              </div>
 
-        {/* EMAIL */}
-        <input
-          name="email"
-          placeholder="Email"
-          autoComplete="off"
-          required
-          className={inputClass("email")}
-          onChange={handleChange}
-        />
-        {errors.email && <p className="text-red-500 text-sm">{errors.email}</p>}
+              <div>
+                <label className="text-sm text-gray-600 dark:text-gray-300">
+                  Last name
+                </label>
+                <input
+                  name="last_name"
+                  value={form.last_name}
+                  onChange={handleChange}
+                  className={inputClass("last_name")}
+                />
+                {errors.last_name && (
+                  <p className="text-xs text-red-500 dark:text-red-400 mt-1">
+                    {errors.last_name}
+                  </p>
+                )}
+              </div>
+            </div>
 
-        {/* PHONE */}
-        <input
-          name="phone"
-          placeholder="Phone (+2519XXXXXXXX or 09XXXXXXXX)"
-          autoComplete="off"
-          required
-          className={inputClass("phone")}
-          onChange={handleChange}
-        />
-        {errors.phone && <p className="text-red-500 text-sm">{errors.phone}</p>}
+            {/* NATIONAL ID */}
+            <div>
+              <label className="text-sm text-gray-600 dark:text-gray-300">
+                National ID
+              </label>
+              <input
+                name="national_id"
+                value={form.national_id}
+                onChange={handleChange}
+                className={inputClass("national_id")}
+              />
+              {errors.national_id && (
+                <p className="text-xs text-red-500 dark:text-red-400 mt-1">
+                  {errors.national_id}
+                </p>
+              )}
+            </div>
 
-        {/* PASSWORD */}
-        <input
-          type="password"
-          name="password"
-          placeholder="Password"
-          autoComplete="off"
-          required
-          className={inputClass("password")}
-          onChange={handleChange}
-        />
-        {errors.password && (
-          <p className="text-red-500 text-sm">{errors.password}</p>
-        )}
+            {/* LOCATION */}
+            <div>
+              <label className="text-sm text-gray-600 dark:text-gray-300">
+                Location
+              </label>
+              <input
+                name="location"
+                value={form.location}
+                onChange={handleChange}
+                className={inputClass("location")}
+              />
+              {errors.location && (
+                <p className="text-xs text-red-500 dark:text-red-400 mt-1">
+                  {errors.location}
+                </p>
+              )}
+            </div>
 
-        {/* CONFIRM PASSWORD */}
-        <input
-          type="password"
-          name="password_2"
-          placeholder="Confirm Password"
-          autoComplete="off"
-          required
-          className={inputClass("password_2")}
-          onChange={handleChange}
-        />
-        {errors.password_2 && (
-          <p className="text-red-500 text-sm">{errors.password_2}</p>
-        )}
+            {/* CONTACT */}
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="text-sm text-gray-600 dark:text-gray-300">
+                  Email
+                </label>
+                <input
+                  name="email"
+                  value={form.email}
+                  onChange={handleChange}
+                  className={inputClass("email")}
+                />
+                {errors.email && (
+                  <p className="text-xs text-red-500 dark:text-red-400 mt-1">
+                    {errors.email}
+                  </p>
+                )}
+              </div>
 
-        {/* SUBMIT */}
-        <button
-          type="submit"
-          disabled={loading}
-          className="w-full bg-green-600 text-white py-2 rounded hover:bg-green-700 disabled:bg-gray-400"
-        >
-          {loading ? "Creating..." : "Create Account"}
-        </button>
-      </form>
-      <p className="text-sm text-center mt-4">
-        Already have an account?{" "}
-        <Link to="/login" className="text-blue-600">
-          Login
-        </Link>
-      </p>
+              <div>
+                <label className="text-sm text-gray-600 dark:text-gray-300">
+                  Phone
+                </label>
+                <input
+                  name="phone"
+                  value={form.phone}
+                  onChange={handleChange}
+                  className={inputClass("phone")}
+                />
+                {errors.phone && (
+                  <p className="text-xs text-red-500 dark:text-red-400 mt-1">
+                    {errors.phone}
+                  </p>
+                )}
+              </div>
+            </div>
+
+            {/* PASSWORD */}
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="text-sm text-gray-600 dark:text-gray-300">
+                  Password
+                </label>
+                <input
+                  type="password"
+                  name="password"
+                  value={form.password}
+                  onChange={handleChange}
+                  className={inputClass("password")}
+                />
+                {errors.password && (
+                  <p className="text-xs text-red-500 dark:text-red-400 mt-1">
+                    {errors.password}
+                  </p>
+                )}
+              </div>
+
+              <div>
+                <label className="text-sm text-gray-600 dark:text-gray-300">
+                  Confirm
+                </label>
+                <input
+                  type="password"
+                  name="password_2"
+                  value={form.password_2}
+                  onChange={handleChange}
+                  className={inputClass("password_2")}
+                />
+                {errors.password_2 && (
+                  <p className="text-xs text-red-500 dark:text-red-400 mt-1">
+                    {errors.password_2}
+                  </p>
+                )}
+              </div>
+            </div>
+
+            {/* BUTTON */}
+            <button
+              disabled={loading}
+              className="w-full h-11 rounded-xl bg-black dark:bg-white dark:text-black text-white font-medium
+              hover:opacity-90 active:scale-[0.99] transition shadow-sm cursor-pointer"
+            >
+              {loading ? "Creating..." : "Create account"}
+            </button>
+          </form>
+          <p className="text-sm text-center mt-6 text-gray-600 dark:text-gray-400">
+            Already have an account?{" "}
+            <Link
+              to="/login"
+              className="text-blue-600 dark:text-blue-400 font-semibold hover:underline underline-offset-4 cursor-pointer transition"
+            >
+              Login
+            </Link>
+          </p>
+        </div>
+      </div>
     </div>
   );
 }

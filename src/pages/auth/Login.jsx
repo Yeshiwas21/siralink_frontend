@@ -37,146 +37,140 @@ function Login() {
 
     try {
       setLoading(true);
-
       await login(form);
       navigate(getHomeRoute(user), { replace: true });
     } catch (err) {
       const data = err?.response?.data || {};
 
-      const errorCode = Array.isArray(data.error_code)
-        ? data.error_code[0]
-        : data.error_code;
-
       const message = Array.isArray(data.message)
         ? data.message[0]
         : data.message;
 
-      if (errorCode === "USER_DISABLED") {
-        setError("Your account has been disabled. Please contact support.");
-      } else if (errorCode === "PROFILE_MISSING") {
-        setError("Your account setup is incomplete.");
-      } else if (errorCode === "ACCOUNT_PENDING") {
-        setError("Your account is still under review.");
-      } else if (errorCode === "ACCOUNT_SUSPENDED") {
-        setError("Your account has been suspended.");
-      } else if (errorCode === "ACCOUNT_REJECTED") {
-        setError("Your account has been rejected. Please contact support.");
-      } else {
-        setError(message || data?.detail || "Invalid email or password");
-      }
+      setError(message || data?.detail || "Invalid email or password");
 
-      setForm((prev) => ({
-        ...prev,
-        password: "",
-      }));
+      setForm((prev) => ({ ...prev, password: "" }));
     } finally {
       setLoading(false);
     }
   };
-  // if logged in → redirect to dashboard
+
   if (user?.isAuthenticated) {
     return <Navigate to={getHomeRoute(user)} replace />;
   }
+
   return (
-    <div className="flex items-center justify-center py-16 px-4">
+    <div className="min-h-screen flex items-center justify-center px-4 bg-gray-50 dark:bg-gray-950 transition-colors">
       {/* CARD */}
-      <div className="w-full max-w-md bg-white rounded-2xl shadow-lg p-8 border">
+      <div className="w-full max-w-md bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl shadow-sm p-6 sm:p-8 transition">
         {/* HEADER */}
         <div className="text-center mb-6">
-          <h1 className="text-2xl font-semibold text-gray-900">
+          <h1 className="text-2xl font-semibold text-gray-900 dark:text-white">
             Login to EthioWorks Hub
-          </h1>{" "}
-          <p className="text-sm text-gray-500 mt-1">
+          </h1>
+
+          <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
             Enter your credentials to continue
           </p>
         </div>
 
         {/* ERROR */}
         {error && (
-          <div className="mb-4 p-3 rounded-lg bg-red-100 text-red-600 text-sm">
+          <div className="mb-4 p-3 rounded-lg bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-300 text-sm">
             {error}
           </div>
         )}
 
         {/* FORM */}
         <form onSubmit={handleSubmit} className="space-y-4">
+          {/* EMAIL */}
           <div className="relative">
-            {/* Icon */}
             <User className="absolute left-3 top-3 text-gray-400 w-5 h-5" />
 
-            {/* Input */}
             <input
               type="email"
               name="email"
-              autoComplete="off"
               value={form.email}
               placeholder="Email address"
-              className="w-full border border-gray-300 p-3 pl-10 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
+              autoComplete="off"
               onChange={handleChange}
+              className="w-full pl-10 p-3 rounded-lg border border-gray-300 dark:border-gray-700
+              bg-white dark:bg-gray-800 text-gray-900 dark:text-white
+              placeholder-gray-400 dark:placeholder-gray-500
+              focus:outline-none focus:ring-2 focus:ring-black/10 dark:focus:ring-white/10 transition"
             />
           </div>
+
+          {/* PASSWORD */}
           <div className="relative">
-            {/* Lock Icon */}
             <Lock className="absolute left-3 top-3 text-gray-400 w-5 h-5" />
 
-            {/* Input */}
             <input
               type={showPassword ? "text" : "password"}
               name="password"
               value={form.password}
               placeholder="Password"
               autoComplete="off"
-              className="w-full border border-gray-300 p-3 pl-10 pr-10 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
               onChange={handleChange}
+              className="w-full pl-10 pr-10 p-3 rounded-lg border border-gray-300 dark:border-gray-700
+              bg-white dark:bg-gray-800 text-gray-900 dark:text-white
+              placeholder-gray-400 dark:placeholder-gray-500
+              focus:outline-none focus:ring-2 focus:ring-black/10 dark:focus:ring-white/10 transition"
             />
 
-            {/* Show/Hide Button */}
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
-              className="absolute right-3 top-3 text-gray-500"
+              className="absolute right-3 top-3 text-gray-500 dark:text-gray-400 cursor-pointer"
             >
               {showPassword ? (
-                <EyeOff className="w-5 h-5" />
-              ) : (
                 <Eye className="w-5 h-5" />
+              ) : (
+                <EyeOff className="w-5 h-5" />
               )}
             </button>
           </div>
-          <div className="flex items-center justify-between mt-2">
-            <label className="flex items-center gap-2 text-sm text-gray-600">
+
+          {/* OPTIONS */}
+          <div className="flex items-center justify-between text-sm">
+            <label className="flex items-center gap-2 text-gray-600 dark:text-gray-300 cursor-pointer">
               <input
                 type="checkbox"
                 name="remember"
                 checked={form.remember}
                 onChange={handleChange}
+                className="cursor-pointer"
               />
               Remember me
             </label>
 
             <button
               type="button"
-              className="text-sm text-blue-600 hover:underline cursor-pointer"
               onClick={() => navigate("/forgot-password")}
+              className="text-blue-600 dark:text-blue-400 hover:underline cursor-pointer"
             >
               Forgot password?
             </button>
           </div>
+
+          {/* BUTTON */}
           <button
             type="submit"
             disabled={loading || !form.email || !form.password}
-            className="w-full bg-blue-600 text-white py-3 rounded-lg font-medium hover:bg-blue-700 transition disabled:bg-gray-400 cursor-pointer disabled:cursor-not-allowed"
+            className="w-full py-3 rounded-lg font-medium
+            bg-black text-white dark:bg-white dark:text-black
+            hover:opacity-90 active:scale-[0.99]
+            transition cursor-pointer disabled:cursor-not-allowed disabled:opacity-50"
           >
             {loading ? "Logging in..." : "Login"}
           </button>
         </form>
 
         {/* FOOTER */}
-        <div className="mt-6 text-center text-sm text-gray-600">
+        <div className="mt-6 text-center text-sm text-gray-600 dark:text-gray-400">
           Don’t have an account?{" "}
           <Link
             to="/signup"
-            className="text-blue-600 font-medium hover:underline"
+            className="text-blue-600 dark:text-blue-400 font-medium hover:underline cursor-pointer"
           >
             Sign up
           </Link>

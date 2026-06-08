@@ -27,6 +27,7 @@ import ClientSignup from "./pages/auth/ClientSignup";
 import NotFound from "./pages/common/NotFound";
 
 import ForgotPassword from "./pages/account/ForgotPassword";
+import HowItWorks from "./pages/common/HowItWorks";
 
 export default function App() {
   const { user, loading } = useAuth();
@@ -83,6 +84,7 @@ export default function App() {
             <Route path="/forgot-password" element={<ForgotPassword />} />
             <Route path="/signup/client" element={<ClientSignup />} />
             <Route path="/signup/worker" element={<WorkerSignup />} />
+            <Route path="/how-it-works" element={<HowItWorks />} />
             {/* ADMIN */}
             <Route
               path="/admin/*"

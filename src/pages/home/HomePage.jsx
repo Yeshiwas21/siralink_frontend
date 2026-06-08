@@ -218,7 +218,7 @@ function HomePage() {
                 initial={{ opacity: 0, y: 40 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.4, delay: index * 0.15 }}
-                viewport={{ once: true }}
+                // viewport={{ once: true }} //Animation runs only the first time the element enters view
                 whileHover={{ y: -8 }}
                 className="relative group"
               >

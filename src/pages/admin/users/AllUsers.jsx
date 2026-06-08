@@ -17,6 +17,7 @@ import {
   CircleCheck,
   MoreHorizontal,
   Printer,
+  X,
 } from "lucide-react";
 import React, { useEffect, useState, useMemo, useRef } from "react";
 import { useNavigate } from "react-router-dom";
@@ -219,6 +220,18 @@ function AllUsers() {
     };
   }, [users]);
 
+  // Lock the background scroll when the modal is open
+  useEffect(() => {
+    if (isViewModalOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [isViewModalOpen]);
   if (loading) {
     return (
       <div className="p-8">
@@ -465,15 +478,21 @@ function AllUsers() {
       {/* VIEW MODAL */}
       {isViewModalOpen && selectedUser && (
         <div
-          className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4"
+          className="fixed inset-0 bg-black/30 backdrop-blur-[2px] flex items-end sm:items-center justify-center z-50 p-0 sm:p-4"
           onClick={closeModal}
         >
           <div
             className="w-full max-w-[95%] sm:max-w-md bg-white rounded-xl shadow-xl p-4 sm:p-6 max-h-[85vh] overflow-y-auto mt-16 md:mt-20"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="px-6 py-4">
+            <div className="flex items-center justify-between mb-5">
               <h2 className="font-bold text-lg">User Details</h2>
+              <button
+                onClick={closeModal}
+                className="p-1.5 rounded-lg hover:bg-gray-100 text-gray-500 transition-colors"
+              >
+                <X size={18} />
+              </button>
             </div>
 
             <div className="p-6 space-y-4">
