@@ -49,32 +49,6 @@ function Sidebar() {
 
   const isCollapsed = collapsed;
 
-  const getDisplayName = () => {
-    if (!user) return "";
-
-    if (user.user_type === "admin") {
-      return [user.first_name, user.last_name].filter(Boolean).join(" ");
-    }
-
-    if (user.user_type === "client") {
-      if (user.client?.client_type === "company") {
-        return user.client?.company_name || "Client";
-      }
-
-      return [user.first_name, user.last_name].filter(Boolean).join(" ");
-    }
-
-    if (user.user_type === "worker") {
-      return [user.worker?.first_name, user.worker?.last_name]
-        .filter(Boolean)
-        .join(" ");
-    }
-
-    return "User";
-  };
-
-  const displayName = getDisplayName();
-
   return (
     <aside
       className={`
@@ -92,10 +66,6 @@ function Sidebar() {
         <div className="flex items-center justify-between">
           {!isCollapsed && (
             <div className="px-3 py-2">
-              <p className="text-sm font-semibold text-gray-900 dark:text-white tracking-tight truncate leading-5 capitalize">
-                {displayName}
-              </p>
-
               <div className="flex items-center gap-2 mt-1">
                 <span className="w-1.5 h-1.5 rounded-full bg-green-500"></span>
 

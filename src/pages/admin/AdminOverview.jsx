@@ -108,7 +108,7 @@ function AdminOverview() {
       <div className="p-8">
         <div className="bg-white rounded-xl shadow border p-8 text-center">
           <RefreshCw className="animate-spin mx-auto mb-3 text-amber-500" />
-          <p className="text-gray-500">Loading users...</p>
+          <p className="text-gray-500">Loading overview data...</p>
         </div>
       </div>
     );

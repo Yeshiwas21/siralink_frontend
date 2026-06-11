@@ -1,7 +1,11 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { useTheme } from "../context/ThemeContext";
+import logoLight from "../assets/ethioworks_light.svg";
+import logoDark from "../assets/ethioworks_dark.svg";
 
 function Footer() {
+  const { theme } = useTheme();
   const footerLinkClass =
     "text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors duration-200";
 
@@ -11,12 +15,18 @@ function Footer() {
         {/* TOP SECTION */}
         <div className="grid md:grid-cols-4 gap-8">
           {/* BRAND */}
-          <div>
-            <h2 className="text-2xl font-bold tracking-tight text-blue-600 dark:text-blue-400">
-              EthioWorks Hub
-            </h2>
+          <div className="space-y-3 max-w-sm">
+            {/* Logo */}
+            <Link to="/" className="flex items-center">
+              <img
+                src={theme === "dark" ? logoDark : logoLight}
+                alt="EthioWorks Hub"
+                className="h-6 md:h-7 w-auto object-contain"
+              />
+            </Link>
 
-            <p className="text-sm leading-relaxed text-gray-600 dark:text-gray-300 mt-3">
+            {/* Tagline */}
+            <p className="text-sm leading-relaxed text-gray-600 dark:text-gray-300">
               Connecting clients with skilled workers across Ethiopia. Build,
               hire, and grow with ease.
             </p>

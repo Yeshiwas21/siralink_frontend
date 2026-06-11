@@ -29,7 +29,7 @@ function SelectUserType() {
       <div className={cardClass}>
         {/* TITLE */}
         <h1 className="text-xl sm:text-2xl font-semibold text-center text-gray-900 dark:text-white">
-          Join EthioWorks Hub
+          Join EthioWorks
         </h1>
 
         <p className="text-sm text-gray-500 dark:text-gray-400 text-center mt-2 mb-6">

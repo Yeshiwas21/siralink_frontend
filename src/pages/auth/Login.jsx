@@ -65,7 +65,7 @@ function Login() {
         {/* HEADER */}
         <div className="text-center mb-6">
           <h1 className="text-2xl font-semibold text-gray-900 dark:text-white">
-            Login to EthioWorks Hub
+            Login to EthioWorks
           </h1>
 
           <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">

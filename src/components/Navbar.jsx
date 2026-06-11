@@ -12,8 +12,8 @@ import {
 } from "lucide-react";
 import { useTheme } from "../context/ThemeContext";
 import { useAuth } from "../context/AuthContext";
-import logoLight from "..//assets/ethioworks_light.png";
-import logoDark from "../assets/ethioworks_dark.png";
+import logoLight from "../assets/ethioworks_light.svg";
+import logoDark from "../assets/ethioworks_dark.svg";
 
 function Navbar() {
   const [open, setOpen] = useState(false);
@@ -132,7 +132,7 @@ function Navbar() {
     <header className="bg-white dark:bg-gray-950 border-b border-gray-200 dark:border-gray-800 sticky top-0 z-50 transition-colors duration-300">
       {" "}
       {/* TOP BAR */}
-      <div className="max-w-7xl mx-auto px-4 h-16 flex items-center">
+      <div className="max-w-7xl mx-auto px-6 h-16 flex items-center">
         {/* LEFT */}
         <div className="flex items-center gap-3 shrink-0">
           <button
@@ -143,12 +143,12 @@ function Navbar() {
           </button>
 
           {/* Logo */}
-          <div className="flex items-center shrink-0 min-w-45">
-            <Link to="/">
+          <div className="flex items-center shrink-0">
+            <Link to="/" className="flex items-center h-6 md:h-7">
               <img
                 src={theme === "dark" ? logoDark : logoLight}
                 alt="EthioWorks Hub"
-                className="h-8 md:h-9 w-auto object-contain"
+                className="h-full w-auto object-contain"
               />
             </Link>
           </div>
