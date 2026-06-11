@@ -182,7 +182,7 @@ function HomePage() {
             </span>
 
             <h2 className="mt-5 text-3xl font-black tracking-tight text-gray-900 dark:text-white">
-              How EthioWorks Hub Works
+              How EthioWorks Works
             </h2>
 
             <p className="mt-5 text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto leading-relaxed">
@@ -218,7 +218,7 @@ function HomePage() {
                 initial={{ opacity: 0, y: 40 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.4, delay: index * 0.15 }}
-                viewport={{ once: true }}
+                // viewport={{ once: true }} //Animation runs only the first time the element enters view
                 whileHover={{ y: -8 }}
                 className="relative group"
               >

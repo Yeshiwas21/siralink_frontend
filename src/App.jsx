@@ -1,4 +1,5 @@
 import React from "react";
+
 import { Routes, Route, useLocation } from "react-router-dom";
 import { useAuth } from "./context/AuthContext";
 import { Navigate } from "react-router-dom";
@@ -27,6 +28,8 @@ import ClientSignup from "./pages/auth/ClientSignup";
 import NotFound from "./pages/common/NotFound";
 
 import ForgotPassword from "./pages/account/ForgotPassword";
+import HowItWorks from "./pages/common/HowItWorks";
+import ScrollToTop from "./utils/ScrollToTop";
 
 export default function App() {
   const { user, loading } = useAuth();
@@ -72,8 +75,12 @@ export default function App() {
         {showSidebar && <Sidebar />}
 
         {/* MAIN CONTENT */}
-        <main className="flex-1 bg-gray-100 p-4 overflow-x-hidden">
+        <main className="flex-1 bg-gray-100 dark:bg-gray-900 p-4 overflow-x-hidden">
           <Toaster position="top-right" />
+
+          {/* To make the links to scroll to the top when clikced */}
+          <ScrollToTop />
+
           <Routes>
             {/* PUBLIC */}
             <Route path="/" element={<HomePage />} />
@@ -83,6 +90,7 @@ export default function App() {
             <Route path="/forgot-password" element={<ForgotPassword />} />
             <Route path="/signup/client" element={<ClientSignup />} />
             <Route path="/signup/worker" element={<WorkerSignup />} />
+            <Route path="/how-it-works" element={<HowItWorks />} />
             {/* ADMIN */}
             <Route
               path="/admin/*"

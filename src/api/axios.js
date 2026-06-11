@@ -13,7 +13,7 @@ import {
  * Axios instance configured with base API URL
  */
 const api = axios.create({
-  baseURL: "http://127.0.0.1:8080/api",
+  baseURL: "http://192.168.3.25:8080/api",
 });
 
 /**
@@ -62,7 +62,7 @@ api.interceptors.response.use(
 
         // Request new tokens
         const res = await axios.post(
-          "http://127.0.0.1:8080/api/token/refresh/",
+          "http://192.168.3.25:8080/api/token/refresh/",
           { refresh }
         );
 
