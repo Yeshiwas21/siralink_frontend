@@ -12,8 +12,8 @@ import {
 } from "lucide-react";
 import { useTheme } from "../context/ThemeContext";
 import { useAuth } from "../context/AuthContext";
-import logoLight from "../assets/ethioworks_light.svg";
-import logoDark from "../assets/ethioworks_dark.svg";
+import logoLight from "../assets/siralink-light.svg";
+import logoDark from "../assets/siralink-dark.svg";
 
 function Navbar() {
   const [open, setOpen] = useState(false);
@@ -147,7 +147,7 @@ function Navbar() {
             <Link to="/" className="flex items-center h-6 md:h-7">
               <img
                 src={theme === "dark" ? logoDark : logoLight}
-                alt="EthioWorks Hub"
+                alt="SiraLink"
                 className="h-full w-auto object-contain"
               />
             </Link>
@@ -230,7 +230,7 @@ function Navbar() {
         {/* RIGHT SIDE */}
         <div className="flex items-center gap-6 ml-auto">
           {/* NAV */}
-          <nav className="hidden md:flex items-center gap-5">
+          <nav className="font-bold hidden md:flex items-center gap-5">
             {!isAuth && (
               <>
                 <NavLink to="/jobs" className={navLinkClass}>
@@ -291,7 +291,7 @@ function Navbar() {
             {/* THEME  FOR MORE THAN MOBILE SCREEN*/}
             <button
               onClick={toggleTheme}
-              className="flex items-center justify-center w-9 h-9 rounded-full text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 transition"
+              className="flex items-center justify-center w-9 h-9  text-gray-700 hover:text-black dark:text-gray-200 dark:hover:text-white transition cursor-pointer"
             >
               {theme === "light" ? <Moon size={18} /> : <Sun size={18} />}
             </button>
@@ -300,7 +300,7 @@ function Navbar() {
           {/* PROFILE */}
           <div className="hidden md:flex items-center">
             {!isAuth ? (
-              <div className="flex items-center gap-4">
+              <div className="font-bold flex items-center gap-4">
                 <NavLink to="/login" className={navLinkClass}>
                   Login
                 </NavLink>
