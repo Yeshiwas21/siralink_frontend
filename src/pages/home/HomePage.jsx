@@ -85,7 +85,7 @@ function HomePage() {
             </h1>
 
             <p className="mt-4 text-gray-600 dark:text-gray-300 text-lg leading-relaxed">
-              EthioWorks connects clients and skilled workers for jobs like
+              SiraLink connects clients and skilled workers for jobs like
               plumbing, electrical work, cleaning, tutoring and more.
             </p>
 
@@ -182,7 +182,7 @@ function HomePage() {
             </span>
 
             <h2 className="mt-5 text-3xl font-black tracking-tight text-gray-900 dark:text-white">
-              How EthioWorks Works
+              How SiraLink Works
             </h2>
 
             <p className="mt-5 text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto leading-relaxed">
@@ -270,7 +270,7 @@ function HomePage() {
             </h2>
 
             <p className="mt-5 text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto leading-relaxed">
-              Thousands of professionals and clients use EthioWorks to connect,
+              Thousands of professionals and clients use SiraLink to connect,
               hire, and build opportunities every day.
             </p>
           </div>
@@ -309,7 +309,7 @@ function HomePage() {
         <div className="max-w-6xl mx-auto px-6">
           <div className="text-center mb-14">
             <span className="inline-flex items-center px-4 py-1.5 rounded-full bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-300 text-sm font-semibold">
-              Why EthioWorks
+              Why SiraLink
             </span>
 
             <h2 className="mt-5 text-3xl font-black tracking-tight text-gray-900 dark:text-white">
@@ -384,7 +384,7 @@ function HomePage() {
               {
                 name: "Abel T.",
                 role: "Client",
-                text: "EthioWorks helped me hire a skilled electrician within a day.",
+                text: "SiraLink helped me hire a skilled electrician within a day.",
               },
               {
                 name: "Meron A.",
@@ -455,7 +455,7 @@ function HomePage() {
             </h2>
 
             <p className="mt-6 text-lg md:text-xl text-gray-700 dark:text-gray-300 leading-relaxed max-w-2xl mx-auto">
-              Join thousands of professionals and clients using EthioWorks to
+              Join thousands of professionals and clients using SiraLink to
               build careers, hire talent, and grow businesses across Ethiopia.
             </p>
 
