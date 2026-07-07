@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { NavLink } from "react-router-dom";
-import { useAuth } from "../context/AuthContext";
+import { useAuth } from "../../contexts/AuthContext";
 
 import {
   LayoutDashboard,
@@ -78,7 +78,7 @@ function Sidebar() {
 
           <button
             onClick={() => setCollapsed(!collapsed)}
-            className="text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"
+            className="hidden md:block text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"
           >
             {isCollapsed ? <ChevronRight /> : <ChevronLeft />}
           </button>

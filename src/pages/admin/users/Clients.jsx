@@ -87,7 +87,6 @@ function ActionMenu({ client, onView, onEdit, onDelete, onPrint }) {
 
     setOpen(true);
   };
-
   // Close on outside click
   useEffect(() => {
     if (!open) return;
@@ -113,61 +112,61 @@ function ActionMenu({ client, onView, onEdit, onDelete, onPrint }) {
 
   const dropdown = open
     ? ReactDOM.createPortal(
-        <div
-          ref={menuRef}
-          style={{
-            position: "fixed",
-            top: pos.top,
-            left: pos.left,
-            zIndex: 9999,
+      <div
+        ref={menuRef}
+        style={{
+          position: "fixed",
+          top: pos.top,
+          left: pos.left,
+          zIndex: 9999,
+        }}
+        className="w-44 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 shadow-2xl overflow-hidden text-gray-700 dark:text-gray-200"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <button
+          onClick={() => {
+            onView(client);
+            setOpen(false);
           }}
-          className="w-44 bg-white rounded-xl border border-gray-200 shadow-2xl overflow-hidden"
-          onClick={(e) => e.stopPropagation()}
+          className="w-full text-left px-4 py-2.5 text-sm hover:bg-blue-50 dark:hover:bg-blue-900/40 hover:text-blue-700 dark:hover:text-blue-400 transition-colors flex items-center gap-2"
         >
-          <button
-            onClick={() => {
-              onView(client);
-              setOpen(false);
-            }}
-            className="w-full text-left px-4 py-2.5 text-sm hover:bg-blue-50 hover:text-blue-700 transition-colors flex items-center gap-2"
-          >
-            <Eye size={13} />
-            View
-          </button>
-          <button
-            onClick={() => {
-              onEdit(client);
-              setOpen(false);
-            }}
-            className="w-full text-left px-4 py-2.5 text-sm hover:bg-green-50 hover:text-green-700 transition-colors flex items-center gap-2"
-          >
-            <Edit size={13} />
-            Edit
-          </button>
-          <button
-            onClick={() => {
-              onPrint(client);
-              setOpen(false);
-            }}
-            className="w-full text-left px-4 py-2.5 text-sm hover:bg-purple-50 hover:text-purple-700 transition-colors flex items-center gap-2"
-          >
-            <Printer size={13} />
-            Print
-          </button>
-          <hr className="border-gray-100" />
-          <button
-            onClick={() => {
-              onDelete(client.id);
-              setOpen(false);
-            }}
-            className="w-full text-left px-4 py-2.5 text-sm text-red-600 hover:bg-red-50 transition-colors flex items-center gap-2"
-          >
-            <Trash2 size={13} />
-            Delete
-          </button>
-        </div>,
-        document.body,
-      )
+          <Eye size={13} />
+          View
+        </button>
+        <button
+          onClick={() => {
+            onEdit(client);
+            setOpen(false);
+          }}
+          className="w-full text-left px-4 py-2.5 text-sm hover:bg-green-50 dark:hover:bg-green-900/40 hover:text-green-700 dark:hover:text-green-400 transition-colors flex items-center gap-2"
+        >
+          <Edit size={13} />
+          Edit
+        </button>
+        <button
+          onClick={() => {
+            onPrint(client);
+            setOpen(false);
+          }}
+          className="w-full text-left px-4 py-2.5 text-sm hover:bg-purple-50 dark:hover:bg-purple-900/40 hover:text-purple-700 dark:hover:text-purple-400 transition-colors flex items-center gap-2"
+        >
+          <Printer size={13} />
+          Print
+        </button>
+        <hr className="border-gray-100 dark:border-gray-700" />
+        <button
+          onClick={() => {
+            onDelete(client.id);
+            setOpen(false);
+          }}
+          className="w-full text-left px-4 py-2.5 text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/40 transition-colors flex items-center gap-2"
+        >
+          <Trash2 size={13} />
+          Delete
+        </button>
+      </div>,
+      document.body,
+    )
     : null;
 
   return (
@@ -175,7 +174,7 @@ function ActionMenu({ client, onView, onEdit, onDelete, onPrint }) {
       <button
         ref={btnRef}
         onClick={openMenu}
-        className="p-1.5 rounded-lg hover:bg-gray-100 transition-colors"
+        className="p-1.5 rounded-lg text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors cursor-pointer"
         aria-label="Actions"
       >
         <MoreHorizontal size={18} />
@@ -200,6 +199,10 @@ function Clients() {
   const [statusFilter, setStatusFilter] = useState("all");
   const [selectedRows, setSelectedRows] = useState([]);
   const [activeTab, setActiveTab] = useState("personal");
+
+  const [currentPage, setCurrentPage] = useState(1);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+
   /* fetch */
   const fetchClients = useCallback(async () => {
     try {
@@ -237,6 +240,18 @@ function Clients() {
     }
     setFilteredClients(data);
   }, [searchTerm, clients, statusFilter]);
+
+  //pagintion
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchTerm, statusFilter]);
+
+  const totalPages = Math.ceil(filteredClients.length / rowsPerPage);
+
+  const paginatedClients = useMemo(() => {
+    const start = (currentPage - 1) * rowsPerPage;
+    return filteredClients.slice(start, start + rowsPerPage);
+  }, [filteredClients, currentPage, rowsPerPage]);
 
   /* stats */
   const stats = useMemo(
@@ -375,6 +390,16 @@ function Clients() {
     };
   }, [isViewModalOpen]);
 
+  const baseBtn = "px-3 py-1 rounded-full border cursor-pointer transition";
+
+  const themeBtn =
+    "border-gray-300 dark:border-gray-600 " +
+    "text-gray-700 dark:text-gray-200 " +
+    "hover:bg-gray-100 dark:hover:bg-gray-700";
+
+  const activeBtn =
+    "bg-blue-600 text-white border-blue-600 dark:bg-blue-500 dark:border-blue-500";
+
   /* loading */
   if (loading) {
     return (
@@ -399,14 +424,14 @@ function Clients() {
 
   /* ── RENDER ── */
   return (
-    <div className="p-4 sm:p-6 lg:p-8 bg-gray-100 min-h-screen">
+    <div className="p-4 sm:p-6 lg:p-8 bg-gray-100 dark:bg-gray-900 min-h-screen">
       {/* HEADER */}
       <header className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">
             Clients Management
           </h1>
-          <p className="text-gray-500 text-sm mt-0.5">
+          <p className="text-gray-500 dark:text-gray-400 text-sm mt-0.5">
             Manage all registered clients
           </p>
         </div>
@@ -414,7 +439,7 @@ function Clients() {
         <div className="flex gap-2 flex-wrap">
           <button
             onClick={fetchClients}
-            className="px-3 py-2 bg-yellow-300 hover:bg-yellow-400 rounded-lg flex items-center gap-1.5 text-sm font-medium transition-colors"
+            className="px-3 py-2 bg-yellow-300 hover:bg-yellow-400 dark:bg-yellow-500 dark:hover:bg-yellow-600 dark:text-gray-900 rounded-lg flex items-center gap-1.5 text-sm font-medium transition-colors"
           >
             <RefreshCw size={14} />
             <span className="hidden xs:inline">Refresh</span>
@@ -464,16 +489,17 @@ function Clients() {
       </div>
 
       {/* SEARCH + FILTER */}
-      <div className="bg-white p-3 sm:p-4 rounded-xl shadow border border-gray-200 mb-4 flex flex-col sm:flex-row gap-4 sm:items-end">
+      <div className="bg-white dark:bg-gray-800 p-3 sm:p-4 rounded-xl shadow border border-gray-200 dark:border-gray-700 mb-4 flex flex-col sm:flex-row gap-4 sm:items-end">
         {/* SEARCH */}
         <div className="relative w-full sm:w-64">
           <Search
-            className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
+            className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-500"
             size={16}
           />
           <input
-            className="w-full pl-9 pr-4 py-2 rounded-lg text-sm border border-gray-200 
-                 focus:outline-none focus:ring-2 focus:ring-blue-300"
+            className="w-full pl-9 pr-4 py-2 rounded-lg text-sm border border-gray-200 dark:border-gray-700 
+                 bg-white dark:bg-gray-900 text-gray-900 dark:text-white
+                 focus:outline-none focus:ring-2 focus:ring-blue-300 dark:focus:ring-blue-800"
             placeholder="Search..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
@@ -488,8 +514,8 @@ function Clients() {
       </div>
       {/* BULK ACTION BAR */}
       {selectedRows.length > 0 && (
-        <div className="flex flex-wrap justify-between items-center bg-blue-50 border border-blue-200 p-3 rounded-xl mb-3 gap-2">
-          <span className="text-sm text-blue-700 font-medium">
+        <div className="flex flex-wrap justify-between items-center bg-blue-50 dark:bg-blue-950/40 border border-blue-200 dark:border-blue-900 p-3 rounded-xl mb-3 gap-2">
+          <span className="text-sm text-blue-700 dark:text-blue-400 font-medium">
             {selectedRows.length} client{selectedRows.length > 1 ? "s" : ""}{" "}
             selected
           </span>
@@ -497,7 +523,7 @@ function Clients() {
           <div className="flex gap-2">
             <button
               onClick={handleExport}
-              className="px-3 py-1.5 bg-white border border-gray-300 rounded-lg flex items-center gap-1.5 text-sm hover:bg-gray-50 transition-colors"
+              className="px-3 py-1.5 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-200 rounded-lg flex items-center gap-1.5 text-sm hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
             >
               <Download size={13} />
               Export
@@ -513,10 +539,10 @@ function Clients() {
       )}
 
       {/* TABLE */}
-      <div className="bg-white rounded-xl shadow  overflow-hidden">
+      <div className="bg-white dark:bg-gray-800 rounded-xl shadow overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-sm min-w-160">
-            <thead className="bg-gray-50 border-b border-gray-200">
+            <thead className="bg-gray-50 dark:bg-gray-900/50 border-b border-gray-200 dark:border-gray-700">
               <tr>
                 <th className="p-3 w-10 text-center">
                   <input
@@ -529,47 +555,47 @@ function Clients() {
                     onChange={toggleAll}
                   />
                 </th>
-                <th className="px-4 py-3 text-left font-semibold text-gray-600 whitespace-nowrap">
+                <th className="px-4 py-3 text-left font-semibold text-gray-600 dark:text-gray-400 whitespace-nowrap">
                   ID
                 </th>
-                <th className="px-4 py-3 text-left font-semibold text-gray-600 whitespace-nowrap">
+                <th className="px-4 py-3 text-left font-semibold text-gray-600 dark:text-gray-400 whitespace-nowrap">
                   Email
                 </th>
-                <th className="px-4 py-3 text-left font-semibold text-gray-600 whitespace-nowrap">
+                <th className="px-4 py-3 text-left font-semibold text-gray-600 dark:text-gray-400 whitespace-nowrap">
                   Phone
                 </th>
-                <th className="px-4 py-3 text-left font-semibold text-gray-600 whitespace-nowrap">
+                <th className="px-4 py-3 text-left font-semibold text-gray-600 dark:text-gray-400 whitespace-nowrap">
                   Location
                 </th>
-                <th className="px-4 py-3 text-left font-semibold text-gray-600 whitespace-nowrap">
+                <th className="px-4 py-3 text-left font-semibold text-gray-600 dark:text-gray-400 whitespace-nowrap">
                   Client Type
                 </th>
-                <th className="px-4 py-3 text-left font-semibold text-gray-600 whitespace-nowrap">
+                <th className="px-4 py-3 text-left font-semibold text-gray-600 dark:text-gray-400 whitespace-nowrap">
                   Status
                 </th>
-                <th className="px-4 py-3 text-center font-semibold text-gray-600 w-16">
+                <th className="px-4 py-3 text-center font-semibold text-gray-600 dark:text-gray-400 w-16">
                   Actions
                 </th>
               </tr>
             </thead>
 
-            <tbody className="divide-y divide-gray-100">
+            <tbody className="divide-y divide-gray-100 dark:divide-gray-700/60">
               {filteredClients.length === 0 ? (
                 <tr>
                   <td
                     colSpan={8}
-                    className="py-12 text-center text-gray-400 text-sm"
+                    className="py-12 text-center text-gray-400 dark:text-gray-500 text-sm"
                   >
                     No clients found
                   </td>
                 </tr>
               ) : (
-                filteredClients.map((c, index) => (
+                paginatedClients.map((c, index) => (
                   <tr
                     key={c.id}
                     onClick={() => openViewModal(c)}
-                    className={`cursor-pointer transition-colors hover:bg-blue-50
-                      ${index % 2 === 0 ? "bg-white" : "bg-gray-50/50"}
+                    className={`cursor-pointer transition-colors hover:bg-blue-50 dark:hover:bg-blue-950/20
+                      ${index % 2 === 0 ? "bg-white dark:bg-gray-800" : "bg-gray-50/50 dark:bg-gray-800/40"}
                     `}
                   >
                     <td
@@ -584,19 +610,19 @@ function Clients() {
                       />
                     </td>
 
-                    <td className="px-4 py-3 text-gray-500 font-mono text-xs">
+                    <td className="px-4 py-3 text-gray-500 dark:text-gray-400 font-mono text-xs">
                       #{c.id}
                     </td>
-                    <td className="px-4 py-3 text-gray-600 max-w-45 truncate">
+                    <td className="px-4 py-3 text-gray-600 dark:text-gray-300 max-w-45 truncate">
                       {c.email}
                     </td>
-                    <td className="px-4 py-3 text-gray-600 whitespace-nowrap">
+                    <td className="px-4 py-3 text-gray-600 dark:text-gray-300 whitespace-nowrap">
                       {c.phone || "—"}
                     </td>
-                    <td className="px-4 py-3 text-gray-600 whitespace-nowrap">
+                    <td className="px-4 py-3 text-gray-600 dark:text-gray-300 whitespace-nowrap">
                       {c.location || "—"}
                     </td>
-                    <td className="px-4 py-3 text-gray-600 whitespace-nowrap">
+                    <td className="px-4 py-3 text-gray-600 dark:text-gray-300 whitespace-nowrap">
                       {c.client_type && c.client_type === "individual"
                         ? "Individual"
                         : "Company"}
@@ -615,7 +641,7 @@ function Clients() {
                     >
                       <ActionMenu
                         client={c}
-                        className="w-44 max-h-[80vh] overflow-y-auto bg-white rounded-xl border border-gray-200 shadow-2xl"
+                        className="w-44 max-h-[80vh] overflow-y-auto bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 shadow-2xl"
                         onView={openViewModal}
                         onEdit={(client) =>
                           navigate(`/admin/edit/client/${client.id}`)
@@ -632,65 +658,149 @@ function Clients() {
         </div>
 
         {/* Row count footer */}
-        <div className="px-4 py-2.5 border-t border-gray-100 bg-gray-50 text-xs text-gray-400">
-          Showing {filteredClients.length} of {clients.length} clients
+        {clients.length > 0 && (
+          <div className="px-4 py-2.5 border-t border-gray-100 dark:border-gray-700 bg-gray-50 dark:bg-gray-900/30 text-xs text-gray-600 dark:text-gray-300">
+            Showing {filteredClients.length} of {clients.length} clients
+          </div>
+        )}
+      </div>
+
+      {/* PAGINATION */}
+      <div className="flex flex-col sm:flex-row items-center justify-between gap-3 mt-4">
+        {/* Rows per page */}
+        <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-300">
+          <span>Rows:</span>
+          <select
+            value={rowsPerPage}
+            onChange={(e) => {
+              setRowsPerPage(Number(e.target.value));
+              setCurrentPage(1);
+            }}
+            className="border border-gray-300 dark:border-gray-600 rounded px-2 py-1 
+                 bg-white dark:bg-gray-800 text-gray-800 dark:text-white"
+          >
+            {[5, 10, 20, 50].map((size) => (
+              <option key={size} value={size}>
+                {size}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        {/* Pagination (CENTER) */}
+        <div className="flex justify-center flex-1">
+          <div className="flex items-center gap-1">
+            {/* FIRST */}
+            {currentPage > 1 && (
+              <button
+                onClick={() => setCurrentPage(1)}
+                className={`${baseBtn} ${themeBtn}`}
+              >
+                « First
+              </button>
+            )}
+
+            {/* PREV */}
+            {currentPage > 1 && (
+              <button
+                onClick={() => setCurrentPage((p) => p - 1)}
+                className={`${baseBtn} ${themeBtn}`}
+              >
+                ‹ Prev
+              </button>
+            )}
+
+            {/* PAGE NUMBERS */}
+            {Array.from({ length: totalPages }, (_, i) => i + 1)
+              .slice(
+                Math.max(0, currentPage - 3),
+                Math.min(totalPages, currentPage + 2),
+              )
+              .map((page) => (
+                <button
+                  key={page}
+                  onClick={() => setCurrentPage(page)}
+                  className={`${baseBtn} ${currentPage === page ? activeBtn : themeBtn
+                    }`}
+                >
+                  {page}
+                </button>
+              ))}
+
+            {/* NEXT */}
+            {currentPage < totalPages && (
+              <button
+                onClick={() => setCurrentPage((p) => p - 1)}
+                className={`${baseBtn} ${themeBtn}`}
+              >
+                Next ›
+              </button>
+            )}
+
+            {/* LAST */}
+            {currentPage < totalPages && (
+              <button
+                onClick={() => setCurrentPage(totalPages)}
+                className={`${baseBtn} ${themeBtn}`}
+              >
+                Last »
+              </button>
+            )}
+          </div>
         </div>
       </div>
 
       {/* VIEW MODAL */}
       {isViewModalOpen && selectedClient && (
         <div
-          className="fixed inset-0 bg-black/30 backdrop-blur-[2px] flex items-end sm:items-center justify-center z-50 p-0 sm:p-4"
+          className="fixed inset-0 bg-black/30 backdrop-blur-[2px] dark:backdrop-blur-xs flex items-end sm:items-center justify-center z-50 p-0 sm:p-4"
           onClick={closeModal}
         >
           <div
-            className="bg-white w-full sm:max-w-md sm:rounded-2xl rounded-t-2xl p-6 shadow-2xl"
+            className="bg-white dark:bg-gray-800 w-full sm:max-w-md sm:rounded-2xl rounded-t-2xl p-6 shadow-2xl"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-center justify-between mb-5">
-              <h2 className="text-lg font-bold text-gray-900">
+              <h2 className="text-lg font-bold text-gray-900 dark:text-white">
                 Client Details
               </h2>
               <button
                 onClick={closeModal}
-                className="p-1.5 rounded-lg hover:bg-gray-100 text-gray-500 transition-colors"
+                className="p-1.5 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-500 dark:text-gray-400 transition-colors"
               >
                 <X size={18} />
               </button>
             </div>
 
-            <div className="flex border-b border-gray-200 mb-4">
+            <div className="flex border-b border-gray-200 dark:border-gray-700 mb-4">
               {selectedClient.client_type === "individual" ? (
                 <>
                   <button
                     onClick={() => setActiveTab("personal")}
-                    className={`px-4 py-2 text-sm font-medium ${
-                      activeTab === "personal"
-                        ? "border-b-2 border-blue-600 text-blue-600"
-                        : "text-gray-500"
-                    }`}
+                    className={`px-4 py-2 text-sm font-medium ${activeTab === "personal"
+                      ? "border-b-2 border-blue-600 text-blue-600 dark:text-blue-400 dark:border-blue-400"
+                      : "text-gray-500 dark:text-gray-400"
+                      }`}
                   >
                     Personal
                   </button>
 
                   <button
                     onClick={() => setActiveTab("contact")}
-                    className={`px-4 py-2 text-sm font-medium ${
-                      activeTab === "contact"
-                        ? "border-b-2 border-blue-600 text-blue-600"
-                        : "text-gray-500"
-                    }`}
+                    className={`px-4 py-2 text-sm font-medium ${activeTab === "contact"
+                      ? "border-b-2 border-blue-600 text-blue-600 dark:text-blue-400 dark:border-blue-400"
+                      : "text-gray-500 dark:text-gray-400"
+                      }`}
                   >
                     Contact
                   </button>
 
                   <button
                     onClick={() => setActiveTab("others")}
-                    className={`px-4 py-2 text-sm font-medium ${
-                      activeTab === "others"
-                        ? "border-b-2 border-blue-600 text-blue-600"
-                        : "text-gray-500"
-                    }`}
+                    className={`px-4 py-2 text-sm font-medium ${activeTab === "others"
+                      ? "border-b-2 border-blue-600 text-blue-600 dark:text-blue-400 dark:border-blue-400"
+                      : "text-gray-500 dark:text-gray-400"
+                      }`}
                   >
                     Others
                   </button>
@@ -699,33 +809,30 @@ function Clients() {
                 <>
                   <button
                     onClick={() => setActiveTab("company")}
-                    className={`px-4 py-2 text-sm font-medium ${
-                      activeTab === "company"
-                        ? "border-b-2 border-blue-600 text-blue-600"
-                        : "text-gray-500"
-                    }`}
+                    className={`px-4 py-2 text-sm font-medium ${activeTab === "company"
+                      ? "border-b-2 border-blue-600 text-blue-600 dark:text-blue-400 dark:border-blue-400"
+                      : "text-gray-500 dark:text-gray-400"
+                      }`}
                   >
                     Company
                   </button>
 
                   <button
                     onClick={() => setActiveTab("contact")}
-                    className={`px-4 py-2 text-sm font-medium ${
-                      activeTab === "contact"
-                        ? "border-b-2 border-blue-600 text-blue-600"
-                        : "text-gray-500"
-                    }`}
+                    className={`px-4 py-2 text-sm font-medium ${activeTab === "contact"
+                      ? "border-b-2 border-blue-600 text-blue-600 dark:text-blue-400 dark:border-blue-400"
+                      : "text-gray-500 dark:text-gray-400"
+                      }`}
                   >
                     Contact
                   </button>
 
                   <button
                     onClick={() => setActiveTab("others")}
-                    className={`px-4 py-2 text-sm font-medium ${
-                      activeTab === "others"
-                        ? "border-b-2 border-blue-600 text-blue-600"
-                        : "text-gray-500"
-                    }`}
+                    className={`px-4 py-2 text-sm font-medium ${activeTab === "others"
+                      ? "border-b-2 border-blue-600 text-blue-600 dark:text-blue-400 dark:border-blue-400"
+                      : "text-gray-500 dark:text-gray-400"
+                      }`}
                   >
                     Others
                   </button>
@@ -738,17 +845,17 @@ function Clients() {
                 selectedClient.client_type === "individual" && (
                   <>
                     <div className="flex gap-2">
-                      <span className="font-semibold text-gray-500 w-32">
+                      <span className="font-semibold text-gray-500 dark:text-gray-400 w-32">
                         First Name
                       </span>
-                      <span>{selectedClient.first_name || "—"}</span>
+                      <span className="text-gray-900 dark:text-gray-200">{selectedClient.first_name || "—"}</span>
                     </div>
 
                     <div className="flex gap-2">
-                      <span className="font-semibold text-gray-500 w-32">
+                      <span className="font-semibold text-gray-500 dark:text-gray-400 w-32">
                         Last Name
                       </span>
-                      <span>{selectedClient.last_name || "—"}</span>
+                      <span className="text-gray-900 dark:text-gray-200">{selectedClient.last_name || "—"}</span>
                     </div>
                   </>
                 )}
@@ -756,10 +863,10 @@ function Clients() {
               {activeTab === "company" &&
                 selectedClient.client_type === "company" && (
                   <div className="flex gap-2">
-                    <span className="font-semibold text-gray-500 w-32">
+                    <span className="font-semibold text-gray-500 dark:text-gray-400 w-32">
                       Company Name
                     </span>
-                    <span>{selectedClient.company_name || "—"}</span>
+                    <span className="text-gray-900 dark:text-gray-200">{selectedClient.company_name || "—"}</span>
                   </div>
                 )}
 
@@ -768,33 +875,33 @@ function Clients() {
                   {selectedClient.client_type === "company" && (
                     <>
                       <div className="flex gap-2">
-                        <span className="font-semibold text-gray-500 w-32">
+                        <span className="font-semibold text-gray-500 dark:text-gray-400 w-32">
                           Contact First Name
                         </span>
-                        <span>{selectedClient.first_name || "—"}</span>
+                        <span className="text-gray-900 dark:text-gray-200">{selectedClient.first_name || "—"}</span>
                       </div>
 
                       <div className="flex gap-2">
-                        <span className="font-semibold text-gray-500 w-32">
+                        <span className="font-semibold text-gray-500 dark:text-gray-400 w-32">
                           Contact Last Name
                         </span>
-                        <span>{selectedClient.last_name || "—"}</span>
+                        <span className="text-gray-900 dark:text-gray-200">{selectedClient.last_name || "—"}</span>
                       </div>
                     </>
                   )}
 
                   <div className="flex gap-2">
-                    <span className="font-semibold text-gray-500 w-32">
+                    <span className="font-semibold text-gray-500 dark:text-gray-400 w-32">
                       Email
                     </span>
-                    <span>{selectedClient.email || "—"}</span>
+                    <span className="text-gray-900 dark:text-gray-200">{selectedClient.email || "—"}</span>
                   </div>
 
                   <div className="flex gap-2">
-                    <span className="font-semibold text-gray-500 w-32">
+                    <span className="font-semibold text-gray-500 dark:text-gray-400 w-32">
                       Phone
                     </span>
-                    <span>{selectedClient.phone || "—"}</span>
+                    <span className="text-gray-900 dark:text-gray-200">{selectedClient.phone || "—"}</span>
                   </div>
                 </>
               )}
@@ -802,19 +909,19 @@ function Clients() {
               {activeTab === "others" && (
                 <>
                   <div className="flex gap-2">
-                    <span className="font-semibold text-gray-500 w-32">ID</span>
-                    <span>#{selectedClient.id}</span>
+                    <span className="font-semibold text-gray-500 dark:text-gray-400 w-32">ID</span>
+                    <span className="text-gray-900 dark:text-gray-200">#{selectedClient.id}</span>
                   </div>
 
                   <div className="flex gap-2">
-                    <span className="font-semibold text-gray-500 w-32">
+                    <span className="font-semibold text-gray-500 dark:text-gray-400 w-32">
                       Location
                     </span>
-                    <span>{selectedClient.location || "—"}</span>
+                    <span className="text-gray-900 dark:text-gray-200">{selectedClient.location || "—"}</span>
                   </div>
 
                   <div className="flex gap-2 items-center">
-                    <span className="font-semibold text-gray-500 w-32">
+                    <span className="font-semibold text-gray-500 dark:text-gray-400 w-32">
                       Status
                     </span>
 
@@ -826,10 +933,10 @@ function Clients() {
 
                   {selectedClient.client_type === "individual" && (
                     <div className="flex gap-2">
-                      <span className="font-semibold text-gray-500 w-32">
+                      <span className="font-semibold text-gray-500 dark:text-gray-400 w-32">
                         National ID
                       </span>
-                      <span>{selectedClient.national_id || "—"}</span>
+                      <span className="text-gray-900 dark:text-gray-200">{selectedClient.national_id || "—"}</span>
                     </div>
                   )}
                 </>
@@ -849,7 +956,7 @@ function Clients() {
               </button>
               <button
                 onClick={() => handlePrint(selectedClient)}
-                className="px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-lg text-sm font-medium transition-colors flex items-center gap-2 cursor-pointer"
+                className="px-4 py-2 bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-800 dark:text-gray-200 rounded-lg text-sm font-medium transition-colors flex items-center gap-2 cursor-pointer"
               >
                 <Printer size={13} />
                 Print
@@ -894,7 +1001,7 @@ export function StatusFilter({ statusFilter, setStatusFilter }) {
   return (
     <div ref={wrapperRef} className="relative w-full sm:w-44">
       {/* LABEL */}
-      <label className="text-xs font-medium text-gray-600 mb-1 block">
+      <label className="text-xs font-medium text-gray-600 dark:text-gray-400 mb-1 block">
         Filter By Status
       </label>
 
@@ -902,24 +1009,24 @@ export function StatusFilter({ statusFilter, setStatusFilter }) {
       <button
         onClick={() => setOpen(!open)}
         className="w-full flex items-center justify-between px-3 py-2 text-sm 
-                   border border-gray-200 bg-white rounded-lg
-                   focus:outline-none focus:ring-2 focus:ring-blue-300"
+                   border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 rounded-lg
+                   focus:outline-none focus:ring-2 focus:ring-blue-300 dark:focus:ring-blue-500 transition-colors"
       >
-        <span className="text-gray-800 flex items-center gap-2">
+        <span className="text-gray-800 dark:text-gray-200 flex items-center gap-2">
           {selected?.label}
 
           {/* ACTIVE DOT */}
           {statusFilter !== "all" && (
-            <span className="w-2 h-2 bg-blue-500 rounded-full"></span>
+            <span className="w-2 h-2 bg-blue-500 dark:bg-blue-400 rounded-full"></span>
           )}
         </span>
 
-        <ChevronDown size={16} className="text-gray-500" />
+        <ChevronDown size={16} className="text-gray-500 dark:text-gray-400" />
       </button>
 
       {/* DROPDOWN */}
       {open && (
-        <div className="absolute z-50 mt-1 w-full bg-white border border-gray-200 rounded-lg shadow-lg overflow-hidden">
+        <div className="absolute z-50 mt-1 w-full bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-lg shadow-lg dark:shadow-2xl overflow-hidden">
           {options.map((opt) => (
             <div
               key={opt.value}
@@ -927,8 +1034,8 @@ export function StatusFilter({ statusFilter, setStatusFilter }) {
                 setStatusFilter(opt.value);
                 setOpen(false);
               }}
-              className={`px-3 py-2 text-sm cursor-pointer transition hover:bg-gray-100
-                ${statusFilter === opt.value ? "bg-gray-50 font-medium" : ""}`}
+              className={`px-3 py-2 text-sm cursor-pointer transition text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800
+                ${statusFilter === opt.value ? "bg-gray-50 dark:bg-gray-800/60 font-medium text-gray-900 dark:text-white" : ""}`}
             >
               {opt.label}
             </div>

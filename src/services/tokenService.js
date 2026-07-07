@@ -19,42 +19,44 @@ export const storeTokens = (access, refresh, remember) => {
 };
 
 /**
+ * Returns the active storage based on auth mode (persistent or session).
+ * Ensures consistent token access across the app.
+ */
+
+const getStorage = () => {
+  const mode = getAuthMode();
+
+  return mode === "persistent"
+    ? localStorage
+    : sessionStorage;
+};
+/**
  * Get access token
  */
 export const getAccessToken = () => {
-  return (
-    localStorage.getItem(ACCESS_KEY) ||
-    sessionStorage.getItem(ACCESS_KEY)
-  );
+  return getStorage().getItem(ACCESS_KEY);
 };
 
 /**
  * Get refresh token
  */
 export const getRefreshToken = () => {
-  return (
-    localStorage.getItem(REFRESH_KEY) ||
-    sessionStorage.getItem(REFRESH_KEY)
-  );
+  return getStorage().getItem(REFRESH_KEY);
 };
 
 /**
  * Detect auth mode
  */
 export const getAuthMode = () => {
-  return (
-    localStorage.getItem(MODE_KEY) ||
-    sessionStorage.getItem(MODE_KEY)
-  );
+  return localStorage.getItem(MODE_KEY);
+
 };
 
 /**
  * Active storage (for updates)
  */
 export const getActiveStorage = () => {
-  if (localStorage.getItem(ACCESS_KEY)) return localStorage;
-  if (sessionStorage.getItem(ACCESS_KEY)) return sessionStorage;
-  return null;
+  return getStorage();
 };
 
 /**

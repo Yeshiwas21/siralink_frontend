@@ -14,8 +14,6 @@ function WorkerSignup() {
     first_name: "",
     last_name: "",
     national_id: "",
-    skills: "",
-    bio: "",
     location: "",
   });
 
@@ -72,8 +70,8 @@ function WorkerSignup() {
       newErrors.email = "Enter a valid email address";
     }
 
-    if (!form.national_id || form.national_id.trim().length < 16) {
-      newErrors.national_id = "Minimum 16 characters required";
+    if (!form.national_id || form.national_id.trim().length < 12) {
+      newErrors.national_id = "Enter exactly 12 digit FIN number";
     }
 
     setErrors(newErrors);
@@ -166,6 +164,7 @@ function WorkerSignup() {
                   value={form.first_name}
                   onChange={handleChange}
                   className={inputClass("first_name")}
+                  autoComplete="off"
                 />
                 {errors.first_name && (
                   <p className="text-xs text-red-500 dark:text-red-400 mt-1">
@@ -183,6 +182,7 @@ function WorkerSignup() {
                   value={form.last_name}
                   onChange={handleChange}
                   className={inputClass("last_name")}
+                  autoComplete="off"
                 />
                 {errors.last_name && (
                   <p className="text-xs text-red-500 dark:text-red-400 mt-1">
@@ -202,6 +202,7 @@ function WorkerSignup() {
                 value={form.national_id}
                 onChange={handleChange}
                 className={inputClass("national_id")}
+                autoComplete="off"
               />
               {errors.national_id && (
                 <p className="text-xs text-red-500 dark:text-red-400 mt-1">
@@ -220,6 +221,7 @@ function WorkerSignup() {
                 value={form.location}
                 onChange={handleChange}
                 className={inputClass("location")}
+                autoComplete="off"
               />
               {errors.location && (
                 <p className="text-xs text-red-500 dark:text-red-400 mt-1">
@@ -239,6 +241,7 @@ function WorkerSignup() {
                   value={form.email}
                   onChange={handleChange}
                   className={inputClass("email")}
+                  autoComplete="off"
                 />
                 {errors.email && (
                   <p className="text-xs text-red-500 dark:text-red-400 mt-1">
@@ -256,6 +259,7 @@ function WorkerSignup() {
                   value={form.phone}
                   onChange={handleChange}
                   className={inputClass("phone")}
+                  autoComplete="off"
                 />
                 {errors.phone && (
                   <p className="text-xs text-red-500 dark:text-red-400 mt-1">
@@ -277,6 +281,7 @@ function WorkerSignup() {
                   value={form.password}
                   onChange={handleChange}
                   className={inputClass("password")}
+                  autoComplete="off"
                 />
                 {errors.password && (
                   <p className="text-xs text-red-500 dark:text-red-400 mt-1">
@@ -295,6 +300,7 @@ function WorkerSignup() {
                   value={form.password_2}
                   onChange={handleChange}
                   className={inputClass("password_2")}
+                  autoComplete="off"
                 />
                 {errors.password_2 && (
                   <p className="text-xs text-red-500 dark:text-red-400 mt-1">

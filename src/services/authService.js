@@ -9,12 +9,18 @@ import {
  * Login user and store tokens
  */
 export const loginApi = async (data) => {
+
+  if (!data.turnstile_token) {
+    throw new Error("Captcha not completed");
+  }
+
   const res = await loginUser(data);
 
   const { access, refresh } = res.data;
 
   // Save tokens (localStorage or sessionStorage)
   storeTokens(access, refresh, data.remember);
+  console.log("REMEMBER FLAG:", data.remember);
 
   return res.data;
 };

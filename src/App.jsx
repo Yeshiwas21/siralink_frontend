@@ -1,14 +1,14 @@
 import React from "react";
 
 import { Routes, Route, useLocation } from "react-router-dom";
-import { useAuth } from "./context/AuthContext";
+import { useAuth } from "./contexts/AuthContext";
 import { Navigate } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
 
 /* Layout */
-import Navbar from "./components/Navbar";
-import Sidebar from "./components/Sidebar";
-import Footer from "./components/Footer";
+import Navbar from "./components/layout/Navbar";
+import Sidebar from "./components/layout/Sidebar";
+import Footer from "./components/layout/Footer";
 
 /* Routes */
 import RoleRoute from "./routes/RoleRoute";
@@ -37,8 +37,13 @@ export default function App() {
 
   if (loading) {
     return (
-      <div className="h-screen flex items-center justify-center">
-        <div className="text-gray-500">Loading...</div>
+      <div className="h-screen flex items-center justify-center bg-white dark:bg-gray-950">
+        <div className="flex flex-col items-center gap-3">
+          <div className="w-8 h-8 border-4 border-gray-300 border-t-black dark:border-gray-700 dark:border-t-white rounded-full animate-spin"></div>
+          <div className="text-gray-500 dark:text-gray-400 text-sm">
+            Loading...
+          </div>
+        </div>
       </div>
     );
   }

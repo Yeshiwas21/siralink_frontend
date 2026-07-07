@@ -63,8 +63,8 @@ export function AuthProvider({ children }) {
   /**
    * LOGIN
    */
-  const login = async (form) => {
-    await loginApi(form);
+  const login = async (payload) => {
+    await loginApi(payload);
     const userData = await getMeApi();
 
     setUser({

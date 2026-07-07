@@ -1,9 +1,7 @@
 import React from "react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { useTheme } from "../context/ThemeContext";
-import logoLight from "../assets/siralink-light.svg";
-import logoDark from "../assets/siralink-dark.svg";
+import ThemedLogo from "../common/ThemedLogo";
 import {
   FaFacebookF,
   FaInstagram,
@@ -15,7 +13,6 @@ import { ChevronDown, ChevronUp } from "lucide-react";
 import { AiFillAndroid, AiOutlineAndroid } from "react-icons/ai";
 
 function Footer() {
-  const { theme } = useTheme();
   const footerLinkClass =
     "relative text-gray-800 dark:text-gray-200 hover:text-gray-900 dark:hover:text-white transition-colors duration-200 after:content-[''] after:absolute after:left-0 after:-bottom-0.5 after:h-[2px] after:w-0 after:bg-current after:transition-all after:duration-300 hover:after:w-full";
 
@@ -48,8 +45,7 @@ function Footer() {
           <div className="space-y-3 max-w-sm">
             {/* Logo */}
             <Link to="/" className="flex items-center">
-              <img
-                src={theme === "dark" ? logoDark : logoLight}
+              <ThemedLogo
                 alt="SiraLink"
                 className="h-6 md:h-7 w-auto object-contain"
               />
@@ -281,7 +277,7 @@ function Footer() {
 
         {/* COPYRIGHT */}
         <div className="border-t border-gray-200 dark:border-gray-800 mt-8 pt-6 text-center text-sm text-gray-600 dark:text-gray-200">
-          © {new Date().getFullYear()} SiraLink plt. All rights reserved.
+          © {new Date().getFullYear()} SiraLink Ethiopia. All rights reserved.
         </div>
       </div>
     </footer>
