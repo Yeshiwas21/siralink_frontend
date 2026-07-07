@@ -2,38 +2,39 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import { registerUser } from "../../../services/userServices";
+import { Link } from "lucide-react";
 
 function CreateUser() {
   const navigate = useNavigate();
 
   const [form, setForm] = useState({
+    first_name: "",
+    last_name: "",
     email: "",
     phone: "",
     password: "",
     password_2: "",
     user_type: "",
-    is_active: "",
   });
 
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
 
-  /* INPUT CHANGE */
   const handleChange = (e) => {
-    setForm({
-      ...form,
-      [e.target.name]: e.target.value,
-    });
-
-    setErrors({
-      ...errors,
-      [e.target.name]: "",
-    });
+    setForm({ ...form, [e.target.name]: e.target.value });
+    setErrors({ ...errors, [e.target.name]: "" });
   };
 
-  /* VALIDATION */
   const validate = () => {
     let newErrors = {};
+
+    if (!form.first_name?.trim()) {
+      newErrors.first_name = "First name is required";
+    }
+
+    if (!form.last_name?.trim()) {
+      newErrors.last_name = "Last name is required";
+    }
 
     if (!form.email || !/^\S+@\S+\.\S+$/.test(form.email)) {
       newErrors.email = "Enter a valid email";
@@ -47,8 +48,9 @@ function CreateUser() {
     if (!form.password || form.password.length < 8) {
       newErrors.password = "Min 8 characters required";
     }
+
     if (!form.password_2) {
-      newErrors.password_2 = "Please confirm a password";
+      newErrors.password_2 = "Please confirm password";
     } else if (form.password !== form.password_2) {
       newErrors.password_2 = "Passwords do not match";
     }
@@ -57,14 +59,9 @@ function CreateUser() {
       newErrors.user_type = "Select user type";
     }
 
-    if (!form.is_active) {
-      newErrors.is_active = "Select a status";
-    }
-
     return newErrors;
   };
 
-  /* ERROR PARSER */
   const parseErrors = (errData) => {
     const newErrors = {};
 
@@ -72,18 +69,23 @@ function CreateUser() {
       return { general: "Something went wrong" };
     }
 
-    Object.keys(errData).forEach((key) => {
-      const value = errData[key];
+    if (errData.detail) {
+      newErrors.general = errData.detail;
+      return newErrors;
+    }
 
-      newErrors[key] = Array.isArray(value)
-        ? value?.[0]
-        : value || "Invalid value";
+    Object.entries(errData).forEach(([key, value]) => {
+      if (key === "non_field_errors") {
+        newErrors.general = Array.isArray(value) ? value.join(", ") : value;
+        return;
+      }
+
+      newErrors[key] = Array.isArray(value) ? value.join(", ") : value;
     });
 
     return newErrors;
   };
 
-  /* SUBMIT */
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -94,128 +96,206 @@ function CreateUser() {
 
     try {
       setLoading(true);
-
       await registerUser(form);
+
       toast.success("New user created");
       navigate("/admin/users");
     } catch (err) {
-      setErrors(parseErrors(err?.response?.data));
-      toast.error("Failed to create a user");
+      const backendErrors = parseErrors(err?.response?.data);
+
+      setErrors(backendErrors);
+
+      toast.error(
+        backendErrors.general ||
+          Object.values(backendErrors)[0] ||
+          "Failed to create user",
+      );
     } finally {
       setLoading(false);
     }
   };
 
-  const inputClass = (field) =>
-    `w-full border p-2 rounded ${
-      errors[field] ? "border-red-500" : "border-gray-300"
-    }`;
-
   return (
-    <div className="p-6 bg-white rounded-xl shadow max-w-xl mx-auto">
-      <h2 className="text-xl font-bold mb-4 text-center">Create User</h2>
+    <div className="min-h-screen py-16 px-4 bg-gray-100 dark:bg-gray-900 transition-all">
+      {/* CARD WRAPPER */}
+      <div className="max-w-xl mx-auto rounded-2xl shadow-xl bg-white dark:bg-gray-800 overflow-hidden border border-gray-200 dark:border-gray-700">
+        {/* HEADER  */}
+        <div className="px-6 py-5 border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">
+          <h2 className="text-xl font-bold text-gray-900 dark:text-white text-center">
+            Create New User
+          </h2>
 
-      <form onSubmit={handleSubmit} className="space-y-4">
-        {/* EMAIL */}
-        <input
-          name="email"
-          type="email"
-          placeholder="Email"
-          required
-          autoComplete="off"
-          value={form.email}
-          onChange={handleChange}
-          className={inputClass("email")}
-        />
-        {errors.email && <p className="text-red-500 text-sm">{errors.email}</p>}
+          <p className="text-center text-gray-500 dark:text-gray-400 text-sm mt-1">
+            Add a new account to the system
+          </p>
+        </div>
+        {/* FORM */}
+        <form onSubmit={handleSubmit} className="p-6 space-y-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {/* FIRST NAME */}
+            <div>
+              <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                First Name
+              </label>
+              <input
+                name="first_name"
+                placeholder="John"
+                value={form.first_name}
+                onChange={handleChange}
+                autoComplete="off"
+                className="mt-1 w-full px-4 py-3 rounded-xl border bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white border-gray-200 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-500 transition"
+              />
+              {errors.first_name && (
+                <p className="text-red-500 text-sm mt-1">{errors.first_name}</p>
+              )}
+            </div>
 
-        {/* PHONE */}
-        <input
-          name="phone"
-          required
-          placeholder="Phone (+2519XXXXXXXX or 09XXXXXXXX)"
-          autoComplete="off"
-          value={form.phone}
-          onChange={handleChange}
-          className={inputClass("phone")}
-        />
-        {errors.phone && <p className="text-red-500 text-sm">{errors.phone}</p>}
+            {/* LAST NAME */}
+            <div>
+              <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                Last Name
+              </label>
+              <input
+                name="last_name"
+                placeholder="Doe"
+                value={form.last_name}
+                onChange={handleChange}
+                autoComplete="off"
+                className="mt-1 w-full px-4 py-3 rounded-xl border bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white border-gray-200 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-500 transition"
+              />
+              {errors.last_name && (
+                <p className="text-red-500 text-sm mt-1">{errors.last_name}</p>
+              )}
+            </div>
+          </div>
+          {/* EMAIL */}
+          <div>
+            <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
+              Email
+            </label>
+            <input
+              name="email"
+              type="email"
+              placeholder="user@example.com"
+              value={form.email}
+              onChange={handleChange}
+              autoComplete="off"
+              className="mt-1 w-full px-4 py-3 rounded-xl border bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white border-gray-200 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-500 transition"
+            />
+            {errors.email && (
+              <p className="text-red-500 text-sm mt-1">{errors.email}</p>
+            )}
+          </div>
 
-        {/* USER TYPE */}
-        <select
-          name="user_type"
-          required
-          value={form.user_type}
-          onChange={handleChange}
-          className={inputClass("user_type")}
-        >
-          <option value="">Select User Type</option>
-          <option value="client">Client</option>
-          <option value="worker">Worker</option>
-          <option value="admin">Admin</option>
-        </select>
-        {errors.user_type && (
-          <p className="text-red-500 text-sm">{errors.user_type}</p>
-        )}
+          {/* PHONE */}
+          <div>
+            <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
+              Phone
+            </label>
+            <input
+              name="phone"
+              placeholder="+2519XXXXXXXX or 09XXXXXXXX"
+              value={form.phone}
+              onChange={handleChange}
+              autoComplete="off"
+              className="mt-1 w-full px-4 py-3 rounded-xl border bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white border-gray-200 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-500 transition"
+            />
+            {errors.phone && (
+              <p className="text-red-500 text-sm mt-1">{errors.phone}</p>
+            )}
+          </div>
 
-        {/* PASSWORD */}
-        <input
-          type="password"
-          name="password"
-          required
-          placeholder="Password (min 8 characters)"
-          autoComplete="off"
-          value={form.password}
-          onChange={handleChange}
-          className={inputClass("password")}
-        />
-        {errors.password && (
-          <p className="text-red-500 text-sm">{errors.password}</p>
-        )}
+          {/* USER TYPE */}
+          <div>
+            <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
+              User Type
+            </label>
+            <select
+              name="user_type"
+              value={form.user_type}
+              onChange={handleChange}
+              className="mt-1 w-full px-4 py-3 rounded-xl border bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white border-gray-200 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-500 transition"
+            >
+              <option value="">Select user type</option>
+              <option value="client">Client</option>
+              <option value="worker">Worker</option>
+              <option value="admin">Admin</option>
+            </select>
 
-        {/* CONFIRM PASSWORD */}
-        <input
-          type="password"
-          name="password_2"
-          placeholder="Confirm Password"
-          autoComplete="off"
-          value={form.password_2}
-          onChange={handleChange}
-          className={inputClass("password_2")}
-        />
-        {errors.password_2 && (
-          <p className="text-red-500 text-sm">{errors.password_2}</p>
-        )}
+            {errors.user_type && (
+              <p className="text-red-500 text-sm mt-1">{errors.user_type}</p>
+            )}
+          </div>
 
-        {/* STATUS */}
-        <select
-          name="is_active"
-          value={form.is_active}
-          onChange={handleChange}
-          className={inputClass("is_active")}
-        >
-          <option value="">Select A Status</option>
-          <option value="true">Active</option>
-          <option value="false">Inactive</option>
-        </select>
-        {errors.is_active && (
-          <p className="text-red-500 text-sm">{errors.is_active}</p>
-        )}
+          {/* PASSWORD GRID */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                Password
+              </label>
+              <input
+                type="password"
+                name="password"
+                value={form.password}
+                onChange={handleChange}
+                autoComplete="off"
+                className="mt-1 w-full px-4 py-3 rounded-xl border bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white border-gray-200 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-500 transition"
+              />
+              {errors.password && (
+                <p className="text-red-500 text-sm mt-1">{errors.password}</p>
+              )}
+            </div>
 
-        {/* GENERAL ERROR */}
-        {errors.general && (
-          <p className="text-red-500 text-sm text-center">{errors.general}</p>
-        )}
+            <div>
+              <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                Confirm
+              </label>
+              <input
+                type="password"
+                name="password_2"
+                value={form.password_2}
+                onChange={handleChange}
+                autoComplete="off"
+                className="mt-1 w-full px-4 py-3 rounded-xl border bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white border-gray-200 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-500 transition"
+              />
+              {errors.password_2 && (
+                <p className="text-red-500 text-sm mt-1">{errors.password_2}</p>
+              )}
+            </div>
+          </div>
 
-        {/* SUBMIT */}
-        <button
-          type="submit"
-          disabled={loading}
-          className="bg-blue-500 text-white px-4 py-2 rounded font-semibold w-full cursor-pointer"
-        >
-          {loading ? "Creating..." : "Create User"}
-        </button>
-      </form>
+          {/* GENERAL ERROR */}
+          {errors.general && (
+            <div className="p-3 rounded-xl bg-red-50 dark:bg-red-900/30 text-red-600 dark:text-red-300 text-sm text-center border border-red-200 dark:border-red-700">
+              {errors.general}
+            </div>
+          )}
+
+          {/* SUBMIT */}
+          <button
+            type="submit"
+            disabled={loading}
+            className={`w-full py-3 rounded-xl font-semibold transition-all shadow-sm ${
+              loading
+                ? "bg-gray-400 cursor-not-allowed"
+                : "bg-gray-900 dark:bg-white dark:text-gray-900 text-white hover:opacity-90"
+            }`}
+          >
+            {loading ? "Creating user..." : "Create User"}
+          </button>
+          {/* FOOTER NAVIGATION */}
+          <div className="px-6 pb-6">
+            <button
+              type="button"
+              onClick={() => navigate("/admin/users")}
+              className="w-full flex items-center justify-center gap-2 py-3 rounded-xl border border-gray-200 dark:border-gray-700 
+               bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 transition cursor-pointer"
+            >
+              ← Back to Users List
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
   );
 }

@@ -1,21 +1,25 @@
 import React, { useState } from "react";
 import { User, Lock, Eye, EyeOff } from "lucide-react";
 import { useNavigate, Link, Navigate } from "react-router-dom";
-import { useAuth } from "../../context/AuthContext";
+import { useAuth } from "../../contexts/AuthContext";
 import { getHomeRoute } from "../../utils/getHomeRoute";
+import { Turnstile } from "@marsidev/react-turnstile";
 
 function Login() {
   const { user, login } = useAuth();
   const navigate = useNavigate();
 
   const [form, setForm] = useState({
-    email: "",
+    identifier: "", // for either email or phone
     password: "",
     remember: false,
   });
 
+  const [turnstileToken, setTurnstileToken] = useState("");
+  const [turnstileKey, setTurnstileKey] = useState(0);
+
   const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
+  const [loginLoading, setLoginLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
   const handleChange = (e) => {
@@ -30,15 +34,21 @@ function Login() {
     e.preventDefault();
     setError("");
 
-    if (!form.email || !form.password) {
-      setError("Please fill both email and password");
+    if (!form.identifier || !form.password) {
+      setError("Please fill both email/phone and password");
       return;
     }
+    const payload = {
+      identifier: form.identifier,
+      password: form.password,
+      remember: form.remember,
+      turnstile_token: turnstileToken, // from Turnstile
+    };
 
     try {
-      setLoading(true);
-      await login(form);
-      navigate(getHomeRoute(user), { replace: true });
+      setLoginLoading(true);
+      const loggedInUser = await login(payload);
+      navigate(getHomeRoute(loggedInUser), { replace: true });
     } catch (err) {
       const data = err?.response?.data || {};
 
@@ -46,11 +56,15 @@ function Login() {
         ? data.message[0]
         : data.message;
 
-      setError(message || data?.detail || "Invalid email or password");
+      setError(message || data?.detail || "Invalid email/phone or password");
 
       setForm((prev) => ({ ...prev, password: "" }));
+
+      // RESET TURNSTILE
+      setTurnstileToken("");
+      setTurnstileKey((prev) => prev + 1); // forces reload
     } finally {
-      setLoading(false);
+      setLoginLoading(false);
     }
   };
 
@@ -82,15 +96,15 @@ function Login() {
 
         {/* FORM */}
         <form onSubmit={handleSubmit} className="space-y-4">
-          {/* EMAIL */}
+          {/* EMAIL/PHONE */}
           <div className="relative">
             <User className="absolute left-3 top-3 text-gray-400 w-5 h-5" />
 
             <input
-              type="email"
-              name="email"
-              value={form.email}
-              placeholder="Email address"
+              type="text"
+              name="identifier"
+              value={form.identifier}
+              placeholder="Email or Phone"
               autoComplete="off"
               onChange={handleChange}
               className="w-full pl-10 p-3 rounded-lg border border-gray-300 dark:border-gray-700
@@ -152,16 +166,28 @@ function Login() {
             </button>
           </div>
 
+          {/* TURNSTILE */}
+          <div className="flex justify-center">
+            <Turnstile
+              key={turnstileKey} // for reloading
+              siteKey={import.meta.env.VITE_TURNSTILE_SITE_KEY}
+              onSuccess={(token) => setTurnstileToken(token)}
+              onExpire={() => setTurnstileToken("")}
+            />
+          </div>
+
           {/* BUTTON */}
           <button
             type="submit"
-            disabled={loading || !form.email || !form.password}
+            disabled={
+              loginLoading || !form.identifier || !form.password || !turnstileToken
+            }
             className="w-full py-3 rounded-lg font-medium
             bg-black text-white dark:bg-white dark:text-black
             hover:opacity-90 active:scale-[0.99]
             transition cursor-pointer disabled:cursor-not-allowed disabled:opacity-50"
           >
-            {loading ? "Logging in..." : "Login"}
+            {loginLoading ? "Logging in..." : "Login"}
           </button>
         </form>
 

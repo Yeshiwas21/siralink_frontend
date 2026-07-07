@@ -10,10 +10,9 @@ import {
   Sun,
   Moon,
 } from "lucide-react";
-import { useTheme } from "../context/ThemeContext";
-import { useAuth } from "../context/AuthContext";
-import logoLight from "../assets/siralink-light.svg";
-import logoDark from "../assets/siralink-dark.svg";
+import { useTheme } from "../../contexts/ThemeContext";
+import { useAuth } from "../../contexts/AuthContext";
+import ThemedLogo from "../common/ThemedLogo";
 
 function Navbar() {
   const [open, setOpen] = useState(false);
@@ -145,8 +144,7 @@ function Navbar() {
           {/* Logo */}
           <div className="flex items-center shrink-0">
             <Link to="/" className="flex items-center h-6 md:h-7">
-              <img
-                src={theme === "dark" ? logoDark : logoLight}
+              <ThemedLogo
                 alt="SiraLink"
                 className="h-full w-auto object-contain"
               />

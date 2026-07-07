@@ -96,8 +96,8 @@ function ClientSignup() {
 
     // CONDITIONAL FIELDS
     if (isIndividual) {
-      if (!form.national_id || form.national_id.trim().length < 16) {
-        e.national_id = "Minimum 16 characters required";
+      if (!form.national_id || form.national_id.trim().length < 12) {
+        e.national_id = "Enter exactly 12 digit FIN number";
       }
     }
 
@@ -124,7 +124,15 @@ function ClientSignup() {
     try {
       setLoading(true);
 
-      await signupClient(form);
+      // ✅ normalize ONLY optional fields
+      const payload = {
+        ...form,
+        national_id: form.national_id?.trim() || null,
+        company_name: form.company_name?.trim() || null,
+        location: form.location?.trim() || null,
+      };
+
+      await signupClient(payload);
 
       toast.success("Account created successfully");
       navigate("/login");
@@ -233,6 +241,7 @@ function ClientSignup() {
                   value={form.first_name}
                   onChange={handleChange}
                   className={inputClass("first_name")}
+                  autoComplete="off"
                 />
                 {errors.first_name && (
                   <p className="text-xs text-red-500 dark:text-red-400 mt-1">
@@ -250,6 +259,7 @@ function ClientSignup() {
                   value={form.last_name}
                   onChange={handleChange}
                   className={inputClass("last_name")}
+                  autoComplete="off"
                 />
                 {errors.last_name && (
                   <p className="text-xs text-red-500 dark:text-red-400 mt-1">
@@ -270,6 +280,7 @@ function ClientSignup() {
                   value={form.national_id}
                   onChange={handleChange}
                   className={inputClass("national_id")}
+                  autoComplete="off"
                 />
                 {errors.national_id && (
                   <p className="text-xs text-red-500 dark:text-red-400 mt-1">
@@ -289,6 +300,7 @@ function ClientSignup() {
                   value={form.company_name}
                   onChange={handleChange}
                   className={inputClass("company_name")}
+                  autoComplete="off"
                 />
                 {errors.company_name && (
                   <p className="text-xs text-red-500 dark:text-red-400 mt-1">
@@ -309,6 +321,7 @@ function ClientSignup() {
                   value={form.location}
                   onChange={handleChange}
                   className={inputClass("location")}
+                  autoComplete="off"
                 />
                 {errors.location && (
                   <p className="text-xs text-red-500 dark:text-red-400 mt-1">
@@ -327,6 +340,7 @@ function ClientSignup() {
                     value={form.email}
                     onChange={handleChange}
                     className={inputClass("email")}
+                    autoComplete="off"
                   />
                   {errors.email && (
                     <p className="text-xs text-red-500 dark:text-red-400 mt-1">
@@ -344,6 +358,7 @@ function ClientSignup() {
                     value={form.phone}
                     onChange={handleChange}
                     className={inputClass("phone")}
+                    autoComplete="off"
                   />
                   {errors.phone && (
                     <p className="text-xs text-red-500 dark:text-red-400 mt-1">
@@ -366,6 +381,7 @@ function ClientSignup() {
                   value={form.password}
                   onChange={handleChange}
                   className={inputClass("password")}
+                  autoComplete="off"
                 />
                 {errors.password && (
                   <p className="text-xs text-red-500 dark:text-red-400 mt-1">
@@ -384,6 +400,7 @@ function ClientSignup() {
                   value={form.password_2}
                   onChange={handleChange}
                   className={inputClass("password_2")}
+                  autoComplete="off"
                 />
                 {errors.password_2 && (
                   <p className="text-xs text-red-500 dark:text-red-400 mt-1">

@@ -9,7 +9,7 @@ import {
   Hammer,
   Paintbrush,
 } from "lucide-react";
-import { useAuth } from "../../context/AuthContext";
+import { useAuth } from "../../contexts/AuthContext";
 import { getHomeRoute } from "../../utils/getHomeRoute";
 
 function HomePage() {
