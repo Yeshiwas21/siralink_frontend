@@ -1,39 +1,56 @@
 import React from "react";
 import { motion as Motion } from "framer-motion";
 import { ChevronDown } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 function HowItWorks() {
+  const { t } = useTranslation();
+
   const steps = [
     {
       step: "01",
-      title: "Create Your Profile",
-      desc: "Sign up as a Client or Worker and build your profile with skills, location, and experience.",
-      extra:
-        "Verified profiles increase trust and improve your chances of getting hired faster.",
+      title: t("how_it_works.steps.step1.title"),
+      desc: t("how_it_works.steps.step1.desc"),
+      extra: t("how_it_works.steps.step1.extra"),
     },
     {
       step: "02",
-      title: "Post or Discover Jobs",
-      desc: "Clients post job requests. Workers browse opportunities based on skills and location.",
-      extra: "Smart filtering helps you find the right match quickly.",
+      title: t("how_it_works.steps.step2.title"),
+      desc: t("how_it_works.steps.step2.desc"),
+      extra: t("how_it_works.steps.step2.extra"),
     },
     {
       step: "03",
-      title: "Connect & Communicate",
-      desc: "Chat, negotiate price, and agree on job details before starting.",
-      extra: "Clear communication reduces misunderstandings.",
+      title: t("how_it_works.steps.step3.title"),
+      desc: t("how_it_works.steps.step3.desc"),
+      extra: t("how_it_works.steps.step3.extra"),
     },
     {
       step: "04",
-      title: "Work Progress",
-      desc: "Complete work while keeping transparency with updates and tracking.",
-      extra: "Clients can request updates anytime.",
+      title: t("how_it_works.steps.step4.title"),
+      desc: t("how_it_works.steps.step4.desc"),
+      extra: t("how_it_works.steps.step4.extra"),
     },
     {
       step: "05",
-      title: "Payment & Rating",
-      desc: "Secure payment release after completion and mutual reviews.",
-      extra: "Ratings improve your visibility and trust score.",
+      title: t("how_it_works.steps.step5.title"),
+      desc: t("how_it_works.steps.step5.desc"),
+      extra: t("how_it_works.steps.step5.extra"),
+    },
+  ];
+
+  const infoCards = [
+    {
+      title: t("how_it_works.features.trust.title"),
+      desc: t("how_it_works.features.trust.desc"),
+    },
+    {
+      title: t("how_it_works.features.speed.title"),
+      desc: t("how_it_works.features.speed.desc"),
+    },
+    {
+      title: t("how_it_works.features.security.title"),
+      desc: t("how_it_works.features.security.desc"),
     },
   ];
 
@@ -49,16 +66,15 @@ function HowItWorks() {
         {/* HEADER */}
         <div className="text-center mb-20">
           <span className="inline-flex px-5 py-2 rounded-full bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 text-sm font-semibold text-gray-700 dark:text-gray-300">
-            ⚡ Simple Workflow
+            ⚡ {t("how_it_works.badge")}
           </span>
 
           <h2 className="mt-6 text-4xl font-black text-gray-900 dark:text-white">
-            How It Works
+            {t("how_it_works.title")}
           </h2>
 
           <p className="mt-5 text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
-            Step-by-step system showing how clients and workers connect and
-            complete jobs.
+            {t("how_it_works.subtitle")}
           </p>
         </div>
 
@@ -70,7 +86,7 @@ function HowItWorks() {
               initial={{ opacity: 0, y: 40, scale: 0.9 }}
               whileInView={{ opacity: 1, y: 0, scale: 1 }}
               transition={{ duration: 0.45, delay: index * 0.08 }}
-              viewport={{ amount: 0.4 }} // 🔥 re-triggers when re-entering view
+              viewport={{ amount: 0.4 }}
               className="relative flex flex-col items-center text-center"
             >
               {/* NUMBER CIRCLE */}
@@ -80,15 +96,15 @@ function HowItWorks() {
 
               {/* CONTENT */}
               <div className="mt-5 max-w-xl px-2">
-                <h3 className="text-xl md:text-2xl font-bold text-gray-900 dark:text-white">
+                <h3 className="text-xl md:text-2xl font-bold text-gray-900 dark:text-gray-100">
                   {item.title}
                 </h3>
 
-                <p className="mt-3 text-gray-600 dark:text-gray-400 text-sm md:text-base">
+                <p className="mt-3 text-gray-600 dark:text-gray-300 text-sm md:text-base">
                   {item.desc}
                 </p>
 
-                <p className="mt-3 text-xs md:text-sm text-gray-500 dark:text-gray-500 italic">
+                <p className="mt-3 text-xs md:text-sm text-gray-500 dark:text-gray-300 italic">
                   {item.extra}
                 </p>
               </div>
@@ -104,7 +120,7 @@ function HowItWorks() {
           ))}
         </div>
 
-        {/* BOTTOM INFO CARDS (CONNECTED ON ALL SCREENS) */}
+        {/* BOTTOM INFO CARDS */}
         <div className="mt-20 relative">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 relative">
             {/* MOBILE VERTICAL LINE */}
@@ -113,25 +129,12 @@ function HowItWorks() {
             {/* DESKTOP HORIZONTAL LINE */}
             <div className="hidden md:block absolute top-1/2 left-0 right-0 h-px bg-linear-to-r from-transparent via-gray-300 to-transparent dark:via-gray-700"></div>
 
-            {[
-              {
-                title: "Trust First System",
-                desc: "Built to increase safety, transparency, and confidence for both sides.",
-              },
-              {
-                title: "Fast Matching",
-                desc: "Active workers respond quickly to new job postings.",
-              },
-              {
-                title: "Secure Workflow",
-                desc: "Payments and communication are structured and protected.",
-              },
-            ].map((item, i) => (
+            {infoCards.map((item, i) => (
               <div
                 key={i}
                 className="relative pl-10 md:pl-0 p-5 md:p-6 rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 transition hover:-translate-y-1 hover:shadow-xl"
               >
-                {/* NODE (mobile + desktop) */}
+                {/* NODE */}
                 <div className="absolute left-4 top-6 md:left-1/2 md:-top-2 md:-translate-x-1/2 w-3 h-3 rounded-full bg-gray-400 dark:bg-gray-600"></div>
 
                 <h4 className="font-bold text-gray-900 dark:text-white text-base md:text-lg text-left md:text-center">

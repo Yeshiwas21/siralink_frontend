@@ -1,19 +1,25 @@
 import api from "./axios";
 
+
 /* LOGIN */
 export const loginUser = (data) => {
   return api.post("/users/login/", data);
 };
 
+
 /* LOGOUT */
-export const logoutUser = (refresh) => {
-  return api.post("/users/logout/", { refresh });
+export const logoutUser = () => {
+  return api.post("/users/logout/");
 };
+
 
 /* CURRENT USER */
 export const getMe = () => {
-  return api.get("/users/me/");
+  return api.get("/users/me/", {
+    skipRefresh: true,  //This prevents the app from trying to refresh tokens when the user is not logged in yet.
+  });
 };
+
 
 /* USERS LIST */
 export const getUsers = () => {
@@ -23,13 +29,15 @@ export const getUsers = () => {
 
 /* REGISTER USER */
 export const userRegisterAPI = (data) => {
-  return api.post(`/users/register/`, data);
-}
+  return api.post("/users/register/", data);
+};
+
 
 /* DELETE USER */
-export const userDeletApi = (id) => {
+export const userDeleteApi = (id) => {
   return api.delete(`/users/${id}/delete/`);
 };
+
 
 /* UPDATE USER */
 export const userUpdateApi = (id, data) => {
@@ -37,11 +45,11 @@ export const userUpdateApi = (id, data) => {
 };
 
 
-
-/* CLIENT  SIGNUP */
+/* CLIENT SIGNUP */
 export const clientSignupApi = (data) => {
   return api.post("/users/signup/client/", data);
 };
+
 
 /* WORKER SIGNUP */
 export const workerSignupApi = (data) => {
@@ -54,10 +62,12 @@ export const workerListApi = () => {
   return api.get("/users/workers/");
 };
 
+
 /* LIST CLIENTS */
 export const clientListApi = () => {
   return api.get("/users/clients/");
 };
+
 
 /* WORKER CREATE */
 export const workerCreateApi = (data) => {
@@ -67,6 +77,7 @@ export const workerCreateApi = (data) => {
     },
   });
 };
+
 
 /* CLIENT CREATE */
 export const clientCreateApi = (data) => {
@@ -82,6 +93,7 @@ export const clientCreateApi = (data) => {
 export const clientDeleteApi = (id) => {
   return api.delete(`/users/client/${id}/delete/`);
 };
+
 
 /* DELETE WORKER */
 export const workerDeleteApi = (id) => {

@@ -1,0 +1,381 @@
+{
+  "navbar": {
+    "searchPlaceholder": "ፈልግ",
+    "jobs": "ሥራዎች",
+    "workers": "ሠራተኞች",
+    "findWork": "ሥራ ፈልግ",
+    "hireWorkers": "ሠራተኞችን ቅጠር",
+    "findWorkers": "ሠራተኞችን ፈልግ",
+    "deliverWork": "ሥራ አስረክብ",
+    "postJob": "ሥራ ለጥፍ",
+    "messages": "መልዕክቶች",
+    "notifications": "ማሳወቂያዎች",
+    "help": "እርዳታ",
+    "howItWorks": "እንዴት እንደሚሰራ",
+    "login": "ግባ",
+    "getStarted": "ጀምር",
+    "profile": "ፕሮፋይል",
+    "settings": "ማስተካከያዎች",
+    "logout": "ውጣ",
+    "admin": "አስተዳዳሪ",
+    "worker": "ሠራተኛ",
+    "client": "ደበኛ",
+    "user": "ተጠቃሚ"
+  },
+  "login": {
+    "title": "ወደ ሲራሊንክ ይግቡ",
+    "subtitle": "ለመቀጠል መለያ መረጃዎን ያስገቡ",
+    "identifierPlaceholder": "ኢሜይል ወይም ስልክ ቁጥር",
+    "passwordPlaceholder": "የይለፍ ቃል",
+    "rememberMe": "አስታውሰኝ",
+    "forgotPassword": "የይለፍ ቃል ረስተዋል?",
+    "submit": "ይግቡ",
+    "submitting": "በመግባት ላይ...",
+    "noAccount": "መለያ የሎትም?",
+    "signUp": "ተመዝገብ",
+    "errorRequired": "እባክዎን ኢሜይል/ስልክ እና የይለፍ ቃል ያስገቡ",
+    "errorInvalidCredentials": "የተሳሳተ ኢሜይል/ስልክ ወይም የይለፍ ቃል"
+   },
+   "account": "መለያ",
+  "admin_panel": "የአስተዳዳሪ ፓነል",
+  "expand": "ሳይድባር ዘርጋ",
+  "collapse": "ሳይድባር ሰብስብ",
+  "user_type": {
+    "admin": "የአስተዳዳሪ",
+    "client": "የቀጣሪ",
+    "worker": "የሰራተኛ"
+  },
+  "nav": {
+    "overview": "አጠቃላይ እይታ",
+    "all_users": "ሁሉም ተጠቃሚዎች",
+    "clients": "ቀጣሪዎች",
+    "workers": "ሰራተኞች",
+    "jobs": "ሥራዎች",
+    "applications": "ማመልከቻዎች",
+    "payments": "ክፍያዎች",
+    "reviews": "ግምገማዎች",
+    "reports": "ሪፖርቶች",
+    "jobs_posted": "የተለቀቁ ሥራዎች",
+    "verification": "ማረጋገጫ",
+    "my_reviews": "የእኔ ግምገማዎች",
+    "proposals": "የሥራ ጥያቄዎች",
+    "works_completed": "የተጠናቀቁ ሥራዎች",
+    "earnings": "ገቢ"
+  },
+  "signup": {
+    "title": "ሲራሊንክን ይቀላቀሉ",
+    "subtitle": "መድረኩን እንዴት መጠቀም እንደሚፈልጉ ይምረጡ",
+    "clientTitle": "እንደ ቀጣሪ ይቀላቀሉ",
+    "clientSubtitle": "ሰራተኞችን ይቀጥሩ እና ስራዎችን ይልቀቁ",
+    "workerTitle": "እንደ ሰራተኛ ይቀላቀሉ",
+    "workerSubtitle": "ስራዎችን ያግኙ እና አገልግሎቶችን ያቅርቡ",
+    "continue": "ቀጥል",
+    "alreadyHaveAccount": "ቀደም ብለው መለያ አለዎት?",
+    "login": "ይግቡ"
+  },
+  "workerSignup": {
+    "title": "እንደ ሰራተኛ ይቀላቀሉ",
+    "subtitle": "ስራዎችን ያግኙ እና አገልግሎቶችን ያቅርቡ",
+    "lookingForHiring": "ሰራተኛ መቅጠር ይፈልጋሉ?",
+    "joinAsClient": "እንደ ቀጣሪ ይቀላቀሉ",
+    "firstName": "ስም",
+    "lastName": "የአባት ስም",
+    "nationalId": "ብሔራዊ መታወቂያ ቁጥር",
+    "location": "አድራሻ",
+    "email": "ኢሜይል",
+    "phone": "ስልክ ቁጥር",
+    "password": "የይለፍ ቃል",
+    "confirmPassword": "የይለፍ ቃል ያረጋግጡ",
+    "createAccount": "መለያ ፍጠር",
+    "creating": "በመፍጠር ላይ...",
+    "alreadyHaveAccount": "መለያ አለዎት",
+    "login": "ይግቡ",
+    "accountCreatedSuccess": "መለያው በተካካ ሁኔታ ተፈጥሯል",
+    "validation": {
+        "min2Chars": "ቢያንስ 2 ቁምፊዎች ያስፈልጋሉ",
+        "textLetterStart": "በፊደል መጀመር አለበት",
+        "lettersOnly": "ፊደላት ብቻ ይፈቀዳሉ",
+        "phoneRequired": "ስልክ ቁጥር ያስፈልጋል",
+        "phoneInvalidFormat": "ስልክ ቁጥር +2519XXXXXXXX ወይም የ10 አሃዝ የአካባቢ ቁጥር መሆን አለበት",
+        "min8Chars": "ቢያንስ 8 ቁምፊዎች ያስፈልጋሉ",
+        "confirmPasswordRequired": "እባክዎን የይለፍ ቃሉን ያረጋግጡ",
+        "passwordsDoNotMatch": "የይለፍ ቃላቱ አይመሳሰሉም",
+        "emailRequired": "ኢሜይል ያስፈልጋል",
+        "emailInvalid": "ትክክለኛ የኢሜይል አድራሻ ያስገቡ",
+        "nationalIdInvalid": "ትክክለኛ የ12 አሃዝ የብሔራዊ መታወቂያ (FIN) ቁጥር ያስገቡ"
+    }
+  },
+  "clientSignup": {
+    "title": "እንደ ቀጣሪ ይቀላቀሉ",
+    "subtitle": "ሰራተኞችን ለመቅጠር መለያዎን ይፍጠሩ",
+    "lookingForWork": "ስራ እየፈለጉ ነው",
+    "applyAsWorker": "እንደ ሰራተኛ ያመልክቱ",
+    "accountType": "የመለያ አይነት",
+    "individual": "ግለሰብ",
+    "company": "ድርጅት",
+    "firstName": "ስም",
+    "contactFirstName": "የተወካይ ስም",
+    "lastName": "የአባት ስም",
+    "contactLastName": "የተወካይ የአባት ስም",
+    "nationalId": "ብሔራዊ መታወቂያ",
+    "companyName": "የድርጅቱ ስም",
+    "location": "አድራሻ",
+    "email": "ኢሜይል",
+    "phone": "ስልክ ቁጥር",
+    "password": "የይለፍ ቃል",
+    "confirmPassword": "የይለፍ ቃል ያረጋግጡ",
+    "createAccount": "መለያ ፍጠር",
+    "creating": "በመፍጠር ላይ...",
+    "alreadyHaveAccount": "ቀደም ብለው መለያ አለዎት?",
+    "login": "ይግቡ",
+    "accountCreatedSuccess": "መለያው በተሳካ ሁኔታ ተፈጥሯል",
+    "validation": {
+      "emailRequired": "ኢሜይል ያስፈልጋል",
+      "emailValid": "ትክክለኛ የኢሜይል አድራሻ ያስገቡ",
+      "phoneRequired": "ስልክ ቁጥር ያስፈልጋል",
+      "phoneValid": "ስልክ ቁጥር +2519XXXXXXXX ወይም የ 10 አሃዝ ቁጥር መሆን አለበት",
+      "passwordMin": "ቢያንስ 8 ቁምፊዎች ያስፈልጋሉ",
+      "confirmRequired": "እባክዎን የይለፍ ቃልዎን ያረጋግጡ",
+      "passwordMatch": "የይለፍ ቃሎቹ አይመሳሰሉም",
+      "textMin": "ቢያንስ 2 ቁምፊዎች ያስፈልጋሉ",
+      "textLetterStart": "በፊደል መጀመር አለበት",
+      "textLettersOnly": "ፊደላት ብቻ ይፈቀዳሉ",
+      "finRequired": "ልክ የ 12 አሃዝ FIN ቁጥር ያስገቡ",
+      "companyRequired": "የድርጅት ስም ያስፈልጋል",
+      "companyMin": "ቢያንስ 2 ቁምፊዎች ያስፈልጋሉ"
+    }
+  },
+  "create_user": {
+    "title": "አዲስ ተጠቃሚ ፍጠር",
+    "subtitle": "አዲስ መለያ ወደ ስርዓቱ ያክሉ",
+    "first_name": "ስም",
+    "first_name_placeholder": "ዮሐንስ",
+    "last_name": "የአባት ስም",
+    "last_name_placeholder": "ከበደ",
+    "email": "ኢሜይል",
+    "email_placeholder": "user@example.com",
+    "phone": "ስልክ ቁጥር",
+    "phone_placeholder": "+2519XXXXXXXX ወይም 09XXXXXXXX",
+    "user_type": "የተጠቃሚ ዓይነት",
+    "select_user_type": "የተጠቃሚ ዓይነት ይምረጡ",
+    "client": "ቀጣሪ",
+    "worker": "ሰራተኛ",
+    "admin": "አስተዳዳሪ",
+    "password": "የይለፍ ቃል",
+    "confirm_password": "የይለፍ ቃል ያረጋግጡ",
+    "creating": "ተጠቃሚ በመፍጠር ላይ...",
+    "create_btn": "ተጠቃሚ ፍጠር",
+    "back_to_users": "← ወደ ተጠቃሚዎች ዝርዝር ተመለስ",
+    "success_toast": "አዲስ ተጠቃሚ በትክክል ተፈጥሯል",
+    "validation": {
+      "first_name_required": "ስም ማስገባት አስፈላጊ ነው",
+      "last_name_required": "የአባት ስም ማስገባት አስፈላጊ ነው",
+      "invalid_email": "ትክክለኛ ኢሜይል ያስገቡ",
+      "invalid_phone": "+2519XXXXXXXX ወይም 10 አሃዝ ያለው ስልክ ቁጥር ይጠቀሙ",
+      "min_password": "ቢያንስ 8 ቁምፊዎች ያስፈልጋሉ",
+      "confirm_password_required": "እባክዎን የይለፍ ቃሉን ያረጋግጡ",
+      "passwords_do_not_match": "የይለፍ ቃላቱ አይመሳሰሉም",
+      "select_user_type": "የተጠቃሚ ዓይነት ይምረጡ",
+      "default_failed": "ተጠቃሚ መፍጠር አልተቻለም",
+      "min2Chars": "ቢያንስ 2 ቁምፊዎች ያስፈልጋሉ",
+      "textLetterStart": "በፊደል መጀመር አለበት",
+      "lettersOnly": "ፊደላት ብቻ ይፈቀዳሉ"
+    }
+  },
+  "backendErrors": {
+    "INVALID_CREDENTIAL": "የተሳሳተ ኢሜይል/ስልክ ቁጥር ወይም የይለፍ ቃል",
+    "ACCOUNT_PENDING": "መለያዎ አሁንም እየተገመገመ ነው",
+    "ACCOUNT_SUSPENDED": "መለያዎ ታግዷል",
+    "ACCOUNT_REJECTED": "መለያዎ አልተቀበለም። እባክዎን የደንበኞች ድጋፍን ያነጋግሩ።",
+    "USER_DISABLED": "የተጠቃሚው መለያ ተሰናክሏል",
+    "emailExists": "በዚህ ኢሜይል የተመዘገበ ተጠቃሚ አስቀድሞ አለ።",
+    "phoneExists": "በዚህ ስልክ ቁጥር የተመዘገበ ተጠቃሚ አስቀድሞ አለ።",
+    "passwords_donot_match": "የይለፍ ቃሎቹ አይመሳሰሉም።",
+    "weak_password": "የይለፍ ቃሉ በጣም የተለመደ ነው።",
+    "numeric_password": "ይህ የይለፍ ቃል ሙሉ በሙሉ ቁጥር ብቻ ነው።",
+    "national_id_registered_as_client": "ይህ ብሔራዊ መታወቂያ አስቀድሞ እንደ ደንበኛ ተመዝግቧል።",
+    "password_similar_company_name": "የይለፍ ቃሉ ከድርጅቱ ስም ጋር በጣም ይመሳሰላል።",
+    "national_id_registered_as_worker": "ይህ ብሔራዊ መታወቂያ ቀደም ሲል በሰራተኛነት ተመዝግቧል።",
+    "password_similar_first_name": "የይለፍ ቃሉ ከመጀመሪያ ስምዎ ጋር በጣም የተቀራረበ ነው።",
+    "password_similar_last_name": "የይለፍ ቃሉ ከአባት ስምዎ ጋር በጣም የተቀራረበ ነው።",
+    "password_similar_email": "የይለፍ ቃሉ ከኢሜይልዎ ጋር በጣም የተቀራረበ ነው።",
+    "worker": {
+      "nationalIdExists": "በዚህ ብሔራዊ መታወቂያ ቁጥር የተመዘገበ ሰራተኛ አስቀድሞ አለ።"
+    },
+    "client": {
+      "companyNameExists": "በዚህ ስም የተመዘገበ ድርጅት አስቀድሞ አለ።",
+      "nationalIdExists": "በዚህ ብሔራዊ መታወቂያ የተመዘገበ ደንበኛ አስቀድሞ አለ።"
+    },
+    "generic": "የሆነ ችግር ተፈጥሯል"
+  },
+  "how_it_works": {
+    "badge": "ቀላል የአሰራር ሂደት",
+    "title": "እንዴት እንደሚሰራ",
+    "subtitle": "አገልጋዮች እና ደበኞች እንዴት እንደሚገናኙና ስራዎችን እንደሚያጠናቅቁ የሚያሳይ ደረጃ በደረጃ ሂደት።",
+    "steps": {
+      "step1": {
+        "title": "መገለጫዎን (Profile) ይፍጠሩ",
+        "desc": "እንደ ደበኛ ወይም ሰራተኛ ይመዝገቡ፤ ሙያዎን፣ አድራሻዎን እና ልምድዎን ያካቱ።",
+        "extra": "የተረጋገጡ መገለጫዎች እምነትን ይጨምራሉ፤ በፍጥነት የመቀጠር እድልዎን ያሳድጋሉ።"
+      },
+      "step2": {
+        "title": "ስራ ይልቀቁ ወይም ይፈልጉ",
+        "desc": "ደበኞች የሥራ ጥያቄ ይለጥፋሉ። ሰራተኞች በሙያቸው እና በአካባቢያቸው መሰረት አማራጮችን ይመለከታሉ።",
+        "extra": "ትክክለኛ ማጣሪያዎች ተስማሚውን ስራ በፍጥነት ለማግኘት ይረዳል።"
+      },
+      "step3": {
+        "title": "ይገናኙ እና ይወያዩ",
+        "desc": "ስራ ከመጀመርዎ በፊት በሜሴጅ ይወያዩ፣ ዋጋ ይደራደሩ እና በዝርዝሩ ላይ ይስማሙ።",
+        "extra": "ግልጽ ግንኙነት አለመግባባቶችን ይቀንሳል።"
+      },
+      "step4": {
+        "title": "የስራ ሂደት",
+        "desc": "የስራ ሂደቱን በማሳወቅ እና ክትትል በማድረግ ስራውን በግልጽነት ያጠናቅቁ።",
+        "extra": "ደበኞች በማንኛውም ጊዜ የስራውን ሁኔታ መጠየቅ ይችላሉ።"
+      },
+      "step5": {
+        "title": "ክፍያ እና ደረጃ መስጠት",
+        "desc": "ስራው ከተጠናቀቀ እና የጋራ ግምገማ ከተደረገ በኋላ አስተማማኝ ክፍያ ይፈጸማል።",
+        "extra": "ደረጃ መስጠት የእርስዎን ተቀባይነት እና የታማኝነት ደረጃ ያሳድጋል።"
+      }
+    },
+    "features": {
+      "trust": {
+        "title": "በታማኝነት ላይ የተመሰረተ",
+        "desc": "ለሁለቱም ወገኖች ደህንነትን፣ ግልጽነትን እና እምነትን ለመጨመር የተገነባ።"
+      },
+      "speed": {
+        "title": "ፈጣን ትስስር",
+        "desc": "ዝግጁ የሆኑ ሰራተኞች ለተለቀቁ አዳዲስ ስራዎች በፍጥነት ምላሽ ይሰጣሉ።"
+      },
+      "security": {
+        "title": "አስተማማኝ የሰራ ሂደት",
+        "desc": "ክፍያዎች እና የጽሑፍ ውይይቶች የተጠበቁ እና የተደራጁ ናቸው።"
+      }
+    }
+  },
+  "not_found": {
+    "title": "404",
+    "description": "ይቅርታ! የሚፈልጉት ገጽ አልተገኘም።",
+    "go_to_overview": "ወደ ማጠቃለያ ይሂዱ",
+    "go_to_home": "ወደ መነሻ ገጽ ይሂዱ"
+  },
+  "footer": {
+    "tagline": "በመላው ኢትዮጵያ ደበኞችን ከባለሙያዎች ጋር እናገናኛለን። በቀላሉ ይገንቡ፣ ይቀጥሩ እና ይደጉ።",
+    "follow_us": "ይከተሉን",
+    "mobile_app": "የሞባይል መተግበሪያ",
+    "copyright": "ሲራሊንክ ኢትዮጵያ። መብቱ በህግ የተጠበቀ ነው።",
+    "sections": {
+      "quick_links": "ፈጣን ማገናኛዎች",
+      "for_workers": "ለሰራተኞች",
+      "for_clients": "ለደበኞች",
+      "company": "ድርጅት"
+    },
+    "links": {
+      "find_jobs": "ስራዎችን ያግኙ",
+      "hire_talent": "ባለሙያ ይቀጥሩ",
+      "how_it_works": "እንዴት እንደሚሰራ",
+      "browse_jobs": "ስራዎችን ይመልከቱ",
+      "become_worker": "ሰራተኛ ይሁኑ",
+      "nearest_works": "ቅርብ ስራዎችን ያግኙ",
+      "post_job": "ስራ ይለጥፉ",
+      "become_client": "ደበኛ ይሁኑ",
+      "nearest_workers": "ቅርብ ሰራተኞችን ያግኙ",
+      "about_us": "ስለ እኛ",
+      "contact_us": "ያግኙን",
+      "our_impact": "የእኛ ተፅዕኖ",
+      "terms": "የአገልግሎት ውሎች",
+      "privacy": "የግላዊነት ፖሊሲ"
+    }
+  },
+  "home": {
+    "loading": "በመጫን ላይ...",
+    "hero": {
+      "title": "በኢትዮጵያ ውስጥ የብቃት ባለሙያዎችን ያግኙ ወይም በፍጥነት የተቀጠሩ",
+      "description": "ሲራሊንክ ደበኞችን እና ባለሙያዎችን እንደ የቧንቧ፣ የኤሌክትሪክ፣ የጽዳት፣ የማስጠናት እና ሌሎች ስራዎች ያገናኛል።",
+      "find_work": "ስራ ያግኙ",
+      "hire_talent": "ባለሙያ ይቀጥሩ"
+    },
+    "services": {
+      "badge": "ምድቦች",
+      "heading": "ታዋቂ አገልግሎቶች",
+      "find_verified": "የተረጋገጡ የ{{service}} ባለሙያዎችን ያግኙ",
+      "names": {
+        "plumbing": "የቧንቧ ስራ",
+        "electrical": "የኤሌክትሪክ ስራ",
+        "cleaning": "ጽዳት",
+        "tutoring": "ትምህርት/ማስጠናት",
+        "appliance_repair": "የቤት ዕቃዎች ጥገና",
+        "painting": "ቅባት/ቀለም ቅብ",
+        "carpentry": "የአናጺነት ስራ"
+      }
+    },
+    "how_it_works": {
+      "badge": "ቀላል ሂደት",
+      "heading": "ሲራሊንክ እንዴት ይሰራል",
+      "subheading": "ደንበኞች እና ባለሙያዎች በቀላሉ የሚገናኙበት፣ አብረው የሚሰሩበት እና የሚያድጉበት ቀልጣፋ መንገድ።",
+      "steps": {
+        "step_1": {
+          "title": "ስራ ይለጥፉ",
+          "desc": "ደንበኞች ግልጽ በጀት፣ መስፈርት እና የጊዜ ሰሌዳ ያለው ስራ ይለጥፋሉ።"
+        },
+        "step_2": {
+          "title": "ማመልከቻዎችን ይቀበሉ",
+          "desc": "ባለሙያዎች ልምዳቸውን፣ ዋጋቸውን እና ደረጃቸውን በመጥቀስ ያመላክታሉ።"
+        },
+        "step_3": {
+          "title": "ይቀጥሩ እና አብረው ይስሩ",
+          "desc": "ምርጡን ባለሙያ ይምረጡ፣ ስራውን ያጠናቁ፣ እና ደህንነቱ በተጠበቀ ሁኔታ ይክፈሉ።"
+        }
+      }
+    },
+    "stats": {
+      "badge": "የመድረኩ መረጃዎች",
+      "heading": "በመላው ኢትዮጵያ የታመነ",
+      "subheading": "በሺዎች የሚቆጠሩ ባለሙያዎች እና ደንበኞች በየቀኑ ለመገናኘት፣ ለመቀጠር እና እድሎችን ለመፍጠር ሲራሊንክን ይጠቀማሉ።",
+      "active_workers": "ንቁ ሰራተኞች",
+      "jobs_posted": "የተለጠፉ ስራዎች",
+      "successful_hires": "የተሳኩ ቅጠራዎች",
+      "platform_support": "የመድረክ ድጋፍ"
+    },
+    "why_us": {
+      "badge": "ለማን ሲራሊንክ",
+      "heading": "ለኢትዮጵያ የሰራተኛ ኃይል የተገነባ",
+      "subheading": "ደንበኞች እና ባለሙያዎች በፍጥነት እንዲገናኙ፣ በብቃት እንዲሰሩ እና በራስ መተማመን እንዲያድጉ የሚረዳ ዘመናዊ መድረክ።",
+      "reasons": {
+        "verified": {
+          "title": "የተረጋገጡ ባለሙያዎች",
+          "desc": "የተረጋገጠ መገለጫ፣ ግምገማዎች እና የታየ ልምድ ያላቸውን የታመኑ ሰራተኞችን ይቀጥሩ።"
+        },
+        "payments": {
+          "title": "ደህንነቱ የተጠበቀ ክፍያ",
+          "desc": "ለደንበኞችም ሆነ ለሰራተኞች ደህንነቱ የተጠበቀ እና ግልጽ የክፍያ ስርዓት።"
+        },
+        "hiring": {
+          "title": "ፈጣን ቅጠራ",
+          "desc": "ስራዎችን ይለጥፉ፣ በፍጥነት ማመልከቻዎችን ይቀበሉ እና በደቂቃዎች ውስጥ ይቀጥሩ።"
+        }
+      }
+    },
+    "testimonials": {
+      "badge": "ምስክርነቶች",
+      "heading": "በደንበኞች እና ሰራተኞች የታመነ",
+      "items": {
+        "abel": "ሲራሊንክ በአንድ ቀን ውስጥ ብቃት ያለው የኤሌክትሪክ ባለሙያ እንድቀጥር ረድቶኛል።",
+        "meron": "ቋሚ የፍሪላንስ ስራ እና አስተማማኝ ደንበኞችን አግኝቻለሁ።",
+        "samuel": "መድረኩ ጽዱ፣ ሙያዊ እና ለመጠቀም በጣም ቀላል ነው።"
+      },
+      "roles": {
+        "client": "ደንበኛ",
+        "worker": "ሰራተኛ"
+      }
+    },
+    "cta": {
+      "badge": "የኢትዮጵያ ዘመናዊ የቅጠራ መድረክ",
+      "heading": "ለመጀመር ዝግጁ ነዎት?",
+      "subheading": "በመላው ኢትዮጵያ ስራ ለመስራት፣ ባለሙያ ለመቀጠር እና ንግዶችን ለማሳደግ ሲራሊንክን የሚጠቀሙ በሺዎች የሚቆጠሩ ሰዎችን ይቀላቀሉ።",
+      "create_account": "መለያ ፍጠር",
+      "browse_jobs": "ስራዎችን ይመልከቱ"
+    }
+  }
+}

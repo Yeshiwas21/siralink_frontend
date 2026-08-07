@@ -1,10 +1,14 @@
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import toast from "react-hot-toast";
+import { useTranslation } from "react-i18next";
+
 import { signupClient } from "../../services/userServices";
+import { translateApiError } from "../../utils/translateApiError";
 
 function ClientSignup() {
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   const [form, setForm] = useState({
     email: "",
@@ -45,41 +49,46 @@ function ClientSignup() {
 
     // EMAIL
     if (!form.email) {
-      e.email = "Email is required";
+      e.email = t("clientSignup.validation.emailRequired");
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email.trim())) {
-      e.email = "Enter a valid email address";
+      e.email = t("clientSignup.validation.emailValid");
     }
 
     // PHONE
     const phone = form.phone?.trim();
     if (!phone) {
-      e.phone = "Phone is required";
+      e.phone = t("clientSignup.validation.phoneRequired");
     } else if (!/^\+2519\d{8}$/.test(phone) && !/^\d{10}$/.test(phone)) {
-      e.phone = "Phone must be +2519XXXXXXXX or 10 digit local number";
+      e.phone = t("clientSignup.validation.phoneValid");
     }
 
     // PASSWORD
     if (!form.password || form.password.length < 8) {
-      e.password = "Minimum 8 characters required";
+      e.password = t("clientSignup.validation.passwordMin");
     }
 
     // CONFIRM PASSWORD
     if (form.password && !form.password_2) {
-      e.password_2 = "Please confirm your password";
+      e.password_2 = t("clientSignup.validation.confirmRequired");
     } else if (form.password !== form.password_2) {
-      e.password_2 = "Passwords do not match";
+      e.password_2 = t("clientSignup.validation.passwordMatch");
     }
 
-    // NAME VALIDATION (same style as Worker)
+    // NAME VALIDATION
     const validateTextField = (value) => {
       const val = value?.trim();
 
       if (!val || val.length < 2) {
-        return "Minimum 2 characters required";
-      } else if (!/^[A-Za-z]/.test(val)) {
-        return "Must start with a letter";
-      } else if (!/^[A-Za-z\s]+$/.test(val)) {
-        return "Only letters are allowed";
+        return t("clientSignup.validation.textMin");
+      }
+      // Accepts letters from ANY language (including Amharic / Ge'ez)
+      if (!/^\p{L}/u.test(val)) {
+        return t("clientSignup.validation.textLetterStart");
+      }
+
+      // Allows letters from any language + spaces
+      if (!/^[\p{L}\s]+$/u.test(val)) {
+        return t("clientSignup.validation.textLettersOnly");
       }
 
       return null;
@@ -96,8 +105,8 @@ function ClientSignup() {
 
     // CONDITIONAL FIELDS
     if (isIndividual) {
-      if (!form.national_id || form.national_id.trim().length < 12) {
-        e.national_id = "Enter exactly 12 digit FIN number";
+      if (!form.national_id || form.national_id.trim().length != 12) {
+        e.national_id = t("clientSignup.validation.finRequired");
       }
     }
 
@@ -105,14 +114,15 @@ function ClientSignup() {
       const company = form.company_name?.trim();
 
       if (!company) {
-        e.company_name = "Company name is required";
+        e.company_name = t("clientSignup.validation.companyRequired");
       } else if (company.length < 2) {
-        e.company_name = "Minimum 2 characters required";
+        e.company_name = t("clientSignup.validation.companyMin");
       }
     }
 
     return e;
   };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -124,9 +134,12 @@ function ClientSignup() {
     try {
       setLoading(true);
 
-      // ✅ normalize ONLY optional fields
       const payload = {
         ...form,
+        first_name: form.first_name.trim(),
+        last_name: form.last_name.trim(),
+        email: form.email.trim(),
+        phone: form.phone.trim(),
         national_id: form.national_id?.trim() || null,
         company_name: form.company_name?.trim() || null,
         location: form.location?.trim() || null,
@@ -134,25 +147,53 @@ function ClientSignup() {
 
       await signupClient(payload);
 
-      toast.success("Account created successfully");
+      toast.success(t("clientSignup.accountCreatedSuccess"));
       navigate("/login");
     } catch (err) {
-      const backend = err?.response?.data || {};
+      const data = err?.response?.data || {};
       let formatted = {};
 
-      // user-level errors
-      Object.entries(backend).forEach(([key, value]) => {
-        if (key === "client") return;
-        formatted[key] = Array.isArray(value) ? value[0] : value;
-      });
+      const processErrorNode = (node, path = "") => {
+        if (!node) return;
 
-      // nested client errors
-      if (backend.client) {
-        Object.entries(backend.client).forEach(([key, value]) => {
-          formatted[key] = Array.isArray(value) ? value[0] : value;
-        });
-      }
+        // 1. String code/message
+        if (typeof node === "string") {
+          const cleanKey = path.replace(/^(client|worker)\./, "");
+          const translatedMsg = translateApiError(t, cleanKey, node);
+          formatted[cleanKey] = translatedMsg;
+          formatted[path] = translatedMsg;
+          return;
+        }
 
+        // 2. Array of errors [ "code" ]
+        if (Array.isArray(node)) {
+          if (node.length > 0) processErrorNode(node[0], path);
+          return;
+        }
+
+        // 3. Object
+        if (typeof node === "object") {
+          // If object represents a single error details object (e.g. { error_code: "..." })
+          if (node.error_code || node.code || node.message) {
+            const rawCode = node.error_code || node.code || node.message;
+            const cleanKey = path.replace(/^(client|worker)\./, "");
+            const translatedMsg = translateApiError(t, cleanKey, rawCode);
+            formatted[cleanKey] = translatedMsg;
+            formatted[path] = translatedMsg;
+            return;
+          }
+
+          // Otherwise, traverse nested structure (e.g. { client: { national_id: ... } })
+          Object.entries(node).forEach(([k, v]) => {
+            const currentPath = path ? `${path}.${k}` : k;
+            processErrorNode(v, currentPath);
+          });
+        }
+      };
+
+      processErrorNode(data);
+
+      console.log("Formatted Errors Object:", formatted);
       setErrors(formatted);
     } finally {
       setLoading(false);
@@ -168,37 +209,34 @@ function ClientSignup() {
     focus:outline-none focus:ring-2 focus:ring-black/10 dark:focus:ring-white/10
     focus:border-gray-400 dark:focus:border-gray-500
     transition
-   ${
-     errors[field]
-       ? "border-red-400 focus:ring-red-200 dark:focus:ring-red-900"
-       : ""
-   }`;
+   ${errors[field]
+      ? "border-red-400 focus:ring-red-200 dark:focus:ring-red-900"
+      : ""
+    }`;
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-950 px-4 transition-colors">
       <div className="w-full max-w-xl">
-        {/* HEADER (FIXED LAYOUT) */}
+        {/* HEADER */}
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3 mb-6 text-center md:text-left">
-          {/* LEFT TITLE */}
           <div>
             <h2 className="text-2xl font-semibold text-gray-900 dark:text-white">
-              Join as Client
+              {t("clientSignup.title")}
             </h2>
 
             <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
-              Create your account to start hiring
+              {t("clientSignup.subtitle")}
             </p>
           </div>
 
-          {/* RIGHT CTA */}
           <div className="md:text-right">
             <p className="text-sm text-gray-600 dark:text-gray-300">
-              Looking for work?{" "}
+              {t("clientSignup.lookingForWork")}?
               <Link
                 to="/signup/worker/"
-                className="font-medium text-black dark:text-white  hover:opacity-70 transition"
+                className="font-medium text-black dark:text-white hover:opacity-70 transition ml-2"
               >
-                Apply as a worker →
+                {t("clientSignup.applyAsWorker")} →
               </Link>
             </p>
           </div>
@@ -216,7 +254,7 @@ function ClientSignup() {
             {/* CLIENT TYPE */}
             <div>
               <label className="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wide">
-                Account Type
+                {t("clientSignup.accountType")}
               </label>
 
               <select
@@ -225,8 +263,8 @@ function ClientSignup() {
                 onChange={handleChange}
                 className={inputClass("client_type")}
               >
-                <option value="individual">Individual</option>
-                <option value="company">Company</option>
+                <option value="individual">{t("clientSignup.individual")}</option>
+                <option value="company">{t("clientSignup.company")}</option>
               </select>
             </div>
 
@@ -234,7 +272,7 @@ function ClientSignup() {
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <label className="text-sm text-gray-600 dark:text-gray-300">
-                  {isCompany ? "Contact First Name" : "First Name"}
+                  {isCompany ? t("clientSignup.contactFirstName") : t("clientSignup.firstName")}
                 </label>
                 <input
                   name="first_name"
@@ -252,7 +290,7 @@ function ClientSignup() {
 
               <div>
                 <label className="text-sm text-gray-600 dark:text-gray-300">
-                  {isCompany ? "Contact Last Name" : "Last name"}
+                  {isCompany ? t("clientSignup.contactLastName") : t("clientSignup.lastName")}
                 </label>
                 <input
                   name="last_name"
@@ -273,7 +311,7 @@ function ClientSignup() {
             {isIndividual && (
               <div>
                 <label className="text-sm text-gray-600 dark:text-gray-300">
-                  National ID
+                  {t("clientSignup.nationalId")}
                 </label>
                 <input
                   name="national_id"
@@ -293,7 +331,7 @@ function ClientSignup() {
             {isCompany && (
               <div>
                 <label className="text-sm text-gray-600 dark:text-gray-300">
-                  Company name
+                  {t("clientSignup.companyName")}
                 </label>
                 <input
                   name="company_name"
@@ -314,7 +352,7 @@ function ClientSignup() {
             <div className="space-y-4">
               <div>
                 <label className="text-sm text-gray-600 dark:text-gray-300">
-                  Location
+                  {t("clientSignup.location")}
                 </label>
                 <input
                   name="location"
@@ -333,7 +371,7 @@ function ClientSignup() {
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label className="text-sm text-gray-600 dark:text-gray-300">
-                    Email
+                    {t("clientSignup.email")}
                   </label>
                   <input
                     name="email"
@@ -351,7 +389,7 @@ function ClientSignup() {
 
                 <div>
                   <label className="text-sm text-gray-600 dark:text-gray-300">
-                    Phone
+                    {t("clientSignup.phone")}
                   </label>
                   <input
                     name="phone"
@@ -373,7 +411,7 @@ function ClientSignup() {
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <label className="text-sm text-gray-600 dark:text-gray-300">
-                  Password
+                  {t("clientSignup.password")}
                 </label>
                 <input
                   type="password"
@@ -392,7 +430,7 @@ function ClientSignup() {
 
               <div>
                 <label className="text-sm text-gray-600 dark:text-gray-300">
-                  Confirm
+                  {t("clientSignup.confirmPassword")}
                 </label>
                 <input
                   type="password"
@@ -416,16 +454,17 @@ function ClientSignup() {
               className="w-full h-11 rounded-xl bg-black dark:bg-white dark:text-black text-white font-medium
               hover:opacity-90 active:scale-[0.99] transition shadow-sm cursor-pointer"
             >
-              {loading ? "Creating..." : "Create account"}
+              {loading ? t("clientSignup.creating") : t("clientSignup.createAccount")}
             </button>
           </form>
+
           <p className="text-sm text-center mt-6 text-gray-600 dark:text-gray-400">
-            Already have an account?{" "}
+            {t("clientSignup.alreadyHaveAccount")}?{" "}
             <Link
               to="/login"
               className="text-blue-600 dark:text-blue-400 font-semibold hover:underline underline-offset-4 cursor-pointer transition"
             >
-              Login
+              {t("clientSignup.login")}
             </Link>
           </p>
         </div>

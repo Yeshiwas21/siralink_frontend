@@ -1,10 +1,14 @@
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import toast from "react-hot-toast";
+import { useTranslation } from "react-i18next";
+
 import { signupWorker } from "../../services/userServices";
+import { translateApiError } from "../../utils/translateApiError";
 
 function WorkerSignup() {
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   const [form, setForm] = useState({
     email: "",
@@ -27,78 +31,143 @@ function WorkerSignup() {
 
   const validateTextField = (value) => {
     const val = value?.trim();
-    if (!val || val.length < 2) return "Minimum 2 characters required";
-    if (!/^[A-Za-z]/.test(val)) return "Must start with a letter";
-    if (!/^[A-Za-z\s]+$/.test(val)) return "Only letters are allowed";
+    if (!val || val.length < 2) {
+      return t("workerSignup.validation.min2Chars");
+    }
+    // Accepts letters from ANY language (including Amharic / Ge'ez)
+    if (!/^\p{L}/u.test(val)) {
+      return t("workerSignup.validation.textLetterStart");
+    }
+
+    // Allows letters from any language + spaces
+    if (!/^[\p{L}\s]+$/u.test(val)) {
+      return t("workerSignup.validation.lettersOnly");
+    }
     return null;
+  };
+
+  const validate = () => {
+    let e = {};
+
+    // EMAIL
+    if (!form.email) {
+      e.email = t("workerSignup.validation.emailRequired");
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email.trim())) {
+      e.email = t("workerSignup.validation.emailInvalid");
+    }
+
+    // PHONE
+    const phone = form.phone?.trim();
+    if (!phone) {
+      e.phone = t("workerSignup.validation.phoneRequired");
+    } else if (!/^\+2519\d{8}$/.test(phone) && !/^\d{10}$/.test(phone)) {
+      e.phone = t("workerSignup.validation.phoneInvalidFormat");
+    }
+
+    // PASSWORD
+    if (!form.password || form.password.length < 8) {
+      e.password = t("workerSignup.validation.min8Chars");
+    }
+
+    // CONFIRM PASSWORD
+    if (form.password && !form.password_2) {
+      e.password_2 = t("workerSignup.validation.confirmPasswordRequired");
+    } else if (form.password !== form.password_2) {
+      e.password_2 = t("workerSignup.validation.passwordsDoNotMatch");
+    }
+
+    // NAME & LOCATION VALIDATION
+    const firstNameError = validateTextField(form.first_name);
+    if (firstNameError) e.first_name = firstNameError;
+
+    const lastNameError = validateTextField(form.last_name);
+    if (lastNameError) e.last_name = lastNameError;
+
+    const locationError = validateTextField(form.location);
+    if (locationError) e.location = locationError;
+
+    // NATIONAL ID
+    if (!form.national_id || form.national_id.trim().length < 12) {
+      e.national_id = t("workerSignup.validation.nationalIdInvalid");
+    }
+
+    return e;
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    let newErrors = {};
+    const eObj = validate();
+    setErrors(eObj);
 
-    const phone = form.phone?.trim();
-    if (!phone) {
-      newErrors.phone = "Phone is required";
-    } else if (!/^\+2519\d{8}$/.test(phone) && !/^\d{10}$/.test(phone)) {
-      newErrors.phone = "Phone must be +2519XXXXXXXX or 10 digit local number";
-    }
-
-    if (!form.password || form.password.length < 8) {
-      newErrors.password = "Minimum 8 characters required";
-    }
-
-    if (!form.password_2) {
-      newErrors.password_2 = "Please confirm password";
-    } else if (form.password !== form.password_2) {
-      newErrors.password_2 = "Passwords do not match";
-    }
-
-    const firstNameError = validateTextField(form.first_name);
-    if (firstNameError) newErrors.first_name = firstNameError;
-
-    const lastNameError = validateTextField(form.last_name);
-    if (lastNameError) newErrors.last_name = lastNameError;
-
-    const locationError = validateTextField(form.location);
-    if (locationError) newErrors.location = locationError;
-
-    if (!form.email) {
-      newErrors.email = "Email is required";
-    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) {
-      newErrors.email = "Enter a valid email address";
-    }
-
-    if (!form.national_id || form.national_id.trim().length < 12) {
-      newErrors.national_id = "Enter exactly 12 digit FIN number";
-    }
-
-    setErrors(newErrors);
-    if (Object.keys(newErrors).length > 0) return;
+    if (Object.keys(eObj).length > 0) return;
 
     try {
       setLoading(true);
-      await signupWorker(form);
-      toast.success("Account created successfully");
+
+      const payload = {
+        ...form,
+        first_name: form.first_name?.trim(),
+        last_name: form.last_name?.trim(),
+        email: form.email?.trim(),
+        phone: form.phone?.trim(),
+        national_id: form.national_id?.trim(),
+        location: form.location?.trim() || null,
+      };
+
+      await signupWorker(payload);
+
+      toast.success(t("workerSignup.accountCreatedSuccess"));
       navigate("/login");
     } catch (err) {
-      const backend = err?.response?.data || {};
+      const data = err?.response?.data || {};
       let formatted = {};
 
-      // user-level errors
-      Object.entries(backend).forEach(([key, value]) => {
-        if (key === "worker") return;
-        formatted[key] = Array.isArray(value) ? value[0] : value;
+      const extractRawValue = (val) => {
+        if (Array.isArray(val)) return extractRawValue(val[0]);
+        if (typeof val === "object" && val !== null) {
+          return val.error_code || val.code || val.message || extractRawValue(Object.values(val)[0]);
+        }
+        return val;
+      };
+
+      // Helper to flatten nested DRF objects (e.g. { client: { national_id: [...] } } -> { national_id: [...] })
+      const flattenErrors = (obj) => {
+        let flat = {};
+        if (typeof obj !== "object" || obj === null) return flat;
+
+        Object.entries(obj).forEach(([key, val]) => {
+          if ((key === "client" || key === "worker") && typeof val === "object" && val !== null && !Array.isArray(val)) {
+            // Un-nest client/worker parent wrapper
+            Object.assign(flat, flattenErrors(val));
+          } else {
+            flat[key] = val;
+          }
+        });
+        return flat;
+      };
+
+      const flatData = flattenErrors(data);
+
+      Object.entries(flatData).forEach(([key, val]) => {
+        const rawVal = extractRawValue(val);
+
+        if (key === "non_field_errors" || key === "detail") {
+          formatted.form = translateApiError(t, "form", rawVal);
+          return;
+        }
+
+        let normKey = key === "confirm_password" ? "password_2" : key;
+        const cleanKey = normKey.replace(/^(client|worker)\./, "");
+
+        const translatedMessage = translateApiError(t, cleanKey, rawVal);
+
+        formatted[cleanKey] = translatedMessage;
+        formatted[normKey] = translatedMessage;
+        formatted[key] = translatedMessage;
       });
 
-      // nested worker errors
-      if (backend.worker) {
-        Object.entries(backend.worker).forEach(([key, value]) => {
-          formatted[key] = Array.isArray(value) ? value[0] : value;
-        });
-      }
-
+      console.log("Formatted Errors Object:", formatted);
       setErrors(formatted);
     } finally {
       setLoading(false);
@@ -123,22 +192,22 @@ function WorkerSignup() {
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3 mb-6 text-center md:text-left">
           <div>
             <h2 className="text-2xl font-semibold text-gray-900 dark:text-white">
-              Join as Worker
+              {t("workerSignup.title")}
             </h2>
 
             <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
-              Find jobs and offer services
+              {t("workerSignup.subtitle")}
             </p>
           </div>
 
           <div className="md:text-right">
             <p className="text-sm text-gray-600 dark:text-gray-300">
-              Looking for hiring?{" "}
+              {t("workerSignup.lookingForHiring")}
               <Link
                 to="/signup/client/"
-                className="font-medium text-black dark:text-white hover:opacity-70"
+                className="font-medium text-black dark:text-white hover:opacity-70 ml-2"
               >
-                Join as client →
+                {t("workerSignup.joinAsClient")}→
               </Link>
             </p>
           </div>
@@ -157,7 +226,7 @@ function WorkerSignup() {
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <label className="text-sm text-gray-600 dark:text-gray-300">
-                  First name
+                  {t("workerSignup.firstName")}
                 </label>
                 <input
                   name="first_name"
@@ -175,7 +244,7 @@ function WorkerSignup() {
 
               <div>
                 <label className="text-sm text-gray-600 dark:text-gray-300">
-                  Last name
+                  {t("workerSignup.lastName")}
                 </label>
                 <input
                   name="last_name"
@@ -195,7 +264,7 @@ function WorkerSignup() {
             {/* NATIONAL ID */}
             <div>
               <label className="text-sm text-gray-600 dark:text-gray-300">
-                National ID
+                {t("workerSignup.nationalId")}
               </label>
               <input
                 name="national_id"
@@ -214,7 +283,7 @@ function WorkerSignup() {
             {/* LOCATION */}
             <div>
               <label className="text-sm text-gray-600 dark:text-gray-300">
-                Location
+                {t("workerSignup.location")}
               </label>
               <input
                 name="location"
@@ -234,7 +303,7 @@ function WorkerSignup() {
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <label className="text-sm text-gray-600 dark:text-gray-300">
-                  Email
+                  {t("workerSignup.email")}
                 </label>
                 <input
                   name="email"
@@ -252,7 +321,7 @@ function WorkerSignup() {
 
               <div>
                 <label className="text-sm text-gray-600 dark:text-gray-300">
-                  Phone
+                  {t("workerSignup.phone")}
                 </label>
                 <input
                   name="phone"
@@ -273,7 +342,7 @@ function WorkerSignup() {
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <label className="text-sm text-gray-600 dark:text-gray-300">
-                  Password
+                  {t("workerSignup.password")}
                 </label>
                 <input
                   type="password"
@@ -292,7 +361,7 @@ function WorkerSignup() {
 
               <div>
                 <label className="text-sm text-gray-600 dark:text-gray-300">
-                  Confirm
+                  {t("workerSignup.confirmPassword")}
                 </label>
                 <input
                   type="password"
@@ -316,16 +385,16 @@ function WorkerSignup() {
               className="w-full h-11 rounded-xl bg-black dark:bg-white dark:text-black text-white font-medium
               hover:opacity-90 active:scale-[0.99] transition shadow-sm cursor-pointer"
             >
-              {loading ? "Creating..." : "Create account"}
+              {loading ? t("workerSignup.creating") : t("workerSignup.createAccount")}
             </button>
           </form>
           <p className="text-sm text-center mt-6 text-gray-600 dark:text-gray-400">
-            Already have an account?{" "}
+            {t("workerSignup.alreadyHaveAccount")}?
             <Link
               to="/login"
               className="text-blue-600 dark:text-blue-400 font-semibold hover:underline underline-offset-4 cursor-pointer transition"
             >
-              Login
+              {t("workerSignup.login")}
             </Link>
           </p>
         </div>

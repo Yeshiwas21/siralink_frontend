@@ -1,6 +1,6 @@
-import React from "react";
-import { useState } from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import ThemedLogo from "../common/ThemedLogo";
 import {
   FaFacebookF,
@@ -10,9 +10,11 @@ import {
   FaApple,
 } from "react-icons/fa6";
 import { ChevronDown, ChevronUp } from "lucide-react";
-import { AiFillAndroid, AiOutlineAndroid } from "react-icons/ai";
+import { AiFillAndroid } from "react-icons/ai";
 
 function Footer() {
+  const { t } = useTranslation();
+
   const footerLinkClass =
     "relative text-gray-800 dark:text-gray-200 hover:text-gray-900 dark:hover:text-white transition-colors duration-200 after:content-[''] after:absolute after:left-0 after:-bottom-0.5 after:h-[2px] after:w-0 after:bg-current after:transition-all after:duration-300 hover:after:w-full";
 
@@ -53,8 +55,7 @@ function Footer() {
 
             {/* Tagline */}
             <p className="text-sm leading-relaxed text-gray-600 dark:text-gray-300">
-              Connecting clients with skilled workers across Ethiopia. Build,
-              hire, and grow with ease.
+              {t("footer.tagline")}
             </p>
           </div>
 
@@ -65,7 +66,7 @@ function Footer() {
               className="w-full flex items-center justify-start gap-2 mb-3 md:cursor-default"
             >
               <h3 className="font-semibold text-gray-900 dark:text-white">
-                Quick Links
+                {t("footer.sections.quick_links")}
               </h3>
 
               <span className="md:hidden">
@@ -78,23 +79,22 @@ function Footer() {
             </button>
 
             <ul
-              className={`space-y-2 text-sm transition-all ${
-                openSections.quick ? "block" : "hidden"
-              } md:block`}
+              className={`space-y-2 text-sm transition-all ${openSections.quick ? "block" : "hidden"
+                } md:block`}
             >
               <li>
                 <Link className={footerLinkClass} to="/jobs">
-                  Find Jobs
+                  {t("footer.links.find_jobs")}
                 </Link>
               </li>
               <li>
                 <Link className={footerLinkClass} to="/hire">
-                  Hire Talent
+                  {t("footer.links.hire_talent")}
                 </Link>
               </li>
               <li>
                 <Link className={footerLinkClass} to="/how-it-works">
-                  How It Works
+                  {t("footer.links.how_it_works")}
                 </Link>
               </li>
             </ul>
@@ -107,7 +107,7 @@ function Footer() {
               className="w-full flex items-center justify-start gap-2 mb-3 md:cursor-default"
             >
               <h3 className="font-semibold text-gray-900 dark:text-white">
-                For Workers
+                {t("footer.sections.for_workers")}
               </h3>
 
               <span className="md:hidden">
@@ -119,25 +119,24 @@ function Footer() {
               </span>
             </button>
             <ul
-              className={`space-y-2 text-sm transition-all ${
-                openSections.workers ? "block" : "hidden"
-              } md:block`}
+              className={`space-y-2 text-sm transition-all ${openSections.workers ? "block" : "hidden"
+                } md:block`}
             >
               <li>
                 <Link className={footerLinkClass} to="/jobs/available">
-                  Browse Jobs
+                  {t("footer.links.browse_jobs")}
                 </Link>
               </li>
 
               <li>
                 <Link className={footerLinkClass} to="/signup/worker">
-                  Become a Worker
+                  {t("footer.links.become_worker")}
                 </Link>
               </li>
 
               <li>
                 <Link className={footerLinkClass} to="/nearest-works">
-                  Find Nearest Works
+                  {t("footer.links.nearest_works")}
                 </Link>
               </li>
             </ul>
@@ -150,7 +149,7 @@ function Footer() {
               className="w-full flex items-center justify-start gap-2 mb-3 md:cursor-default"
             >
               <h3 className="font-semibold text-gray-900 dark:text-white">
-                For Clients
+                {t("footer.sections.for_clients")}
               </h3>
 
               <span className="md:hidden">
@@ -162,37 +161,37 @@ function Footer() {
               </span>
             </button>
             <ul
-              className={`space-y-2 text-sm transition-all ${
-                openSections.clients ? "block" : "hidden"
-              } md:block`}
+              className={`space-y-2 text-sm transition-all ${openSections.clients ? "block" : "hidden"
+                } md:block`}
             >
               <li>
                 <Link className={footerLinkClass} to="/jobs/post">
-                  Post a Job
+                  {t("footer.links.post_job")}
                 </Link>
               </li>
 
               <li>
                 <Link className={footerLinkClass} to="/signup/client">
-                  Become a Client
+                  {t("footer.links.become_client")}
                 </Link>
               </li>
 
               <li>
                 <Link className={footerLinkClass} to="/nearest-workers">
-                  Find Nearest Workers
+                  {t("footer.links.nearest_workers")}
                 </Link>
               </li>
             </ul>
           </div>
-          {/* About the COmpany */}
+
+          {/* COMPANY */}
           <div>
             <button
               onClick={() => toggleSection("company")}
               className="w-full flex items-center justify-start gap-2 mb-3 md:cursor-default"
             >
               <h3 className="font-semibold text-gray-900 dark:text-white">
-                Company
+                {t("footer.sections.company")}
               </h3>
 
               <span className="md:hidden">
@@ -204,44 +203,46 @@ function Footer() {
               </span>
             </button>
             <ul
-              className={`space-y-2 text-sm transition-all ${
-                openSections.company ? "block" : "hidden"
-              } md:block`}
+              className={`space-y-2 text-sm transition-all ${openSections.company ? "block" : "hidden"
+                } md:block`}
             >
               <li>
                 <Link className={footerLinkClass} to="/about-us">
-                  About Us
+                  {t("footer.links.about_us")}
                 </Link>
               </li>
               <li>
                 <Link className={footerLinkClass} to="/contact-us">
-                  Contact Us
+                  {t("footer.links.contact_us")}
                 </Link>
               </li>
               <li>
                 <Link className={footerLinkClass} to="/our-impact">
-                  Our Impact
+                  {t("footer.links.our_impact")}
                 </Link>
               </li>
               <li>
                 <Link className={footerLinkClass} to="/terms">
-                  Terms of Service
+                  {t("footer.links.terms")}
                 </Link>
-              </li>{" "}
+              </li>
               <li>
                 <Link className={footerLinkClass} to="/privacy">
-                  Privacy Policy
+                  {t("footer.links.privacy")}
                 </Link>
               </li>
             </ul>
           </div>
         </div>
+
         {/* FOLLOW US + MOBILE APP */}
         <div className="mt-10 pt-6 md:px-8">
           <div className="flex items-center justify-between flex-wrap gap-6">
             {/* LEFT SIDE */}
             <div className="flex items-center gap-5 flex-wrap">
-              <span className="text-gray-900 dark:text-white">Follow us</span>
+              <span className="text-gray-900 dark:text-white">
+                {t("footer.follow_us")}
+              </span>
 
               <a href="https://facebook.com" className={footerIconClass}>
                 <FaFacebookF size={18} />
@@ -262,7 +263,9 @@ function Footer() {
 
             {/* RIGHT SIDE */}
             <div className="flex items-center gap-4 flex-wrap">
-              <span className="text-gray-900 dark:text-white">Mobile App</span>
+              <span className="text-gray-900 dark:text-white">
+                {t("footer.mobile_app")}
+              </span>
 
               <a href="#" className={appIconsClass}>
                 <FaApple size={18} />
@@ -277,10 +280,11 @@ function Footer() {
 
         {/* COPYRIGHT */}
         <div className="border-t border-gray-200 dark:border-gray-800 mt-8 pt-6 text-center text-sm text-gray-600 dark:text-gray-200">
-          © {new Date().getFullYear()} SiraLink Ethiopia. All rights reserved.
+          © {new Date().getFullYear()} {t("footer.copyright")}
         </div>
       </div>
     </footer>
   );
 }
+
 export default Footer;

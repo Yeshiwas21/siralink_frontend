@@ -1,0 +1,383 @@
+{
+  "navbar": {
+    "searchPlaceholder": "Search",
+    "jobs": "Jobs",
+    "workers": "Workers",
+    "findWork": "Find Work",
+    "hireWorkers": "Hire Workers",
+    "findWorkers": "Find Workers",
+    "deliverWork": "Deliver Work",
+    "postJob": "Post Job",
+    "messages": "Messages",
+    "notifications": "Notifications",
+    "help": "Help",
+    "howItWorks": "How it Works",
+    "login": "Login",
+    "loginTitle": "Login to SiraLink",
+    "loginSubtitle": "Enter your credentials to continue",
+    "getStarted": "Get Started",
+    "profile": "Profile",
+    "settings": "Settings",
+    "logout": "Logout",
+    "admin": "Admin",
+    "worker": "Worker",
+    "client": "Client",
+    "user": "User"
+  },
+  "login": {
+    "title": "Login to SiraLink",
+    "subtitle": "Enter your credentials to continue",
+    "identifierPlaceholder": "Email or Phone",
+    "passwordPlaceholder": "Password",
+    "rememberMe": "Remember me",
+    "forgotPassword": "Forgot password?",
+    "submit": "Login",
+    "submitting": "Logging in...",
+    "noAccount": "Don't have an account?",
+    "signUp": "Sign up",
+    "errorRequired": "Please fill both email/phone and password",
+    "errorInvalidCredentials": "Invalid email/phone or password"
+  },
+  "account": "Account",
+  "admin_panel": "Admin Panel",
+  "expand": "Expand sidebar",
+  "collapse": "Collapse sidebar",
+  "user_type": {
+    "admin": "Admin",
+    "client": "Client",
+    "worker": "Worker"
+  },
+  "nav": {
+    "overview": "Overview",
+    "all_users": "All Users",
+    "clients": "Clients",
+    "workers": "Workers",
+    "jobs": "Jobs",
+    "applications": "Applications",
+    "payments": "Payments",
+    "reviews": "Reviews",
+    "reports": "Reports",
+    "jobs_posted": "Jobs Posted",
+    "verification": "Verification",
+    "my_reviews": "My Reviews",
+    "proposals": "Proposals",
+    "works_completed": "Work Completed",
+    "earnings": "Earnings"
+  },
+  "signup": {
+    "title": "Join SiraLink",
+    "subtitle": "Choose how you want to use the platform",
+    "clientTitle": "Join as Client",
+    "clientSubtitle": "Hire workers and post jobs",
+    "workerTitle": "Join as Worker",
+    "workerSubtitle": "Find jobs and offer services",
+    "continue": "Continue",
+    "alreadyHaveAccount": "Already have an account?",
+    "login": "Login"
+  },
+  "workerSignup": {
+    "title": "Join as Worker",
+    "subtitle": "Find jobs and offer services",
+    "lookingForHiring": "Looking for hiring?",
+    "joinAsClient": "Join as client",
+    "firstName": "First name",
+    "lastName": "Last name",
+    "nationalId": "National ID",
+    "location": "Location",
+    "email": "Email",
+    "phone": "Phone",
+    "password": "Password",
+    "confirmPassword": "Confirm",
+    "createAccount": "Create account",
+    "creating": "Creating...",
+    "alreadyHaveAccount": "Already have an account",
+    "login": "Login",
+    "accountCreatedSuccess": "Account created successfully",
+    "validation": {
+        "min2Chars": "Minimum 2 characters required",
+        "textLetterStart": "Must start with a letter",
+        "lettersOnly": "Only letters are allowed",
+        "phoneRequired": "Phone is required",
+        "phoneInvalidFormat": "Phone must be +2519XXXXXXXX or 10 digit local number",
+        "min8Chars": "Minimum 8 characters required",
+        "confirmPasswordRequired": "Please confirm password",
+        "passwordsDoNotMatch": "Passwords do not match",
+        "emailRequired": "Email is required",
+        "emailInvalid": "Enter a valid email address",
+        "nationalIdInvalid": "Enter exactly 12 digit FIN number"
+    }
+  },
+  "clientSignup": {
+    "title": "Join as Client",
+    "subtitle": "Create your account to start hiring",
+    "lookingForWork": "Looking for work",
+    "applyAsWorker": "Apply as a worker",
+    "accountType": "Account Type",
+    "individual": "Individual",
+    "company": "Company",
+    "firstName": "First Name",
+    "contactFirstName": "Contact First Name",
+    "lastName": "Last Name",
+    "contactLastName": "Contact Last Name",
+    "nationalId": "National ID",
+    "companyName": "Company Name",
+    "location": "Location",
+    "email": "Email",
+    "phone": "Phone",
+    "password": "Password",
+    "confirmPassword": "Confirm",
+    "createAccount": "Create account",
+    "creating": "Creating...",
+    "alreadyHaveAccount": "Already have an account?",
+    "login": "Login",
+    "accountCreatedSuccess": "Account created successfully",
+    "validation": {
+      "emailRequired": "Email is required",
+      "emailValid": "Enter a valid email address",
+      "phoneRequired": "Phone is required",
+      "phoneValid": "Phone must be +2519XXXXXXXX or 10 digit local number",
+      "passwordMin": "Minimum 8 characters required",
+      "confirmRequired": "Please confirm your password",
+      "passwordMatch": "Passwords do not match",
+      "textMin": "Minimum 2 characters required",
+      "textLetterStart": "Must start with a letter",
+      "textLettersOnly": "Only letters are allowed",
+      "finRequired": "Enter exactly 12 digit FIN number",
+      "companyRequired": "Company name is required",
+      "companyMin": "Minimum 2 characters required"
+    }
+  },
+  "create_user": {
+    "title": "Create New User",
+    "subtitle": "Add a new account to the system",
+    "first_name": "First Name",
+    "first_name_placeholder": "John",
+    "last_name": "Last Name",
+    "last_name_placeholder": "Doe",
+    "email": "Email",
+    "email_placeholder": "user@example.com",
+    "phone": "Phone",
+    "phone_placeholder": "+2519XXXXXXXX or 09XXXXXXXX",
+    "user_type": "User Type",
+    "select_user_type": "Select user type",
+    "client": "Client",
+    "worker": "Worker",
+    "admin": "Admin",
+    "password": "Password",
+    "confirm_password": "Confirm",
+    "creating": "Creating user...",
+    "create_btn": "Create User",
+    "back_to_users": "← Back to Users List",
+    "success_toast": "New user created successfully",
+    "validation": {
+      "first_name_required": "First name is required",
+      "last_name_required": "Last name is required",
+      "invalid_email": "Enter a valid email",
+      "invalid_phone": "Use +2519XXXXXXXX or 10 digit local number",
+      "min_password": "Min 8 characters required",
+      "confirm_password_required": "Please confirm password",
+      "passwords_do_not_match": "Passwords do not match",
+      "select_user_type": "Select user type",
+      "default_failed": "Failed to create user",
+      "min2Chars": "Must be at least 2 characters long.",
+      "textLetterStart": "Must start with a letter.",
+      "lettersOnly": "Must contain letters only."
+    }
+  },
+  "backendErrors": {
+    "INVALID_CREDENTIAL": "Invalid email/phone or password",
+    "ACCOUNT_PENDING": "Your account is still under review",
+    "ACCOUNT_SUSPENDED": "Your account has been suspended",
+    "ACCOUNT_REJECTED": "Your account was rejected. Contact support.",
+    "USER_DISABLED": "User account is disabled",
+    "emailExists": "User with this email already exists.",
+    "phoneExists": "User with this phone already exists.",
+    "passwords_donot_match": "Passwords do not match.",
+    "weak_password": "Password is too common.",
+    "numeric_password": "This password is entirely numeric.",
+    "national_id_registered_as_client": "This National ID is already registered as a client.",
+    "password_similar_company_name": "Password is too similar to the company name.",
+    "national_id_registered_as_worker": "This National ID is already registered as a worker.",
+    "password_similar_first_name": "The password is too similar to your first name.",
+    "password_similar_last_name": "The password is too similar to your last name.",
+    "password_similar_email": "The password is too similar to your email.",
+    "worker": {
+      "nationalIdExists": "Worker with this national id already exists."
+    },
+    "client": {
+      "companyNameExists": "A company with this name is already registered.",
+      "nationalIdExists": "Client with this national id already exists."
+    },
+    "generic": "Something went wrong"
+  },
+  "how_it_works": {
+    "badge": "Simple Workflow",
+    "title": "How It Works",
+    "subtitle": "Step-by-step system showing how clients and workers connect and complete jobs.",
+    "steps": {
+      "step1": {
+        "title": "Create Your Profile",
+        "desc": "Sign up as a Client or Worker and build your profile with skills, location, and experience.",
+        "extra": "Verified profiles increase trust and improve your chances of getting hired faster."
+      },
+      "step2": {
+        "title": "Post or Discover Jobs",
+        "desc": "Clients post job requests. Workers browse opportunities based on skills and location.",
+        "extra": "Smart filtering helps you find the right match quickly."
+      },
+      "step3": {
+        "title": "Connect & Communicate",
+        "desc": "Chat, negotiate price, and agree on job details before starting.",
+        "extra": "Clear communication reduces misunderstandings."
+      },
+      "step4": {
+        "title": "Work Progress",
+        "desc": "Complete work while keeping transparency with updates and tracking.",
+        "extra": "Clients can request updates anytime."
+      },
+      "step5": {
+        "title": "Payment & Rating",
+        "desc": "Secure payment release after completion and mutual reviews.",
+        "extra": "Ratings improve your visibility and trust score."
+      }
+    },
+    "features": {
+      "trust": {
+        "title": "Trust First System",
+        "desc": "Built to increase safety, transparency, and confidence for both sides."
+      },
+      "speed": {
+        "title": "Fast Matching",
+        "desc": "Active workers respond quickly to new job postings."
+      },
+      "security": {
+        "title": "Secure Workflow",
+        "desc": "Payments and communication are structured and protected."
+      }
+    }
+  },
+  "not_found": {
+    "title": "404",
+    "description": "Oops! The page you’re looking for doesn’t exist.",
+    "go_to_overview": "Go to Overview",
+    "go_to_home": "Go to Home"
+  },
+  "footer": {
+    "tagline": "Connecting clients with skilled workers across Ethiopia. Build, hire, and grow with ease.",
+    "follow_us": "Follow us",
+    "mobile_app": "Mobile App",
+    "copyright": "SiraLink Ethiopia. All rights reserved.",
+    "sections": {
+      "quick_links": "Quick Links",
+      "for_workers": "For Workers",
+      "for_clients": "For Clients",
+      "company": "Company"
+    },
+    "links": {
+      "find_jobs": "Find Jobs",
+      "hire_talent": "Hire Talent",
+      "how_it_works": "How It Works",
+      "browse_jobs": "Browse Jobs",
+      "become_worker": "Become a Worker",
+      "nearest_works": "Find Nearest Works",
+      "post_job": "Post a Job",
+      "become_client": "Become a Client",
+      "nearest_workers": "Find Nearest Workers",
+      "about_us": "About Us",
+      "contact_us": "Contact Us",
+      "our_impact": "Our Impact",
+      "terms": "Terms of Service",
+      "privacy": "Privacy Policy"
+    }
+  },
+  "home": {
+    "loading": "Loading...",
+    "hero": {
+      "title": "Find Skilled Workers or Get Hired Fast in Ethiopia",
+      "description": "SiraLink connects clients and skilled workers for jobs like plumbing, electrical work, cleaning, tutoring and more.",
+      "find_work": "Find Work",
+      "hire_talent": "Hire Talent"
+    },
+    "services": {
+      "badge": "Categories",
+      "heading": "Popular Services",
+      "find_verified": "Find verified {{service}} professionals",
+      "names": {
+        "plumbing": "Plumbing",
+        "electrical": "Electrical",
+        "cleaning": "Cleaning",
+        "tutoring": "Tutoring",
+        "appliance_repair": "Appliance Repair",
+        "painting": "Painting",
+        "carpentry": "Carpentry"
+      }
+    },
+    "how_it_works": {
+      "badge": "Simple Process",
+      "heading": "How SiraLink Works",
+      "subheading": "A fast and seamless way for clients and skilled professionals to connect, collaborate, and grow together.",
+      "steps": {
+        "step_1": {
+          "title": "Post a Job",
+          "desc": "Clients publish jobs with clear budgets, requirements, and timelines."
+        },
+        "step_2": {
+          "title": "Receive Applications",
+          "desc": "Skilled workers apply with proposals, experience, and ratings."
+        },
+        "step_3": {
+          "title": "Hire & Collaborate",
+          "desc": "Choose the best professional, complete the work, and pay securely."
+        }
+      }
+    },
+    "stats": {
+      "badge": "Platform Insights",
+      "heading": "Trusted Across Ethiopia",
+      "subheading": "Thousands of professionals and clients use SiraLink to connect, hire, and build opportunities every day.",
+      "active_workers": "Active Workers",
+      "jobs_posted": "Jobs Posted",
+      "successful_hires": "Successful Hires",
+      "platform_support": "Platform Support"
+    },
+    "why_us": {
+      "badge": "Why SiraLink",
+      "heading": "Built for Ethiopia’s Workforce",
+      "subheading": "A modern platform helping clients and skilled professionals connect faster, work smarter, and grow confidently.",
+      "reasons": {
+        "verified": {
+          "title": "Verified Professionals",
+          "desc": "Hire trusted workers with verified profiles, reviews, and proven experience."
+        },
+        "payments": {
+          "title": "Secure Payments",
+          "desc": "Safe transactions and transparent payments for both clients and workers."
+        },
+        "hiring": {
+          "title": "Fast Hiring",
+          "desc": "Post jobs, receive applications quickly, and hire in minutes."
+        }
+      }
+    },
+    "testimonials": {
+      "badge": "Testimonials",
+      "heading": "Trusted by Clients & Workers",
+      "items": {
+        "abel": "SiraLink helped me hire a skilled electrician within a day.",
+        "meron": "I found consistent freelance work and reliable clients.",
+        "samuel": "The platform is clean, professional, and easy to use."
+      },
+      "roles": {
+        "client": "Client",
+        "worker": "Worker"
+      }
+    },
+    "cta": {
+      "badge": "Ethiopia’s Modern Hiring Platform",
+      "heading": "Ready to Get Started?",
+      "subheading": "Join thousands of professionals and clients using SiraLink to build careers, hire talent, and grow businesses across Ethiopia.",
+      "create_account": "Create Account",
+      "browse_jobs": "Browse Jobs"
+    }
+  }
+}

@@ -1,0 +1,383 @@
+{
+  "navbar": {
+    "searchPlaceholder": "Barbaadi",
+    "jobs": "Hojiiwwan",
+    "workers": "Hojjettoota",
+    "findWork": "Hojii Barbaadi",
+    "hireWorkers": "Hojjettoota Mindeessi",
+    "findWorkers": "Hojjettoota Barbaadi",
+    "deliverWork": "Hojii Dhiyeessi",
+    "postJob": "Hojii Maxxansi",
+    "messages": "Ergaawwan",
+    "notifications": "Beeksisa",
+    "help": "Gargaarsa",
+    "howItWorks": "Akkaata Inni Hojjetu",
+    "login": "Seeni",
+    "loginTitle": "Gara SiraLinktti Seenaa",
+    "loginSubtitle": "Itti fufuuf odeeffannoo accauntii keessanii galchaa",
+    "getStarted": "Jalqabi",
+    "profile": "Piroofayilii",
+    "settings": "Sajoollee",
+    "logout": "Ba'i",
+    "admin": "Bulchaa",
+    "worker": "Hojjetaa",
+    "client": "Maamila",
+    "user": "Fayyadamaa"
+  },
+  "login": {
+    "title": "Gara SiraLinktti Seenaa",
+    "subtitle": "Itti fufuuf odeeffannoo accauntii keessanii galchaa",
+    "identifierPlaceholder": "E-mail ykn Lakkoofsa Bilbilaa",
+    "passwordPlaceholder": "Jechoota Darbiinsaa",
+    "rememberMe": "Na yaadadhu",
+    "forgotPassword": "Jechoota darbiinsaa dagattaniittuu?",
+    "submit": "Seenaa",
+    "submitting": "Seenaa jira...",
+    "noAccount": "Akkaantii hin qabduu?",
+    "signUp": "Galmaa'aa",
+    "errorRequired": "Odeeffannoo e-mail/bilbilaa fi jecha darbiinsaa guutaa",
+    "errorInvalidCredentials": "E-mail/bilbila ykn jecha darbiinsaa dogoggoraa"
+   },
+   "account": "Akkaawuntii",
+  "admin_panel": "Mootummaa Admin",
+  "expand": "Guddisii",
+  "collapse": "Xiqneessi",
+  "user_type": {
+    "admin": "Adminii",
+    "client": "Maamila",
+    "worker": "Hojjetaa"
+  },
+  "nav": {
+    "overview": "Waliigala",
+    "all_users": "Fayyadamtoota Hundumaa",
+    "clients": "Kondomaaniin/Maamiltoota",
+    "workers": "Hojjettoota",
+    "jobs": "Hojiiwwan",
+    "applications": "Iyyannoowwan",
+    "payments": "Kaffaltiiwwan",
+    "reviews": "Gamaaggama",
+    "reports": "Gabaasota",
+    "jobs_posted": "Hojii Maxxanfame",
+    "verification": "Mirkaneessuu",
+    "my_reviews": "Gamaaggama Koof",
+    "proposals": "Yaada Hojii",
+    "works_completed": "Hojii Xumurame",
+    "earnings": "Galii"
+  },
+  "signup": {
+    "title": "SiraLink tti Makamaa",
+    "subtitle": "Plaatformii kana akkamitti fayyadamuu akka barbaaddan filadhaa",
+    "clientTitle": "Akkasuma Maamilaan Makamaa",
+    "clientSubtitle": "Hojjettoota qacaraa fi hojiiwwan maxxansaa",
+    "workerTitle": "Akkasuma Hojjetaan Makamaa",
+    "workerSubtitle": "Hojiiwwan barbaadaa fi tajaajiloota dhiheessaa",
+    "continue": "Itti Fufa",
+    "alreadyHaveAccount": "Duraan akkaawuntii qabduu?",
+    "login": "Seenaa"
+  },
+  "workerSignup": {
+    "title": "Akkasuma Hojjetaan Makamaa",
+    "subtitle": "Hojiiwwan barbaadaa fi tajaajiloota dhiheessaa",
+    "lookingForHiring": "Hojjetaa qacaruu barbaadduu?",
+    "joinAsClient": "Akkasuma maamilaan makamaa",
+    "firstName": "Maqaa",
+    "lastName": "Maqaa Abbaa",
+    "nationalId": "Waraqaa Eenyummaa Biyyooleessaa",
+    "location": "Bakka",
+    "email": "Imeelii",
+    "phone": "Lakkoofsa Bilbilaa",
+    "password": "Jecha Darbiinsaa",
+    "confirmPassword": "Mirkaneessi",
+    "createAccount": "Akkaawuntii Uumii",
+    "creating": "Uumamaa jira...",
+    "alreadyHaveAccount": "Duraan akkaawuntii qabduu",
+    "login": "Seenaa",
+    "accountCreatedSuccess": "Akkaawuntiin milkaa'inaan uumameera",
+    "validation": {
+        "min2Chars": "Xiqqeenyaa qubee 2 ta'uu qaba",
+        "textLetterStart": "Qubeen jalqabamuu qaba",
+        "lettersOnly": "Qubee qofa ta'uu qaba",
+        "phoneRequired": "Lakkoofsi bilbilaa ni barbaachisa",
+        "phoneInvalidFormat": "Lakkoofsi bilbilaa +2519XXXXXXXX fi lakkoofsa idilee dijiitii 10 ta'uu qaba",
+        "min8Chars": "Xiqqeenyaa qubee 8 ta'uu qaba",
+        "confirmPasswordRequired": "Jeequmsa jecha iccitii mirkaneessaa",
+        "passwordsDoNotMatch": "Jeequmsi jecha iccitii wal hin simu",
+        "emailRequired": "Imeeliin ni barbaachisa",
+        "emailInvalid": "Teessoo imeelii sirrii ta'e galchaa",
+        "nationalIdInvalid": "Lakkoofsa waraqaa eenyummaa (FIN) dijiitii 12 sirrii ta'e galchaa"
+    }
+  },
+  "clientSignup": {
+    "title": "Akkasuma Maamilaan Makamaa",
+    "subtitle": "Hojjettoota qacaruuf akkaawuntii keessan uumaa",
+    "lookingForWork": "Hojii barbaadaa jirtuu",
+    "applyAsWorker": "Akkasuma hojjetaan iyyaadhaa",
+    "accountType": "Gosa Akkaawuntii",
+    "individual": "Dhuunfaa",
+    "company": "Dhaabbata",
+    "firstName": "Maqaa",
+    "contactFirstName": "Maqaa Qunnamtii",
+    "lastName": "Maqaa Abbaa",
+    "contactLastName": "Maqaa Abbaa Qunnamtii",
+    "nationalId": "Waraqaa Eenyummaa Biyyooleessaa",
+    "companyName": "Maqaa Dhaabbataa",
+    "location": "Bakka",
+    "email": "Imeelii",
+    "phone": "Lakkoofsa Bilbilaa",
+    "password": "Jecha Darbiinsaa",
+    "confirmPassword": "Mirkaneessi",
+    "createAccount": "Akkaawuntii Uumii",
+    "creating": "Uumamaa jira...",
+    "alreadyHaveAccount": "Duraan akkaawuntii qabduu?",
+    "login": "Seenaa",
+    "accountCreatedSuccess": "Akkaawuntiin milkaa'inaan uumameera",
+    "validation": {
+      "emailRequired": "Imeeliin barbaachisaa dha",
+      "emailValid": "Teessoo imeelii sirrii galchaa",
+      "phoneRequired": "Lakkoofsi bilbilaa barbaachisaa dha",
+      "phoneValid": "Lakkoofsi bilbilaa +2519XXXXXXXX ta'uu ykn lakkoofsa biyyooleessaa digitii 10 ta'uu qaba",
+      "passwordMin": "Xiqqaate arfiilee 8 barbaachisa",
+      "confirmRequired": "Moo'ee jecha darbiinsaa keessan mirkaneessaa",
+      "passwordMatch": "Jechi darbiinsaa wal hin simne",
+      "textMin": "Xiqqaate arfiilee 2 barbaachisa",
+      "textLetterStart": "Arfiidhaan eegaluu qaba",
+      "textLettersOnly": "Arfiilee qofatu hayyamama",
+      "finRequired": "Lakkoofsa FIN digitii 12 sirriitti galchaa",
+      "companyRequired": "Maqaan dhaabbataa barbaachisaa dha",
+      "companyMin": "Xiqqaate arfiilee 2 barbaachisa"
+    }
+  },
+  "create_user": {
+    "title": "Fayyadamaa Haaraa Uumi",
+    "subtitle": "Akaawuntii haaraa gara sirnaatti ida'i",
+    "first_name": "Maqaa",
+    "first_name_placeholder": "Yohannis",
+    "last_name": "Maqaa Abbaa",
+    "last_name_placeholder": "Tafarraa",
+    "email": "Imeelii",
+    "email_placeholder": "user@example.com",
+    "phone": "Lakkoofsa Bilbilaa",
+    "phone_placeholder": "+2519XXXXXXXX yookiin 09XXXXXXXX",
+    "user_type": "Gosa Fayyadamaa",
+    "select_user_type": "Gosa fayyadamaa filadhu",
+    "client": "Maamila",
+    "worker": "Hojjetaa",
+    "admin": "Bulchaa",
+    "password": "Jecha Darbiiti",
+    "confirm_password": "Jecha Darbii Mirkaneessi",
+    "creating": "Fayyadamaa uumaa jira...",
+    "create_btn": "Fayyadamaa Uumi",
+    "back_to_users": "← Gara Tarree Fayyadamtootaatti Deebi'i",
+    "success_toast": "Fayyadamaa haaraan milkaa'inaan uumameera",
+    "validation": {
+      "first_name_required": "Maqaan barbaachisaadha",
+      "last_name_required": "Maqaan abbaa barbaachisaadha",
+      "invalid_email": "Imeelii sirrii ta'e galchu",
+      "invalid_phone": "+2519XXXXXXXX yookiin lakkoofsa biyya keessaa dijiitii 10 fayyadami",
+      "min_password": "Xiqqaatee arfiilee 8 barbaachisa",
+      "confirm_password_required": "Maaloo jecha darbii mirkaneessi",
+      "passwords_do_not_match": "Jechi darbii wal hin simu",
+      "select_user_type": "Gosa fayyadamaa filadhu",
+      "default_failed": "Fayyadamaa uumuun hin danda'amne",
+      "min2Chars": "Xiqqeenyaa qubee 2 ta'uu qaba",
+      "textLetterStart": "Qubeen jalqabamuu qaba",
+      "lettersOnly": "Qubee qofa ta'uu qaba"
+    }
+  },
+  "backendErrors": {
+    "INVALID_CREDENTIAL": "Imeelii/lakkoofsa bilbilaa ykn jecha darbii dogoggoraa",
+    "ACCOUNT_PENDING": "Akkaantiin keessan ammas qoratamaa jira",
+    "ACCOUNT_SUSPENDED": "Akkaantiin keessan dhorkameera",
+    "ACCOUNT_REJECTED": "Akkaantiin keessan kufaa ta'eera. Deeggarsa qunnamaa.",
+    "USER_DISABLED": "Akkaantiin fayyadamaa hojiirraa ala ta'eera",
+    "emailExists": "Fayyadamaan imeelii kanaan galmaa'e ammas jira.",
+    "phoneExists": "Fayyadamaan lakkoofsa bilbilaa kanaan galmaa'e ammas jira.",
+    "passwords_donot_match": "Jechi darbii wal hin simu.",
+    "weak_password": "Jechi darbii baay'ee beekamaa dha.",
+    "numeric_password": "Jechi darbii kun lakkoofsa qofa.",
+    "national_id_registered_as_client": "Waraqaan eenyummaa kun duraan akka maamilaatti galmaa'eera.",
+    "password_similar_company_name": "Jechi darbii maqaa dhaabbataa waliin baay'ee wal fakkaata.",
+    "national_id_registered_as_worker": "Waraqaan eenyummaa biyyoolessaa kun duraan akka hojjataatti galmeeffameera.",
+    "password_similar_first_name": "Jechi darbii maqaa keessan isa jalqabaatiin baay'ee wal fakkaata.",
+    "password_similar_last_name": "Jechi darbii maqaa abbaa keessaniin baay'ee wal fakkaata.",
+    "password_similar_email": "Jechi darbii imeelii keessaniin baay'ee wal fakkaata.",
+    "worker": {
+      "nationalIdExists": "Hojjetaan waraqaa eenyummaa kanaan galmaa'e ammas jira."
+    },
+    "client": {
+      "companyNameExists": "Dhaabbanni maqaa kanaan galmaa'e ammas jira.",
+      "nationalIdExists": "Maamilli waraqaa eenyummaa kanaan galmaa'e ammas jira."
+    },
+    "generic": "Dogoggorri tokko uumameera"
+  },
+  "how_it_works": {
+    "badge": "Adeemsa Hojii Salphaa",
+    "title": "Akkaataa Itti Hojjetu",
+    "subtitle": "Sirna sadarkaa sadarkaadhan akkaataa maamiltoonni fi hojjattoonni itti walqunnamanii fi hojii itti xumuran agarsiisu.",
+    "steps": {
+      "step1": {
+        "title": "Puroofaayilii Keessan Uumaa",
+        "desc": "Akka Maamilaatti ykn Hojjataatti galmaa'aatii dandeettii, teessoo fi muuxannoo keessaniin puroofaayilii keessan ijaaraa.",
+        "extra": "Puroofaayiliin mirkanaa'e amanamummaa ni dabala, daftanii akka qacarramtanis carraa keessan fooyyessa."
+      },
+      "step2": {
+        "title": "Hojii Maxxansaa ykn Barbaadaa",
+        "desc": "Maamiltoonni gaaffii hojii maxxansu. Hojjattoonni dandeettii fi teessoo isaaniirratti hundaa'uun carraawwan dhiyaatan sakatta'u.",
+        "extra": "Calalliin ammayyaa hojii sirrii ta'e daftanii akka argattaniif isin gargaara."
+      },
+      "step3": {
+        "title": "Walqunnamaa fi Mari'adhaa",
+        "desc": "Hojii jalqabuu keessan dura mari'adhaa, gatii irratti waliigalaati fi tarreeffama hojii irratti waliigalaa.",
+        "extra": "Qunnamtiin ifa ta'e wal-dhabdee fi maalummaa wallaaluu hir'isa."
+      },
+      "step4": {
+        "title": "Adeemsa Hojii",
+        "desc": "Gabaasa haaraa fi hordoffii ifa ta'een hojii keessan xumuraa.",
+        "extra": "Maamiltoonni yeroo kamiyyuu gabaasa sadarkaa hojii gaafachuu danda'u."
+      },
+      "step5": {
+        "title": "Kaffaltii fi Sadarkaa Kennuu",
+        "desc": "Hojiin erga xumuramee fi gama lamaaniinuu yaadni erga kenneen booda kaffaltiin eegamaa ta'e ni gadhiifama.",
+        "extra": "Sadarkaan kennamu mul'achuu fi qabxii amanamummaa keessan ni fooyyessa."
+      }
+    },
+    "features": {
+      "trust": {
+        "title": "Sirna Amanamummaa Duraa",
+        "desc": "Nageenya, iftoomina fi amantaa gama lamaanii dabaluuf kan ijaarame."
+      },
+      "speed": {
+        "title": "Walqunnamtii Saffisaa",
+        "desc": "Hojjattoonni qophii ta'an maxxansa hojii haaraaf dafanii deebii kennu."
+      },
+      "security": {
+        "title": "Adeemsa Hojii Eegamaa",
+        "desc": "Kaffaltiin fi qunnamtiin sirnaan kan qindaa'ee fi kan eegameedha."
+      }
+    }
+  },
+  "not_found": {
+    "title": "404",
+    "description": "Dhiifama! Fuulii isin barbaaddan hin argamne.",
+    "go_to_overview": "Gara Cuunfaa Deebi'aa",
+    "go_to_home": "Gara Fuula Duraa Deebi'aa"
+  },
+  "footer": {
+    "tagline": "Itoophiyaa guututti maamiltootaa fi hojjattoota dandeettii qaban walitti connects gochaa. Salphaatti ijaaraa, qacaraa, guddadhaa.",
+    "follow_us": "Nu hordofaa",
+    "mobile_app": "Aappii Mobaayilaa",
+    "copyright": "SiraLink Itoophiyaa. Mirgi forbidden eegamaadha.",
+    "sections": {
+      "quick_links": "Geessituu Saffisaa",
+      "for_workers": "Hojjattootaaf",
+      "for_clients": "Maamiltootaaf",
+      "company": "Dhaabbata"
+    },
+    "links": {
+      "find_jobs": "Hojii Barbaadaa",
+      "hire_talent": "Ogeessa Qacaraa",
+      "how_it_works": "Akkaataa Itti Hojjetu",
+      "browse_jobs": "Hojiiwwan Sakatta'aa",
+      "become_worker": "Hojjataa Ta'aa",
+      "nearest_works": "Hojiiwwan Dhiyoo Barbaadaa",
+      "post_job": "Hojii Maxxansaa",
+      "become_client": "Maamila Ta'aa",
+      "nearest_workers": "Hojjattoota Dhiyoo Barbaadaa",
+      "about_us": "Snoobee Nuu",
+      "contact_us": "Nu Nu Qunnamti",
+      "our_impact": "Dhiibbaa Keessan",
+      "terms": "Haala Tajaajilaa",
+      "privacy": "Imoo Imaammata Imaammata"
+    }
+  },
+  "home": {
+    "loading": "Fe'aamaa jira...",
+    "hero": {
+      "title": "Itoophiyaa Keessatti Hojjettoota Ogummaa Qaban Argadhu Yookiin Dafte Hojii Argadhu",
+      "description": "Siiraaliink maamiltootaa fi hojjettoota ogummaa qaban hojiiwwan kan akka ujummoo bishaanii, ibsaa, qulqullinaa, barsiisummaa fi kanneen birootiin walconnect godha.",
+      "find_work": "Hojii Argadhu",
+      "hire_talent": "Ogeessa Qaxari"
+    },
+    "services": {
+      "badge": "Gosa Hojiiwwanii",
+      "heading": "Tajaajiloota Beekamoo",
+      "find_verified": "Ogeessota {{service}} mirkanaa'an argadhu",
+      "names": {
+        "plumbing": "Hojii Ujummoo Bishaanii",
+        "electrical": "Hojii Ibsaa",
+        "cleaning": "Qulqullina",
+        "tutoring": "Barnoota/Barsiisummaa",
+        "appliance_repair": "Suphaa Meeshaa Manaa",
+        "painting": "Dibata Halluu",
+        "carpentry": "Hojii Muka/Anaxummaa"
+      }
+    },
+    "how_it_works": {
+      "badge": "Adeemsa Salphaa",
+      "heading": "Siiraaliink Akkaamitti Hojjeta",
+      "subheading": "Akkaataan maamiltoonni fi ogeessonni salphaatti walqunnaman, waliin hojjetanii fi waliin guddatan ቀልጣፋ auraa.",
+      "steps": {
+        "step_1": {
+          "title": "Hojii Maxxansi",
+          "desc": "Maamiltoonni hojii baajata, ulaagaa fi yeroo ifa ta'een maxxansu."
+        },
+        "step_2": {
+          "title": "Iyyannoo Queue",
+          "desc": "Ogeessonni muuxannoo, gatii fi sadarkaa isaanii ibsuun iyyatu."
+        },
+        "step_3": {
+          "title": "Qaxari & Waliin Hojjedhu",
+          "desc": "Ogeessa gaarii ta'e filadhu, hojichaa xumuri, karaa nagaa ta'een kaffali."
+        }
+      }
+    },
+    "stats": {
+      "badge": "Odeeffannoo Waltajjii",
+      "heading": "Itoophiyaa Guutuu Keessatti Kan Amaname",
+      "subheading": "Kumootaan kan lakkaawaman ogeessonni fi maamiltoonni guyyaa guyyaan walqunnamuuf, qaxaramuufi carraa create gochuuf Siiraaliinkitti fayyadamu.",
+      "active_workers": "Hojjettoota Socho'an",
+      "jobs_posted": "Hojiiwwan Maxxanfaman",
+      "successful_hires": "Qaxarrii Milkaa'an",
+      "platform_support": "Deeggarsa Waltajjii"
+    },
+    "why_us": {
+      "badge": "Maaliif Siiraaliink",
+      "heading": "Humna Hojii Itoophiyaatiif Kan Uumame",
+      "subheading": "Waltajjii ammayyaa maamiltoonni fi ogeessonni dafanii akka wal-argatan, gahumsaan akka hojjetanii fi amantaan akka guddatan gargaaru.",
+      "reasons": {
+        "verified": {
+          "title": "Ogeessota Mirkanaa'an",
+          "desc": "Hojjettoota amanamoo proofaayilii mirkanaa'e, madaallii fi muuxannoo qaban qaxari."
+        },
+        "payments": {
+          "title": "Kaffaltii Nageenyi Isaa Eegame",
+          "desc": "Maamiltootaa fi hojjettootaaf kaffaltii si'ataa, ifa ta'e fi nageenyi isaa eegame."
+        },
+        "hiring": {
+          "title": "Qaxarrii Ariifachiisaa",
+          "desc": "Hojii maxxansi, daftee iyyannoo fudhadhu, daqiiqaa muraasa keessatti qaxari."
+        }
+      }
+    },
+    "testimonials": {
+      "badge": "Ragaa Dhuga-baatummaa",
+      "heading": "Maamiltootaa fi Hojjettootaan Kan Amaname",
+      "items": {
+        "abel": "Siiraaliink guyyaa tokko keessatti ogeessa ibsaa gahumsa qabu akka-n qaxaru na gargaare.",
+        "meron": "Hojii fiiriilaansii dhaabbataa fi maamiltoota amanamoo ta'an argadheera.",
+        "samuel": "Waltajjiin kun qulqulluu, ogummaa kan qabuufi fayyadamufuuf salphaa kan ta'eedha."
+      },
+      "roles": {
+        "client": "Maamila",
+        "worker": "Hojjetaa"
+      }
+    },
+    "cta": {
+      "badge": "Waltajjii Qaxarrii Ammayyaa Itoophiyaa",
+      "heading": "Jalqabuuf Qophiidhaa?",
+      "subheading": "Kumootaan kan lakkaawaman ogeessotaa fi maamiltoota Siiraaliinkitti fayyadamanii hojii uummachaa, dandeettii qaxaraa fi dandeettii isaanii guddisaa jiranitti dabalami.",
+      "create_account": "Akaawuntii Uumi",
+      "browse_jobs": "Hojiiwwan Ilaali"
+    }
+  }
+}

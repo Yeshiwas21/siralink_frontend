@@ -4,9 +4,11 @@ import { useNavigate, Link, Navigate } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
 import { getHomeRoute } from "../../utils/getHomeRoute";
 import { Turnstile } from "@marsidev/react-turnstile";
+import { useTranslation } from "react-i18next";
 
 function Login() {
-  const { user, login } = useAuth();
+  const { t } = useTranslation();
+  const { login } = useAuth();
   const navigate = useNavigate();
 
   const [form, setForm] = useState({
@@ -35,7 +37,7 @@ function Login() {
     setError("");
 
     if (!form.identifier || !form.password) {
-      setError("Please fill both email/phone and password");
+      setError(t("login.errorRequired"));
       return;
     }
     const payload = {
@@ -52,25 +54,40 @@ function Login() {
     } catch (err) {
       const data = err?.response?.data || {};
 
-      const message = Array.isArray(data.message)
-        ? data.message[0]
-        : data.message;
+      // 1. Read top-level error_code or code
+      const errorCode = data.error_code || data.code;
 
-      setError(message || data?.detail || "Invalid email/phone or password");
+      // 2. Extract nested message array or detail string if present
+      const extractMessage = (val) => {
+        if (Array.isArray(val)) return val[0];
+        if (typeof val === "string") return val;
+        if (typeof val === "object" && val !== null) {
+          const firstKey = Object.keys(val)[0];
+          return extractMessage(val[firstKey]);
+        }
+        return null;
+      };
+
+      const fallbackMsg = extractMessage(data.message) || data.detail || extractMessage(data);
+
+      // 3. Set translated error if code exists; otherwise use fallback message
+      if (errorCode && t(`backendErrors.${errorCode}`, { defaultValue: "" })) {
+        setError(t(`backendErrors.${errorCode}`));
+      } else if (fallbackMsg) {
+        setError(fallbackMsg);
+      } else {
+        setError(t("login.errorInvalidCredentials"));
+      }
 
       setForm((prev) => ({ ...prev, password: "" }));
 
-      // RESET TURNSTILE
+      // Reset Turnstile widget
       setTurnstileToken("");
-      setTurnstileKey((prev) => prev + 1); // forces reload
+      setTurnstileKey((prev) => prev + 1);
     } finally {
       setLoginLoading(false);
     }
   };
-
-  if (user?.isAuthenticated) {
-    return <Navigate to={getHomeRoute(user)} replace />;
-  }
 
   return (
     <div className="min-h-screen flex items-center justify-center px-4 bg-gray-50 dark:bg-gray-950 transition-colors">
@@ -79,11 +96,11 @@ function Login() {
         {/* HEADER */}
         <div className="text-center mb-6">
           <h1 className="text-2xl font-semibold text-gray-900 dark:text-white">
-            Login to SiraLink
+            {t("login.title")}
           </h1>
 
           <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
-            Enter your credentials to continue
+            {t("login.subtitle")}
           </p>
         </div>
 
@@ -104,7 +121,7 @@ function Login() {
               type="text"
               name="identifier"
               value={form.identifier}
-              placeholder="Email or Phone"
+              placeholder={t("login.identifierPlaceholder")}
               autoComplete="off"
               onChange={handleChange}
               className="w-full pl-10 p-3 rounded-lg border border-gray-300 dark:border-gray-700
@@ -122,7 +139,7 @@ function Login() {
               type={showPassword ? "text" : "password"}
               name="password"
               value={form.password}
-              placeholder="Password"
+              placeholder={t("login.passwordPlaceholder")}
               autoComplete="off"
               onChange={handleChange}
               className="w-full pl-10 pr-10 p-3 rounded-lg border border-gray-300 dark:border-gray-700
@@ -154,7 +171,7 @@ function Login() {
                 onChange={handleChange}
                 className="cursor-pointer"
               />
-              Remember me
+              {t("login.rememberMe")}
             </label>
 
             <button
@@ -162,7 +179,7 @@ function Login() {
               onClick={() => navigate("/forgot-password")}
               className="text-blue-600 dark:text-blue-400 hover:underline cursor-pointer"
             >
-              Forgot password?
+              {t("login.forgotPassword")}
             </button>
           </div>
 
@@ -187,18 +204,18 @@ function Login() {
             hover:opacity-90 active:scale-[0.99]
             transition cursor-pointer disabled:cursor-not-allowed disabled:opacity-50"
           >
-            {loginLoading ? "Logging in..." : "Login"}
+            {loginLoading ? t("login.submitting") : t("login.submit")}
           </button>
         </form>
 
         {/* FOOTER */}
         <div className="mt-6 text-center text-sm text-gray-600 dark:text-gray-400">
-          Don’t have an account?{" "}
+          {t("login.noAccount")}
           <Link
             to="/signup"
             className="text-blue-600 dark:text-blue-400 font-medium hover:underline cursor-pointer"
           >
-            Sign up
+            {t("login.signUp")}
           </Link>
         </div>
       </div>
