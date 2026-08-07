@@ -1,94 +1,112 @@
-// api/axios.js
-
 import axios from "axios";
-import {
-  getAccessToken,
-  getRefreshToken,
-  setAccessToken,
-  setRefreshToken,
-  clearTokens,
-} from "../services/tokenService";
 
-/**
- * Axios instance configured with base API URL
- */
+// Axios instance with cookie authentication enabled
 const api = axios.create({
   baseURL: "http://192.168.3.25:8080/api",
+  withCredentials: true,
 });
 
-/**
- * Attach access token to every outgoing request
- */
-api.interceptors.request.use((config) => {
-  const token = getAccessToken();
 
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
-  }
+// Prevent multiple refresh requests at the same time
+let isRefreshing = false;
 
-  return config;
-});
+// Store requests waiting for token refresh
+let failedQueue = [];
 
-/**
- * Handle response errors (mainly token expiration)
- */
+
+// Retry or reject queued requests after refresh completes
+const processQueue = (error) => {
+  failedQueue.forEach((promise) => {
+    if (error) {
+      promise.reject(error);
+    } else {
+      promise.resolve();
+    }
+  });
+
+  failedQueue = [];
+};
+
+
+// Handle expired access tokens automatically
 api.interceptors.response.use(
-  (response) => response,
+  response => response,
 
-  async (error) => {
+  async error => {
     const originalRequest = error.config;
 
-    if (!originalRequest) return Promise.reject(error);
+    // Ignore non-auth errors and already retried requests
+    if (
+      error.response?.status !== 401 ||
+      originalRequest._retry ||
+      originalRequest.url.includes("/token/refresh/")
 
-    // Skip login endpoint to avoid infinite retry loop
-    if (originalRequest.url.includes("/users/login/")) {
+    ) {
       return Promise.reject(error);
     }
 
-    /**
-     * If access token expired → try refreshing it
-     */
-    if (error.response?.status === 401 && !originalRequest._retry) {
-      originalRequest._retry = true;
-
-      try {
-        const refresh = getRefreshToken();
-
-        // No refresh token → force logout
-        if (!refresh) {
-          clearTokens();
-          return Promise.reject(error);
-        }
-
-        // Request new tokens
-        const res = await axios.post(
-          "http://192.168.3.25:8080/api/token/refresh/",
-          { refresh }
-        );
-
-        const newAccess = res.data.access;
-        const newRefresh = res.data.refresh;
-
-        // Update stored tokens
-        setAccessToken(newAccess);
-
-        if (newRefresh) {
-          setRefreshToken(newRefresh);
-        }
-
-        // Retry original request with new access token
-        originalRequest.headers.Authorization = `Bearer ${newAccess}`;
-
-        return api(originalRequest);
-      } catch (err) {
-        // Refresh failed → logout user
-        clearTokens();
-        return Promise.reject(err);
-      }
+    // Do not refresh after failed login
+    if (
+      originalRequest.url.includes(
+        "/users/login/"
+      )
+    ) {
+      return Promise.reject(error);
     }
 
-    return Promise.reject(error);
+    // Wait for the current refresh request
+    if (isRefreshing) {
+
+      return new Promise(
+        (resolve, reject) => {
+
+          failedQueue.push({
+            resolve,
+            reject,
+          });
+
+        }
+      )
+        .then(() => api(originalRequest))
+        .catch(err => Promise.reject(err));
+
+    }
+    originalRequest._retry = true;
+    isRefreshing = true;
+
+
+    try {
+
+      console.log("Trying token refresh...");
+
+      // Refresh access cookie using HttpOnly refresh cookie
+      await api.post(
+        "/token/refresh/"
+      );
+
+      // Retry queued requests after successful refresh
+      processQueue(null);
+
+
+      return api(originalRequest);
+
+
+    } catch (refreshError) {
+
+      // Reject queued requests if refresh fails
+      processQueue(refreshError);
+
+      return Promise.reject(refreshError);
+
+
+    } finally {
+
+      isRefreshing = false;
+
+    }
+
   }
 );
+
 
 export default api;

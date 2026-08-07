@@ -5,10 +5,16 @@ import React, {
   useEffect,
   useMemo,
 } from "react";
-import { loginApi, logoutApi, getMeApi } from "../services/authService";
-import { getAccessToken, clearTokens } from "../services/tokenService";
+
+import {
+  loginApi,
+  logoutApi,
+  getMeApi,
+} from "../services/authService";
+
 
 const AuthContext = createContext();
+
 
 const defaultUser = {
   isAuthenticated: false,
@@ -24,85 +30,140 @@ const defaultUser = {
   worker: null,
 };
 
+
 export function AuthProvider({ children }) {
+
   const [user, setUser] = useState(defaultUser);
   const [loading, setLoading] = useState(true);
 
+
   /**
-   * INIT AUTH
+   * Load logged-in user from backend.
+   */
+  const loadUser = async () => {
+
+    try {
+
+      const data = await getMeApi();
+
+
+      setUser({
+        ...defaultUser,
+        ...data,
+        isAuthenticated: true,
+      });
+
+
+      return true;
+
+
+    } catch (err) {
+
+
+      setUser(defaultUser);
+
+      return false;
+
+    }
+
+  };
+
+
+  /**
+   * Initialize authentication.
+   *
+   * Cookies are handled by the browser.
+   * Axios handles refresh automatically.
    */
   useEffect(() => {
+    let mounted = true;
+
     const initAuth = async () => {
-      const token = getAccessToken();
-
-      if (!token) {
-        setUser(defaultUser);
-        setLoading(false);
-        return;
-      }
-
       try {
-        const data = await getMeApi();
-
-        setUser({
-          ...defaultUser,
-          ...data,
-          isAuthenticated: true,
-        });
-      } catch (err) {
-        clearTokens();
-        setUser(defaultUser);
+        await loadUser();
       } finally {
-        setLoading(false);
+        if (mounted) {
+          setLoading(false);
+        }
       }
     };
 
     initAuth();
+
+    const syncAuth = () => {
+      loadUser();
+    };
+
+    window.addEventListener("focus", syncAuth);
+
+    return () => {
+      mounted = false;
+      window.removeEventListener("focus", syncAuth);
+    };
   }, []);
 
+
   /**
-   * LOGIN
+   * Login user.
+   *
+   * Backend creates HttpOnly cookies.
    */
   const login = async (payload) => {
     await loginApi(payload);
     const userData = await getMeApi();
-
     setUser({
       ...defaultUser,
       ...userData,
       isAuthenticated: true,
     });
 
+
     return userData;
+
   };
 
+
+
   /**
-   * LOGOUT
+   * Logout user.
+   *
+   * Backend deletes cookies.
    */
   const logout = async () => {
     try {
       await logoutApi();
     } catch (err) {
-      console.log("Logout API failed (ignored)", err);
-    }
+      console.log(
+        "Logout API failed",
+        err
+      );
 
-    clearTokens();
+    }
     setUser(defaultUser);
+
   };
 
-  /**
-   * DERIVED STATE (optimized)
-   */
+
+
   const full_name = useMemo(() => {
     if (user.first_name && user.last_name) {
       return `${user.first_name} ${user.last_name}`;
     }
     return user.first_name || "";
-  }, [user.first_name, user.last_name]);
+  }, [
+    user.first_name,
+    user.last_name,
+  ]);
+
+
 
   const isClient = user.user_type === "client";
+
   const isWorker = user.user_type === "worker";
+
   const isAdmin = user.user_type === "admin";
+
+
 
   return (
     <AuthContext.Provider
@@ -117,9 +178,15 @@ export function AuthProvider({ children }) {
         isAdmin,
       }}
     >
+
       {children}
+
     </AuthContext.Provider>
+
   );
+
 }
+
+
 
 export const useAuth = () => useContext(AuthContext);

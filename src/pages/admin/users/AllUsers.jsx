@@ -329,12 +329,12 @@ function AllUsers() {
   const baseBtn = "px-3 py-1 rounded-full border cursor-pointer transition";
 
   const themeBtn =
-    "border-gray-300 dark:border-gray-600 " +
-    "text-gray-700 dark:text-gray-200 " +
-    "hover:bg-gray-100 dark:hover:bg-gray-700";
+    "border-white dark:border-black " +
+    "text-black dark:text-white " +
+    "hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black";
 
   const activeBtn =
-    "bg-blue-600 text-white border-blue-600 dark:bg-blue-500 dark:border-blue-500";
+    "bg-black text-white border-black dark:bg-white dark:text-black dark:border-white";
 
   if (loading) {
     return (
@@ -795,28 +795,28 @@ function AllUsers() {
               {activeTab === "info" && (
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
                   <div className="p-3 rounded-lg bg-gray-50 dark:bg-gray-900">
-                    <p className="text-xs text-gray-500">Email</p>
+                    <p className="text-xs text-gray-800 dark:text-white">Email</p>
                     <p className="break-all text-gray-900 dark:text-white">
                       {selectedUser.email}
                     </p>
                   </div>
 
                   <div className="p-3 rounded-lg bg-gray-50 dark:bg-gray-900">
-                    <p className="text-xs text-gray-500">User Type</p>
+                    <p className="text-xs text-gray-800 dark:text-white">User Type</p>
                     <p className="capitalize text-gray-900 dark:text-white">
                       {selectedUser.user_type}
                     </p>
                   </div>
 
                   <div className="p-3 rounded-lg bg-gray-50 dark:bg-gray-900">
-                    <p className="text-xs text-gray-500">Phone</p>
+                    <p className="text-xs text-gray-800 dark:text-white">Phone</p>
                     <p className="text-gray-900 dark:text-white">
                       {selectedUser.phone || "No phone"}
                     </p>
                   </div>
 
                   <div className="p-3 rounded-lg bg-gray-50 dark:bg-gray-900">
-                    <p className="text-xs text-gray-500">Status</p>
+                    <p className="text-xs text-gray-800 dark:text-white">Status</p>
                     <p
                       className={
                         selectedUser.is_active
@@ -834,28 +834,28 @@ function AllUsers() {
               {activeTab === "system" && (
                 <div className="space-y-3 text-sm">
                   <div className="p-3 rounded-lg bg-gray-50 dark:bg-gray-900">
-                    <p className="text-xs text-gray-500">User ID</p>
+                    <p className="text-xs text-gray-800 dark:text-white">User ID</p>
                     <p className="text-gray-900 dark:text-white">
                       #{selectedUser.id}
                     </p>
                   </div>
 
                   <div className="p-3 rounded-lg bg-gray-50 dark:bg-gray-900">
-                    <p className="text-xs text-gray-500">Superuser</p>
+                    <p className="text-xs text-gray-500text-gray-800 dark:text-white">Superuser</p>
                     <p className="text-gray-900 dark:text-white">
                       {selectedUser.is_superuser ? "Yes" : "No"}
                     </p>
                   </div>
 
                   <div className="p-3 rounded-lg bg-gray-50 dark:bg-gray-900">
-                    <p className="text-xs text-gray-500">Staff</p>
+                    <p className="text-xs text-gray-800 dark:text-white">Staff</p>
                     <p className="text-gray-900 dark:text-white">
                       {selectedUser.is_staff ? "Yes" : "No"}
                     </p>
                   </div>
 
                   <div className="p-3 rounded-lg bg-gray-50 dark:bg-gray-900">
-                    <p className="text-xs text-gray-500">Registered</p>
+                    <p className="text-xs text-gray-800 dark:text-white">Registered</p>
                     <p className="text-xs text-gray-900 dark:text-white">
                       {selectedUser.registered_date
                         ? new Date(
@@ -866,7 +866,7 @@ function AllUsers() {
                   </div>
 
                   <div className="p-3 rounded-lg bg-gray-50 dark:bg-gray-900">
-                    <p className="text-xs text-gray-500">Last Update</p>
+                    <p className="text-xs text-gray-800 dark:text-white">Last Update</p>
                     <p className="text-xs text-gray-900 dark:text-white">
                       {selectedUser.last_update
                         ? new Date(selectedUser.last_update).toLocaleString()

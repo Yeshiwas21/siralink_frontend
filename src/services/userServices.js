@@ -4,7 +4,7 @@ import {
   getUsers,
   userRegisterAPI,
   userUpdateApi,
-  userDeletApi,
+  userDeleteApi,
   clientListApi,
   workerListApi,
   clientCreateApi,
@@ -30,12 +30,12 @@ export const signupClient = async (form) => {
     password_2: form.password_2,
     client: {
       client_type: form.client_type,
-      national_id: form.national_id ,
+      national_id: form.national_id,
       company_name: form.company_name,
       location: form.location,
     },
   };
-  
+
 
   const res = await clientSignupApi(payload);
   return res.data;
@@ -53,7 +53,7 @@ export const signupWorker = async (form) => {
     worker: {
       national_id: form.national_id,
       location: form.location,
-      
+
     },
   };
 
@@ -69,7 +69,7 @@ export const registerUser = async (payload) => {
 
 /* DELETE USER */
 export const deleteUser = async (id) => {
-  const response = await userDeletApi(id);
+  const response = await userDeleteApi(id);
   return response.data;
 };
 
@@ -110,7 +110,7 @@ export const deleteClient = async (id) => {
 }
 
 /* DELETE WORKER */
-export const deleteWorker = async(id) => {
+export const deleteWorker = async (id) => {
   const response = await workerDeleteApi(id)
   return response.data
 }

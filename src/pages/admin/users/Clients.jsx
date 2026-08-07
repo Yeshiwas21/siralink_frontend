@@ -226,14 +226,21 @@ function Clients() {
     let data = [...clients];
     if (searchTerm.trim()) {
       const q = searchTerm.toLowerCase();
-      data = data.filter(
-        (c) =>
+      data = data.filter((c) => {
+        const firstName = c.first_name?.toLowerCase() || "";
+        const lastName = c.last_name?.toLowerCase() || "";
+        const fullName = `${firstName} ${lastName}`.trim();
+        return (
+          firstName.includes(q) ||
+          lastName.includes(q) ||
+          fullName.includes(q) ||
           c.email?.toLowerCase().includes(q) ||
           c.company_name?.toLowerCase().includes(q) ||
           c.phone?.includes(searchTerm) ||
           c.location?.toLowerCase().includes(q) ||
-          String(c.id).includes(searchTerm),
-      );
+          String(c.id).includes(searchTerm)
+        );
+      });
     }
     if (statusFilter !== "all") {
       data = data.filter((c) => c.verification_status === statusFilter);
@@ -393,12 +400,12 @@ function Clients() {
   const baseBtn = "px-3 py-1 rounded-full border cursor-pointer transition";
 
   const themeBtn =
-    "border-gray-300 dark:border-gray-600 " +
-    "text-gray-700 dark:text-gray-200 " +
-    "hover:bg-gray-100 dark:hover:bg-gray-700";
+    "border-white dark:border-black " +
+    "text-black dark:text-white " +
+    "hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black";
 
   const activeBtn =
-    "bg-blue-600 text-white border-blue-600 dark:bg-blue-500 dark:border-blue-500";
+    "bg-black text-white border-black dark:bg-white dark:text-black dark:border-white";
 
   /* loading */
   if (loading) {
@@ -559,6 +566,9 @@ function Clients() {
                   ID
                 </th>
                 <th className="px-4 py-3 text-left font-semibold text-gray-600 dark:text-gray-400 whitespace-nowrap">
+                  Name
+                </th>
+                <th className="px-4 py-3 text-left font-semibold text-gray-600 dark:text-gray-400 whitespace-nowrap">
                   Email
                 </th>
                 <th className="px-4 py-3 text-left font-semibold text-gray-600 dark:text-gray-400 whitespace-nowrap">
@@ -612,6 +622,10 @@ function Clients() {
 
                     <td className="px-4 py-3 text-gray-500 dark:text-gray-400 font-mono text-xs">
                       #{c.id}
+                    </td>
+                    <td className="px-4 py-3 font-semibold text-gray-800 dark:text-gray-200 whitespace-nowrap">
+                      {[c.first_name, c.last_name].filter(Boolean).join(" ") ||
+                        "—"}
                     </td>
                     <td className="px-4 py-3 text-gray-600 dark:text-gray-300 max-w-45 truncate">
                       {c.email}

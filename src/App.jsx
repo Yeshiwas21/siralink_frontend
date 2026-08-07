@@ -21,7 +21,6 @@ import UserRoutes from "./routes/UserRoutes";
 /* Pages */
 import HomePage from "./pages/home/HomePage";
 import Login from "./pages/auth/Login";
-import Logout from "./pages/auth/Logout";
 import SelectUserType from "./pages/auth/SelectUserType";
 import WorkerSignup from "./pages/auth/WorkerSignup";
 import ClientSignup from "./pages/auth/ClientSignup";
@@ -30,6 +29,7 @@ import NotFound from "./pages/common/NotFound";
 import ForgotPassword from "./pages/account/ForgotPassword";
 import HowItWorks from "./pages/common/HowItWorks";
 import ScrollToTop from "./utils/ScrollToTop";
+import GuestRoute from "./routes/GuestRoute";
 
 export default function App() {
   const { user, loading } = useAuth();
@@ -87,15 +87,19 @@ export default function App() {
           <ScrollToTop />
 
           <Routes>
-            {/* PUBLIC */}
-            <Route path="/" element={<HomePage />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/logout" element={<Logout />} />
-            <Route path="/signup" element={<SelectUserType />} />
-            <Route path="/forgot-password" element={<ForgotPassword />} />
-            <Route path="/signup/client" element={<ClientSignup />} />
-            <Route path="/signup/worker" element={<WorkerSignup />} />
-            <Route path="/how-it-works" element={<HowItWorks />} />
+            {/* Guest-only routes: accessible only to unauthenticated users.
+              Authenticated users are automatically redirected to their dashboard.
+            */}
+            <Route element={<GuestRoute />}>
+              <Route path="/" element={<HomePage />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="/signup" element={<SelectUserType />} />
+              <Route path="/forgot-password" element={<ForgotPassword />} />
+              <Route path="/signup/client" element={<ClientSignup />} />
+              <Route path="/signup/worker" element={<WorkerSignup />} />
+              <Route path="/how-it-works" element={<HowItWorks />} />
+            </Route>
+
             {/* ADMIN */}
             <Route
               path="/admin/*"

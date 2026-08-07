@@ -224,15 +224,22 @@ function Workers() {
     let data = [...workers];
     if (searchTerm.trim()) {
       const q = searchTerm.toLowerCase();
-      data = data.filter(
-        (w) =>
+      data = data.filter((w) => {
+        const firstName = w.first_name?.toLowerCase() || "";
+        const lastName = w.last_name?.toLowerCase() || "";
+        const fullName = `${firstName} ${lastName}`.trim();
+
+        return (
+          firstName.includes(q) ||
+          lastName.includes(q) ||
+          fullName.includes(q) ||
           w.email?.toLowerCase().includes(q) ||
-          w.first_name?.toLowerCase().includes(q) ||
-          w.last_name?.toLowerCase().includes(q) ||
+          w.company_name?.toLowerCase().includes(q) ||
           w.phone?.includes(searchTerm) ||
           w.location?.toLowerCase().includes(q) ||
-          w.id.toString().includes(searchTerm),
-      );
+          String(w.id).includes(searchTerm)
+        );
+      });
     }
     if (statusFilter !== "all") {
       data = data.filter((w) => w.verification_status === statusFilter);
@@ -329,12 +336,12 @@ function Workers() {
   const baseBtn = "px-3 py-1 rounded-full border cursor-pointer transition";
 
   const themeBtn =
-    "border-gray-300 dark:border-gray-600 " +
-    "text-gray-700 dark:text-gray-200 " +
-    "hover:bg-gray-100 dark:hover:bg-gray-700";
+    "border-white dark:border-black " +
+    "text-black dark:text-white " +
+    "hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black";
 
   const activeBtn =
-    "bg-blue-600 text-white border-blue-600 dark:bg-blue-500 dark:border-blue-500";
+    "bg-black text-white border-black dark:bg-white dark:text-black dark:border-white";
 
   /* print */
   const handlePrint = (worker) => {
