@@ -24,7 +24,7 @@ import {
   UserRoundCheck,
   Clock,
 } from "lucide-react";
-import React, { useEffect, useState, useMemo, useRef } from "react";
+import React, { useEffect, useState, useMemo, useRef, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import ReactDOM from "react-dom";
@@ -67,10 +67,6 @@ function AllUsers() {
 
   const navigate = useNavigate();
 
-  useEffect(() => {
-    loadUsers();
-  }, []);
-
   // Filter
   useEffect(() => {
     let data = [...users];
@@ -99,20 +95,27 @@ function AllUsers() {
     setCurrentPage(1);
   }, [searchTerm, roleFilter, statusFilter]);
 
-  const loadUsers = async () => {
+  const loadUsers = useCallback(async () => {
     try {
       setLoading(true);
+
       const data = await fetchUsers();
+
       setUsers(data);
       setFilteredUsers(data);
     } catch (err) {
       setError(
-        err?.response?.data?.detail || t("all_users.messages.load_failed"),
+        err?.response?.data?.detail ||
+        t("all_users.messages.load_failed")
       );
     } finally {
       setLoading(false);
     }
-  };
+  }, [t]);
+
+  useEffect(() => {
+    loadUsers();
+  }, [loadUsers]);
 
   const toggleRow = (id) => {
     setSelectedRows((prev) =>
