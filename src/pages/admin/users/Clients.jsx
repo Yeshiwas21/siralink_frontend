@@ -674,7 +674,7 @@ function Clients() {
         {/* Row count footer */}
         {clients.length > 0 && (
           <div className="px-4 py-2.5 border-t border-gray-100 dark:border-gray-700 bg-gray-50 dark:bg-gray-900/30 text-xs text-gray-600 dark:text-gray-300">
-            Showing {filteredClients.length} of {clients.length} clients
+            Showing {paginatedClients.length} of {clients.length} clients
           </div>
         )}
       </div>
