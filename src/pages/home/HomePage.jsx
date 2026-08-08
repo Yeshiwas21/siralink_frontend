@@ -427,7 +427,7 @@ function HomePage() {
           <Motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
+            transition={{ duration: 0.7 }}
             viewport={{ once: true }}
           >
             <span className="inline-flex items-center px-5 py-2 rounded-full border border-gray-200 dark:border-white/10 bg-white/70 dark:bg-white/5 backdrop-blur-md text-sm font-semibold tracking-wide text-gray-800 dark:text-gray-200">

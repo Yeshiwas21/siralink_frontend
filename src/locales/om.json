@@ -379,5 +379,139 @@
       "create_account": "Akaawuntii Uumi",
       "browse_jobs": "Hojiiwwan Ilaali"
     }
+  },
+  "all_users": {
+    "title": "Bulchiinsa Fayyadamtootaa",
+    "subtitle": "Fayyadamtoota galmeeffaman hunda bulchi",
+    "refresh": "Haaromsi",
+    "add_user": "+ Fayyadamaa Dabalii",
+    "search_placeholder": "Barbaadi...",
+    "export": "Ol ergi (Export)",
+    "selected": "Filataman",
+    "delete_selected": "Kan Filataman Haqii",
+    "showing": "Fayyadamtoota {{total}} keessaa {{count}} agarsiisaa jira",
+    "rows": "Tarroota:",
+    "pagination": {
+      "first": "« Jalqaba",
+      "prev": "‹ Kan Duraa",
+      "next": "Kan Aana ›",
+      "last": "Gara Dhummaa »"
+    },
+    "table": {
+      "id": "Lakk. (ID)",
+      "email": "Imeelii",
+      "phone": "Bilbilaa",
+      "role": "Shoora",
+      "status": "Haala",
+      "linked_profile": "Piroofaayilii",
+      "actions": "Tarkaanfii"
+    },
+    "stats": {
+      "total": "Ida'ama Fayyadamtootaa",
+      "clients": "Kondroolchitoota",
+      "workers": "Hojjettoota",
+      "admins": "Bulchitoota",
+      "active": "Fayyadamtoota Socho'an",
+      "pending": "Qorannoo Jalatti",
+      "rejected": "Fayyadamtoota Didaman",
+      "suspended": "Fayyadamtoota Dhorkaman"
+    },
+    "status_labels": {
+      "active": "Socho'aa",
+      "pending": "Eeggannoo Jalatti",
+      "rejected": "Didameera",
+      "suspended": "Dhorkameera",
+      "unknown": "Hinaamne"
+    },
+    "filter_role": {
+      "label": "Shooraan Gingilchi",
+      "all": "Shoora Hunda",
+      "admin": "Bulchiinsaa",
+      "client": "Kondroolchisaa",
+      "worker": "Hojjetaa"
+    },
+    "filter_status": {
+      "label": "Haalaan Gingilchi",
+      "all": "Haala Hunda",
+      "pending": "Eeggannoo Jalatti",
+      "active": "Socho'aa",
+      "rejected": "Didameera",
+      "suspended": "Dhorkameera"
+    },
+    "actions_menu": {
+      "view": "Ilaali",
+      "edit": "Gulaali",
+      "print": "Maxxansi",
+      "delete": "Haqii"
+    },
+    "view_modal": {
+      "title": "Odeeffannoo Fayyadamaa",
+      "tabs": {
+        "info": "Odeeffannoo",
+        "system": "Sirna",
+        "profile": "Puroofaayilii"
+      },
+      "labels": {
+        "email": "Imeelii",
+        "user_type": "Gosa Fayyadamaa",
+        "phone": "Bilbila",
+        "no_phone": "Bilbili hin jiru",
+        "status": "Haala",
+        "active": "Socho'aa",
+        "inactive": "Kan Hin Socho'ne",
+        "user_id": "ID Fayyadamaa",
+        "superuser": "Bulchaa Ol'aanaa",
+        "staff": "Hojjetaa Sirnaa",
+        "registered": "Guyyaa Galmeeffame",
+        "last_update": "Gulaallii Dhumarraa",
+        "yes": "Eeyyee",
+        "no": "Lakkii",
+        "role_client": "Hojjechiisaa",
+        "role_worker": "Hojjetaa",
+        "client": "KONDROOLCHISAA",
+        "worker": "HOJJETAA",
+        "admin": "BULCHAA",
+        "system_admin": "Bulchaa Sirnaa",
+        "not_linked": "Hingalmeeffamne",
+        "no_linked_profile": "Puroofaayilii walqabate hin jiru",
+        "company": "Dhaabbata",
+        "name": "Maqaa",
+        "individual": "Dhuunfaa"
+      },
+      "buttons": {
+        "edit": "Gulaali",
+        "print": "Maxxansi"
+      }
+    },
+    "edit_modal": {
+      "title": "Fayyadamaa Gulaali",
+      "subtitle": "Odeeffannoo fayyadamaa gadii fooyyessi",
+      "first_name": "Maqaa",
+      "last_name": "Maqaa Abbaa",
+      "email": "Imeelii",
+      "phone": "Lakk. Bilbilaa",
+      "user_type": "Gosa Fayyadamaa",
+      "status": "Haala",
+      "cancel": "Dhiisi",
+      "save": "Jijjiama Ol-kaa'i"
+    },
+    "messages": {
+      "loading": "Fayyadamtoota fe'aa jira...",
+      "load_failed": "Fayyadamtoota fe'uun hin danda'amne",
+      "confirm_delete_user": "Fayyadamaa kana haquuf mirkanaa'aadhaa?",
+      "confirm_delete_selected": "Fayyadamtoota filataman haquu?",
+      "user_deleted": "Fayyadaamaan haqameera",
+      "selected_deleted": "Fayyadamtoonni filataman haqamaniiru",
+      "delete_failed": "Fayyadamtoota filataman haquun hin danda'amne",
+      "user_updated": "Odeeffannoon fayyadamaa fooyya'eera",
+      "update_failed": "Odeeffannoo fayyadamaa fooyyessuun hin danda'amne"
+    },
+    "print": {
+      "document_title": "Puroofaayilii Fayyadamaa",
+      "user_profile": "Puroofaayilii Fayyadamaa",
+      "generated": "Kan Qophaa'e",
+      "footer": "Sirna Bulchiinsa Fayyadamtootaa",
+      "company_name": "Maqaa Guutuu / Dhaabbata"
+    }
   }
 }

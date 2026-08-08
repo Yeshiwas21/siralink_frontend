@@ -24,17 +24,22 @@ import {
   UserRoundCheck,
   Clock,
 } from "lucide-react";
-import React, { useEffect, useState, useMemo, useRef } from "react";
+import React, { useEffect, useState, useMemo, useRef, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import ReactDOM from "react-dom";
+import { useTranslation } from "react-i18next";
 
 import {
   fetchUsers,
   deleteUser,
   updateUser,
 } from "../../../services/userServices";
+
+import { useAuth } from "../../../contexts/AuthContext";
+
 function AllUsers() {
+  const { t } = useTranslation();
   const [users, setUsers] = useState([]);
   const [filteredUsers, setFilteredUsers] = useState([]);
 
@@ -57,13 +62,10 @@ function AllUsers() {
 
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
-  const [errors, setErrors] = useState({})
+  const [errors, setErrors] = useState({});
+  const { full_name } = useAuth();
 
   const navigate = useNavigate();
-
-  useEffect(() => {
-    loadUsers();
-  }, []);
 
   // Filter
   useEffect(() => {
@@ -88,23 +90,32 @@ function AllUsers() {
     setFilteredUsers(data);
   }, [users, searchTerm, roleFilter, statusFilter]);
 
-  //pagintion
+  //pagination
   useEffect(() => {
     setCurrentPage(1);
   }, [searchTerm, roleFilter, statusFilter]);
 
-  const loadUsers = async () => {
+  const loadUsers = useCallback(async () => {
     try {
       setLoading(true);
+
       const data = await fetchUsers();
+
       setUsers(data);
       setFilteredUsers(data);
     } catch (err) {
-      setError(err?.response?.data?.detail || "Failed to load users");
+      setError(
+        err?.response?.data?.detail ||
+        t("all_users.messages.load_failed")
+      );
     } finally {
       setLoading(false);
     }
-  };
+  }, [t]);
+
+  useEffect(() => {
+    loadUsers();
+  }, [loadUsers]);
 
   const toggleRow = (id) => {
     setSelectedRows((prev) =>
@@ -127,7 +138,8 @@ function AllUsers() {
     selectedRows.length > 0 && selectedRows.length < filteredUsers.length;
 
   const handleBulkDelete = async () => {
-    if (!window.confirm("Delete selected users?")) return;
+    if (!window.confirm(t("all_users.messages.confirm_delete_selected")))
+      return;
 
     try {
       await Promise.all(selectedRows.map((id) => deleteUser(id)));
@@ -136,9 +148,9 @@ function AllUsers() {
 
       setSelectedRows([]);
 
-      toast.success("Selected users deleted");
+      toast.success(t("all_users.messages.selected_deleted"));
     } catch {
-      toast.error("Failed to delete selected users");
+      toast.error(t("all_users.messages.delete_failed"));
     }
   };
 
@@ -179,24 +191,24 @@ function AllUsers() {
     let newErrors = {};
 
     if (!editForm.first_name?.trim()) {
-      newErrors.first_name = "First name is required";
+      newErrors.first_name = t("all_users.edit_modal.first_name");
     }
 
     if (!editForm.last_name?.trim()) {
-      newErrors.last_name = "Last name is required";
+      newErrors.last_name = t("all_users.edit_modal.last_name");
     }
 
     if (!editForm.email || !/^\S+@\S+\.\S+$/.test(editForm.email)) {
-      newErrors.email = "Enter a valid email";
+      newErrors.email = t("all_users.edit_modal.email");
     }
 
     const phone = editForm.phone?.trim();
     if (!/^\+2519\d{8}$/.test(phone) && !/^\d{10}$/.test(phone)) {
-      newErrors.phone = "Use +2519XXXXXXXX or 10 digit local number";
+      newErrors.phone = t("all_users.edit_modal.phone");
     }
 
     if (!editForm.user_type) {
-      newErrors.user_type = "Select user type";
+      newErrors.user_type = t("all_users.edit_modal.user_type");
     }
 
     return newErrors;
@@ -206,7 +218,7 @@ function AllUsers() {
     const newErrors = {};
 
     if (!errData || typeof errData !== "object") {
-      return { general: "Something went wrong" };
+      return { general: t("all_users.messages.update_failed") };
     }
 
     if (errData.detail) {
@@ -226,7 +238,6 @@ function AllUsers() {
     return newErrors;
   };
 
-
   // ================= ACTIONS =================
   const handleEditUser = (user) => {
     setEditForm({
@@ -239,35 +250,29 @@ function AllUsers() {
       account_status: user.account_status,
     });
     setIsEditModalOpen(true);
-
   };
 
   const handleDeleteUser = async (id) => {
-    if (!window.confirm("Are you sure you want to delete this user?")) return;
+    if (!window.confirm(t("all_users.messages.confirm_delete_user"))) return;
 
     try {
       await deleteUser(id);
 
-      // remove from state
       setUsers((prev) => prev.filter((u) => u.id !== id));
-
-      // close modal
       closeModal();
-
-      // redirect to All Users page
-      toast.success("User deleted");
+      toast.success(t("all_users.messages.user_deleted"));
       navigate("/admin/users");
     } catch (err) {
       console.error(err);
-      toast.error("Failed to delete a user");
+      toast.error(t("all_users.messages.delete_failed"));
     }
   };
+
   const handleEditChange = (e) => {
     const { name, value } = e.target;
 
-    setEditForm((prev) => ({ ...prev, [name]: value, }));
+    setEditForm((prev) => ({ ...prev, [name]: value }));
     setErrors({ ...errors, [e.target.name]: "" });
-
   };
 
   const handleUpdateUser = async () => {
@@ -284,36 +289,36 @@ function AllUsers() {
       );
       setIsEditModalOpen(false);
       setIsViewModalOpen(false);
-      toast.success("User updated");
+      toast.success(t("all_users.messages.user_updated"));
     } catch (err) {
       const backendErrors = parseErrors(err?.response?.data);
       setErrors(backendErrors);
 
-      toast.error("Failed to update user");
+      toast.error(t("all_users.messages.update_failed"));
     }
   };
+
   const stats = useMemo(() => {
     return {
       total: users.length,
       clients: users.filter((u) => u.user_type === "client").length,
       workers: users.filter((u) => u.user_type === "worker").length,
       admins: users.filter((u) => u.user_type === "admin").length,
-      activeUsers: users.filter((u) => u.account_status == "active").length,
-      pendingUsers: users.filter((u) => u.account_status == "pending").length,
-      rejectedUsers: users.filter((u) => u.account_status == "rejected").length,
-      suspendedUsers: users.filter((u) => u.account_status == "suspended")
+      activeUsers: users.filter((u) => u.account_status === "active").length,
+      pendingUsers: users.filter((u) => u.account_status === "pending").length,
+      rejectedUsers: users.filter((u) => u.account_status === "rejected").length,
+      suspendedUsers: users.filter((u) => u.account_status === "suspended")
         .length,
     };
   }, [users]);
 
   const statusLabels = {
-    active: "Active",
-    pending: "Pending",
-    rejected: "Rejected",
-    suspended: "Suspended",
+    active: t("all_users.status_labels.active"),
+    pending: t("all_users.status_labels.pending"),
+    rejected: t("all_users.status_labels.rejected"),
+    suspended: t("all_users.status_labels.suspended"),
   };
 
-  // Lock the background scroll when the modal is open
   useEffect(() => {
     if (isViewModalOpen || isEditModalOpen) {
       document.body.style.overflow = "hidden";
@@ -342,7 +347,7 @@ function AllUsers() {
         <div className="bg-white dark:bg-gray-800 rounded-xl shadow border border-gray-200 dark:border-gray-700 p-8 text-center">
           <RefreshCw className="animate-spin mx-auto mb-3 text-amber-500 dark:text-amber-400" />
           <p className="text-gray-600 dark:text-gray-300 font-medium">
-            Loading users...
+            {t("all_users.messages.loading")}
           </p>
         </div>
       </div>
@@ -363,20 +368,18 @@ function AllUsers() {
     <div className="p-6 sm:p-8 min-h-screen bg-gray-50 dark:bg-gray-950 text-gray-900 dark:text-gray-100 transition-colors">
       {/* HEADER */}
       <header className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
-        {/* TITLE */}
         <div>
           <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">
-            Users Management
+            {t("all_users.title")}
           </h1>
 
           <p className="text-sm mt-0.5 text-gray-500 dark:text-gray-400">
-            Manage all registered clients
+            {t("all_users.subtitle")}
           </p>
         </div>
 
         {/* ACTIONS */}
         <div className="flex gap-2 flex-wrap">
-          {/* REFRESH */}
           <button
             onClick={loadUsers}
             className="px-3 py-2 rounded-lg flex items-center gap-1.5 text-sm font-medium transition-colors
@@ -384,75 +387,75 @@ function AllUsers() {
                  dark:bg-yellow-500 dark:hover:bg-yellow-400 dark:text-gray-900"
           >
             <RefreshCw size={14} />
-            <span className="hidden xs:inline">Refresh</span>
+            <span className="hidden xs:inline">{t("all_users.refresh")}</span>
           </button>
 
-          {/* ADD USER */}
           <button
             onClick={() => navigate("/admin/create/user")}
             className="px-3 py-2 rounded-lg text-sm font-medium transition-colors
                  bg-blue-600 hover:bg-blue-700 text-white
                  dark:bg-blue-500 dark:hover:bg-blue-400 dark:text-white"
           >
-            + Add User
+            {t("all_users.add_user")}
           </button>
         </div>
       </header>
+
       {/* STATS */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-5 mb-6">
         <StatCard
-          title="Total Users"
+          title={t("all_users.stats.total")}
           value={stats.total}
           icon={<Users />}
           color="gray"
         />
         <StatCard
-          title="Clients"
+          title={t("all_users.stats.clients")}
           value={stats.clients}
           icon={<UserCheck />}
           color="blue"
         />
         <StatCard
-          title="Workers"
+          title={t("all_users.stats.workers")}
           value={stats.workers}
           icon={<Briefcase />}
           color="green"
         />
         <StatCard
-          title="Admins"
+          title={t("all_users.stats.admins")}
           value={stats.admins}
           icon={<Shield />}
           color="purple"
         />
 
         <StatCard
-          title="Active Users"
+          title={t("all_users.stats.active")}
           value={stats.activeUsers}
           icon={<UserCheck />}
           color="green"
         />
         <StatCard
-          title="Under Review"
+          title={t("all_users.stats.pending")}
           value={stats.pendingUsers}
           icon={<Clock />}
           color="amber"
         />
         <StatCard
-          title="Rejected Users"
+          title={t("all_users.stats.rejected")}
           value={stats.rejectedUsers}
           icon={<Ban />}
           color="red"
         />
         <StatCard
-          title="Suspended Users"
+          title={t("all_users.stats.suspended")}
           value={stats.suspendedUsers}
           icon={<UserLock />}
           color="gray"
         />
       </div>
+
       {/* SEARCH + FILTER */}
       <div className="bg-white dark:bg-gray-800 p-3 sm:p-4 rounded-xl shadow border border-gray-200 dark:border-gray-700 mb-4 flex flex-col sm:flex-row gap-4 sm:items-end transition-colors">
-        {/* SEARCH */}
         <div className="relative w-full sm:w-64">
           <Search
             className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-500"
@@ -466,23 +469,20 @@ function AllUsers() {
                  text-gray-900 dark:text-white
                  placeholder-gray-400 dark:placeholder-gray-500
                  focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400"
-            placeholder="Search..."
+            placeholder={t("all_users.search_placeholder")}
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
         </div>
 
-        {/* FILTERS */}
         <div className="flex gap-3 flex-wrap">
           <RoleFilter roleFilter={roleFilter} setRoleFilter={setRoleFilter} />
-
           <StatusFilter
             statusFilter={statusFilter}
             setStatusFilter={setStatusFilter}
           />
         </div>
 
-        {/* EXPORT */}
         <button
           onClick={handleExport}
           className="px-4 py-2 rounded-lg flex items-center gap-2 text-sm font-medium transition-colors
@@ -492,9 +492,10 @@ function AllUsers() {
                hover:bg-gray-50 dark:hover:bg-gray-700"
         >
           <Download size={18} />
-          Export
+          {t("all_users.export")}
         </button>
       </div>
+
       {/* ACTION BAR */}
       {selectedRows.length > 0 && (
         <div
@@ -504,12 +505,10 @@ function AllUsers() {
                   border border-gray-200 dark:border-gray-700
                   transition-colors"
         >
-          {/* LEFT */}
           <span className="font-medium text-sm text-gray-700 dark:text-gray-300">
-            {selectedRows.length} selected
+            {selectedRows.length} {t("all_users.selected")}
           </span>
 
-          {/* ACTIONS */}
           <div className="flex gap-2">
             <button
               onClick={handleExport}
@@ -520,7 +519,7 @@ function AllUsers() {
                    transition-colors"
             >
               <Download size={14} />
-              Export
+              {t("all_users.export")}
             </button>
 
             <button
@@ -530,16 +529,16 @@ function AllUsers() {
                    dark:bg-red-600 dark:hover:bg-red-500
                    text-white transition-colors"
             >
-              Delete Selected
+              {t("all_users.delete_selected")}
             </button>
           </div>
         </div>
       )}
+
       {/* TABLE */}
       <section className="rounded-2xl shadow-sm border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 overflow-hidden transition-colors">
         <div className="overflow-x-auto">
           <table className="w-full min-w-225">
-            {/* HEADER */}
             <thead className="bg-gray-50 dark:bg-gray-900 text-xs uppercase tracking-wider text-gray-600 dark:text-gray-300">
               <tr>
                 <th className="px-4 py-4 text-left">
@@ -554,17 +553,16 @@ function AllUsers() {
                   />
                 </th>
 
-                <th className="px-4 py-3 text-left">ID</th>
-                <th className="px-4 py-3 text-left">Email</th>
-                <th className="px-4 py-3 text-left">Phone</th>
-                <th className="px-4 py-3 text-left">Role</th>
-                <th className="px-4 py-3 text-left">Status</th>
-                <th className="px-4 py-3 text-left">Linked Profile</th>
-                <th className="px-4 py-3 text-left">Actions</th>
+                <th className="px-4 py-3 text-left">{t("all_users.table.id")}</th>
+                <th className="px-4 py-3 text-left">{t("all_users.table.email")}</th>
+                <th className="px-4 py-3 text-left">{t("all_users.table.phone")}</th>
+                <th className="px-4 py-3 text-left">{t("all_users.table.role")}</th>
+                <th className="px-4 py-3 text-left">{t("all_users.table.status")}</th>
+                <th className="px-4 py-3 text-left">{t("all_users.table.linked_profile")}</th>
+                <th className="px-4 py-3 text-left">{t("all_users.table.actions")}</th>
               </tr>
             </thead>
 
-            {/* BODY */}
             <tbody className="divide-y divide-gray-100 dark:divide-gray-700">
               {paginatedUsers.filter(Boolean).map((user, index) => (
                 <tr
@@ -579,7 +577,6 @@ function AllUsers() {
                     }
             `}
                 >
-                  {/* checkbox */}
                   <td
                     className="px-4 py-4"
                     onClick={(e) => e.stopPropagation()}
@@ -592,48 +589,48 @@ function AllUsers() {
                     />
                   </td>
 
-                  {/* ID */}
                   <td className="px-4 py-3 text-gray-700 dark:text-gray-300">
                     {user?.id || "—"}
                   </td>
 
-                  {/* EMAIL */}
                   <td className="px-4 py-3 text-gray-700 dark:text-gray-300 break-all">
                     {user?.email || "—"}
                   </td>
 
-                  {/* PHONE */}
                   <td className="px-4 py-3 text-gray-700 dark:text-gray-300">
                     {user?.phone || "—"}
                   </td>
 
-                  {/* ROLE */}
                   <td className="px-4 py-3 capitalize text-gray-700 dark:text-gray-300">
-                    {user.user_type}
+                    {user.user_type === "client"
+                      ? t("all_users.view_modal.labels.role_client")
+                      : user.user_type === "worker" ?
+                        t("all_users.view_modal.labels.role_worker")
+                        :
+                        t("all_users.view_modal.labels.admin")
+                    }
                   </td>
 
-                  {/* STATUS */}
                   <td className="px-4 py-3">
                     <span
                       className="px-2 py-1 rounded-full text-xs font-medium
                 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200"
                     >
-                      {statusLabels[user.account_status] || "Unknown"}
+                      {statusLabels[user.account_status] ||
+                        t("all_users.status_labels.unknown")}
                     </span>
                   </td>
 
-                  {/* LINKED PROFILE */}
                   <td className="px-3 py-3 text-gray-600 dark:text-gray-300">
                     {user.user_type === "admin"
-                      ? "System Admin"
+                      ? t("all_users.view_modal.labels.system_admin")
                       : user?.client
-                        ? `Client #${user.client.id}`
+                        ? `${t("all_users.view_modal.labels.client")} #${user.client.id}`
                         : user?.worker
-                          ? `Worker #${user.worker.id}`
-                          : "Not linked"}
+                          ? `${t("all_users.view_modal.labels.worker")} #${user.worker.id}`
+                          : t("all_users.view_modal.labels.not_linked")}
                   </td>
 
-                  {/* ACTIONS */}
                   <td
                     className="px-4 py-3 text-center"
                     onClick={(e) => e.stopPropagation()}
@@ -643,7 +640,7 @@ function AllUsers() {
                       onView={openViewModal}
                       onEdit={(user) => handleEditUser(user)}
                       onDelete={handleDeleteUser}
-                      onPrint={handlePrint}
+                      onPrint={(user) => handlePrint(user, t)}
                     />
                   </td>
                 </tr>
@@ -651,19 +648,21 @@ function AllUsers() {
             </tbody>
           </table>
         </div>
-        {/* Row count footer */}
+
         {users.length > 0 && (
           <div className="px-4 py-2.5 border-t border-gray-100 dark:border-gray-700 bg-gray-50 dark:bg-gray-900/30 text-xs text-gray-600 dark:text-gray-300">
-            Showing {filteredUsers.length} of {users.length} users
+            {t("all_users.showing", {
+              count: paginatedUsers.length,
+              total: users.length,
+            })}
           </div>
         )}
       </section>
 
       {/* PAGINATION */}
       <div className="flex flex-col sm:flex-row items-center justify-between gap-3 mt-4">
-        {/* Rows per page */}
         <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-200">
-          <span>Rows:</span>
+          <span>{t("all_users.rows")}</span>
           <select
             value={rowsPerPage}
             onChange={(e) => {
@@ -681,30 +680,26 @@ function AllUsers() {
           </select>
         </div>
 
-        {/* Pagination (CENTER) */}
         <div className="flex justify-center flex-1">
           <div className="flex items-center gap-1">
-            {/* FIRST */}
             {currentPage > 1 && (
               <button
                 onClick={() => setCurrentPage(1)}
                 className={`${baseBtn} ${themeBtn}`}
               >
-                « First
+                {t("all_users.pagination.first")}
               </button>
             )}
 
-            {/* PREV */}
             {currentPage > 1 && (
               <button
                 onClick={() => setCurrentPage((p) => p - 1)}
                 className={`${baseBtn} ${themeBtn}`}
               >
-                ‹ Prev
+                {t("all_users.pagination.prev")}
               </button>
             )}
 
-            {/* PAGE NUMBERS */}
             {Array.from({ length: totalPages }, (_, i) => i + 1)
               .slice(
                 Math.max(0, currentPage - 3),
@@ -721,48 +716,45 @@ function AllUsers() {
                 </button>
               ))}
 
-            {/* NEXT */}
             {currentPage < totalPages && (
               <button
                 onClick={() => setCurrentPage((p) => p + 1)}
                 className={`${baseBtn} ${themeBtn}`}
               >
-                Next ›
+                {t("all_users.pagination.next")}
               </button>
             )}
 
-            {/* LAST */}
             {currentPage < totalPages && (
               <button
                 onClick={() => setCurrentPage(totalPages)}
                 className={`${baseBtn} ${themeBtn}`}
               >
-                Last »
+                {t("all_users.pagination.last")}
               </button>
             )}
           </div>
         </div>
       </div>
+
       {/* VIEW MODAL */}
       {isViewModalOpen && selectedUser && (
         <div
           className="fixed inset-0 bg-black/30 backdrop-blur-[2px] flex items-end sm:items-center justify-center z-50 p-0 sm:p-4"
           onClick={closeModal}
         >
-          {/* MODAL */}
           <div
             className="w-full sm:max-w-md md:max-w-lg lg:max-w-xl bg-white dark:bg-gray-800 
             rounded-t-2xl sm:rounded-2xl shadow-2xl border border-gray-200 dark:border-gray-700
             max-h-[90vh] overflow-y-auto"
             onClick={(e) => e.stopPropagation()}
           >
-            {/* HEADER */}
             <div
               className="sticky top-0 z-10 flex items-center justify-between px-5 py-4 
               border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800"
             >
               <h2 className="font-bold text-lg text-gray-900 dark:text-white">
-                User Details
+                {t("all_users.view_modal.title")}
               </h2>
 
               <button
@@ -773,9 +765,7 @@ function AllUsers() {
               </button>
             </div>
 
-            {/* BODY */}
             <div className="p-5 space-y-5">
-              {/* TABS */}
               <div className="flex gap-2 border-b border-gray-200 dark:border-gray-700 pb-2">
                 {["info", "system", "profile"].map((tab) => (
                   <button
@@ -786,37 +776,46 @@ function AllUsers() {
                       : "text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
                       }`}
                   >
-                    {tab}
+                    {t(`all_users.view_modal.tabs.${tab}`)}
                   </button>
                 ))}
               </div>
 
-              {/* ================= INFO TAB ================= */}
+              {/* INFO TAB */}
               {activeTab === "info" && (
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
                   <div className="p-3 rounded-lg bg-gray-50 dark:bg-gray-900">
-                    <p className="text-xs text-gray-800 dark:text-white">Email</p>
+                    <p className="text-xs text-gray-800 dark:text-white">
+                      {t("all_users.view_modal.labels.email")}
+                    </p>
                     <p className="break-all text-gray-900 dark:text-white">
                       {selectedUser.email}
                     </p>
                   </div>
 
                   <div className="p-3 rounded-lg bg-gray-50 dark:bg-gray-900">
-                    <p className="text-xs text-gray-800 dark:text-white">User Type</p>
+                    <p className="text-xs text-gray-800 dark:text-white">
+                      {t("all_users.view_modal.labels.user_type")}
+                    </p>
                     <p className="capitalize text-gray-900 dark:text-white">
                       {selectedUser.user_type}
                     </p>
                   </div>
 
                   <div className="p-3 rounded-lg bg-gray-50 dark:bg-gray-900">
-                    <p className="text-xs text-gray-800 dark:text-white">Phone</p>
+                    <p className="text-xs text-gray-800 dark:text-white">
+                      {t("all_users.view_modal.labels.phone")}
+                    </p>
                     <p className="text-gray-900 dark:text-white">
-                      {selectedUser.phone || "No phone"}
+                      {selectedUser.phone ||
+                        t("all_users.view_modal.labels.no_phone")}
                     </p>
                   </div>
 
                   <div className="p-3 rounded-lg bg-gray-50 dark:bg-gray-900">
-                    <p className="text-xs text-gray-800 dark:text-white">Status</p>
+                    <p className="text-xs text-gray-800 dark:text-white">
+                      {t("all_users.view_modal.labels.status")}
+                    </p>
                     <p
                       className={
                         selectedUser.is_active
@@ -824,38 +823,52 @@ function AllUsers() {
                           : "text-red-500 font-semibold"
                       }
                     >
-                      {selectedUser.is_active ? "Active" : "Inactive"}
+                      {selectedUser.is_active
+                        ? t("all_users.view_modal.labels.active")
+                        : t("all_users.view_modal.labels.inactive")}
                     </p>
                   </div>
                 </div>
               )}
 
-              {/* ================= SYSTEM TAB ================= */}
+              {/* SYSTEM TAB */}
               {activeTab === "system" && (
                 <div className="space-y-3 text-sm">
                   <div className="p-3 rounded-lg bg-gray-50 dark:bg-gray-900">
-                    <p className="text-xs text-gray-800 dark:text-white">User ID</p>
+                    <p className="text-xs text-gray-800 dark:text-white">
+                      {t("all_users.view_modal.labels.user_id")}
+                    </p>
                     <p className="text-gray-900 dark:text-white">
                       #{selectedUser.id}
                     </p>
                   </div>
 
                   <div className="p-3 rounded-lg bg-gray-50 dark:bg-gray-900">
-                    <p className="text-xs text-gray-500text-gray-800 dark:text-white">Superuser</p>
+                    <p className="text-xs text-gray-800 dark:text-white">
+                      {t("all_users.view_modal.labels.superuser")}
+                    </p>
                     <p className="text-gray-900 dark:text-white">
-                      {selectedUser.is_superuser ? "Yes" : "No"}
+                      {selectedUser.is_superuser
+                        ? t("all_users.view_modal.labels.yes")
+                        : t("all_users.view_modal.labels.no")}
                     </p>
                   </div>
 
                   <div className="p-3 rounded-lg bg-gray-50 dark:bg-gray-900">
-                    <p className="text-xs text-gray-800 dark:text-white">Staff</p>
+                    <p className="text-xs text-gray-800 dark:text-white">
+                      {t("all_users.view_modal.labels.staff")}
+                    </p>
                     <p className="text-gray-900 dark:text-white">
-                      {selectedUser.is_staff ? "Yes" : "No"}
+                      {selectedUser.is_staff
+                        ? t("all_users.view_modal.labels.yes")
+                        : t("all_users.view_modal.labels.no")}
                     </p>
                   </div>
 
                   <div className="p-3 rounded-lg bg-gray-50 dark:bg-gray-900">
-                    <p className="text-xs text-gray-800 dark:text-white">Registered</p>
+                    <p className="text-xs text-gray-800 dark:text-white">
+                      {t("all_users.view_modal.labels.registered")}
+                    </p>
                     <p className="text-xs text-gray-900 dark:text-white">
                       {selectedUser.registered_date
                         ? new Date(
@@ -866,7 +879,9 @@ function AllUsers() {
                   </div>
 
                   <div className="p-3 rounded-lg bg-gray-50 dark:bg-gray-900">
-                    <p className="text-xs text-gray-800 dark:text-white">Last Update</p>
+                    <p className="text-xs text-gray-800 dark:text-white">
+                      {t("all_users.view_modal.labels.last_update")}
+                    </p>
                     <p className="text-xs text-gray-900 dark:text-white">
                       {selectedUser.last_update
                         ? new Date(selectedUser.last_update).toLocaleString()
@@ -876,36 +891,42 @@ function AllUsers() {
                 </div>
               )}
 
-              {/* ================= PROFILE TAB (LAST) ================= */}
+              {/* PROFILE TAB */}
               {activeTab === "profile" && (
                 <div className="space-y-4">
-                  {/* CLIENT */}
                   {selectedUser?.client && (
                     <div className="p-4 rounded-xl bg-blue-50 dark:bg-blue-900/20 border border-blue-100 dark:border-blue-900">
                       <div className="flex justify-between">
                         <span className="text-xs font-bold text-blue-600">
-                          CLIENT
+                          {`${t("all_users.view_modal.labels.client")} (${selectedUser.client.client_type === "company"
+                            ? t("all_users.view_modal.labels.company")
+                            : t("all_users.view_modal.labels.individual")
+                            })`}
                         </span>
                         <span className="text-xs text-blue-600">
-                          ID #{selectedUser.client.id}
+                          {t("all_users.table.id")} #{selectedUser.client.id}
                         </span>
                       </div>
 
                       <p className="mt-2 font-semibold text-blue-900 dark:text-blue-200">
-                        Company: {selectedUser.client.company_name || "N/A"}
+                        {selectedUser.client.client_type === "company"
+                          ? `${t("all_users.view_modal.labels.company")}: ${selectedUser.client.company_name || "N/A"
+                          }`
+                          : `${t("all_users.view_modal.labels.name")}: ${full_name || "N/A"
+                          }`
+                        }
                       </p>
                     </div>
                   )}
 
-                  {/* WORKER */}
                   {selectedUser?.worker && (
                     <div className="p-4 rounded-xl bg-green-50 dark:bg-green-900/20 border border-green-100 dark:border-green-900">
                       <div className="flex justify-between">
                         <span className="text-xs font-bold text-green-600">
-                          WORKER
+                          {t("all_users.view_modal.labels.worker")}
                         </span>
                         <span className="text-xs text-green-600">
-                          ID #{selectedUser.worker.id}
+                          {t("all_users.table.id")} #{selectedUser.worker.id}
                         </span>
                       </div>
 
@@ -916,24 +937,24 @@ function AllUsers() {
                     </div>
                   )}
 
-                  {/* ADMIN */}
                   {selectedUser.user_type === "admin" && (
                     <div className="p-4 rounded-xl bg-purple-50 dark:bg-purple-900/20 border border-purple-100 dark:border-purple-900">
                       <span className="text-xs font-bold text-purple-600">
-                        ADMIN
+                        {t("all_users.view_modal.labels.admin")}
                       </span>
                       <p className="mt-2 text-purple-900 dark:text-purple-200 font-semibold">
-                        System Administrator
+                        {t("all_users.view_modal.labels.system_admin")}
                       </p>
                     </div>
                   )}
 
-                  {/* EMPTY */}
                   {!selectedUser.client &&
                     !selectedUser.worker &&
                     selectedUser.user_type !== "admin" && (
                       <div className="p-4 text-center rounded-xl bg-gray-50 dark:bg-gray-900">
-                        <p className="text-gray-500">No linked profile</p>
+                        <p className="text-gray-500">
+                          {t("all_users.view_modal.labels.no_linked_profile")}
+                        </p>
                       </div>
                     )}
                 </div>
@@ -948,115 +969,109 @@ function AllUsers() {
                   }}
                   className="flex-1 px-4 py-2 rounded-lg bg-gray-900 dark:bg-white text-white dark:text-gray-900 font-medium"
                 >
-                  Edit
+                  {t("all_users.view_modal.buttons.edit")}
                 </button>
 
                 <button
-                  onClick={() => handlePrint(selectedUser)}
+                  onClick={() => handlePrint(selectedUser, t)}
                   className="flex-1 px-4 py-2 rounded-lg bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-white font-medium"
                 >
-                  Print
+                  {t("all_users.view_modal.buttons.print")}
                 </button>
               </div>
             </div>
           </div>
         </div>
       )}
+
+      {/* EDIT MODAL */}
       {isEditModalOpen && editForm && (
         <div
-          className="fixed inset-0 bg-black/30  backdrop-blur-[2px] flex items-center justify-center z-50 p-4"
+          className="fixed inset-0 bg-black/30 backdrop-blur-[2px] flex items-center justify-center z-50 p-4"
           onClick={() => setIsEditModalOpen(false)}
         >
-          {/* MODAL CARD */}
           <div
             className="w-full max-w-md rounded-2xl shadow-2xl bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 overflow-hidden"
             onClick={(e) => e.stopPropagation()}
           >
-            {/* HEADER */}
             <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900">
               <h2 className="text-lg font-bold text-gray-900 dark:text-white">
-                Edit User
+                {t("all_users.edit_modal.title")}
               </h2>
               <p className="text-sm text-gray-500 dark:text-gray-400">
-                Update user details below
+                {t("all_users.edit_modal.subtitle")}
               </p>
             </div>
 
-            {/* FORM BODY */}
             <div className="p-6 space-y-4 max-h-[70vh] overflow-y-auto">
-              {/* FIRST NAME */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                  First Name
+                  {t("all_users.edit_modal.first_name")}
                 </label>
                 <input
                   name="first_name"
                   value={editForm.first_name}
                   onChange={handleEditChange}
                   className="w-full px-3 py-2 rounded-lg border bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white border-gray-200 dark:border-gray-600 focus:ring-2 focus:ring-gray-500 outline-none"
-                  placeholder="First Name"
+                  placeholder={t("all_users.edit_modal.first_name")}
                 />
                 {errors.first_name && (
                   <p className="text-red-500 text-sm mt-1">{errors.first_name}</p>
                 )}
               </div>
 
-              {/* LAST NAME */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                  Last Name
+                  {t("all_users.edit_modal.last_name")}
                 </label>
                 <input
                   name="last_name"
                   value={editForm.last_name}
                   onChange={handleEditChange}
                   className="w-full px-3 py-2 rounded-lg border bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white border-gray-200 dark:border-gray-600 focus:ring-2 focus:ring-gray-500 outline-none"
-                  placeholder="Last Name"
+                  placeholder={t("all_users.edit_modal.last_name")}
                 />
                 {errors.last_name && (
                   <p className="text-red-500 text-sm mt-1">{errors.last_name}</p>
                 )}
               </div>
 
-              {/* EMAIL */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                  Email
+                  {t("all_users.edit_modal.email")}
                 </label>
                 <input
                   name="email"
                   value={editForm.email}
                   onChange={handleEditChange}
                   className="w-full px-3 py-2 rounded-lg border bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white border-gray-200 dark:border-gray-600 focus:ring-2 focus:ring-gray-500 outline-none"
-                  placeholder="Email"
+                  placeholder={t("all_users.edit_modal.email")}
                 />
                 {errors.email && (
                   <p className="text-red-500 text-sm mt-1">{errors.email}</p>
                 )}
               </div>
 
-              {/* PHONE */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                  Phone
+                  {t("all_users.edit_modal.phone")}
                 </label>
                 <input
                   name="phone"
                   value={editForm.phone || ""}
                   onChange={handleEditChange}
                   className="w-full px-3 py-2 rounded-lg border bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white border-gray-200 dark:border-gray-600 focus:ring-2 focus:ring-gray-500 outline-none"
-                  placeholder="Phone"
+                  placeholder={t("all_users.edit_modal.phone")}
                 />
                 {errors.phone && (
                   <p className="text-red-500 text-sm mt-1">{errors.phone}</p>
                 )}
               </div>
 
-              {/* USER TYPE + STATUS GRID */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                    User Type
+                    {t("all_users.edit_modal.user_type")}
                   </label>
                   <select
                     name="user_type"
@@ -1064,15 +1079,15 @@ function AllUsers() {
                     onChange={handleEditChange}
                     className="w-full px-3 py-2 rounded-lg border bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white border-gray-200 dark:border-gray-600 focus:ring-2 focus:ring-gray-500 outline-none"
                   >
-                    <option value="admin">Admin</option>
-                    <option value="client">Client</option>
-                    <option value="worker">Worker</option>
+                    <option value="admin">{t("all_users.filter_role.admin")}</option>
+                    <option value="client">{t("all_users.filter_role.client")}</option>
+                    <option value="worker">{t("all_users.filter_role.worker")}</option>
                   </select>
                 </div>
 
                 <div>
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                    Status
+                    {t("all_users.edit_modal.status")}
                   </label>
                   <select
                     name="account_status"
@@ -1085,10 +1100,10 @@ function AllUsers() {
                     }
                     className="w-full px-3 py-2 rounded-lg border bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white border-gray-200 dark:border-gray-600 focus:ring-2 focus:ring-gray-500 outline-none"
                   >
-                    <option value="active">Active</option>
-                    <option value="pending">Pending</option>
-                    <option value="rejected">Rejected</option>
-                    <option value="suspended">Suspended</option>
+                    <option value="active">{t("all_users.status_labels.active")}</option>
+                    <option value="pending">{t("all_users.status_labels.pending")}</option>
+                    <option value="rejected">{t("all_users.status_labels.rejected")}</option>
+                    <option value="suspended">{t("all_users.status_labels.suspended")}</option>
                   </select>
                 </div>
               </div>
@@ -1097,20 +1112,19 @@ function AllUsers() {
               )}
             </div>
 
-            {/* FOOTER */}
             <div className="flex justify-end gap-2 px-6 py-4 border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900">
               <button
                 onClick={() => setIsEditModalOpen(false)}
                 className="px-4 py-2 rounded-lg bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 hover:opacity-80 transition cursor-pointer"
               >
-                Cancel
+                {t("all_users.edit_modal.cancel")}
               </button>
 
               <button
                 onClick={handleUpdateUser}
                 className="px-4 py-2 rounded-lg bg-gray-900 dark:bg-white text-white dark:text-gray-900 hover:opacity-90 transition font-medium cursor-pointer"
               >
-                Save Changes
+                {t("all_users.edit_modal.save")}
               </button>
             </div>
           </div>
@@ -1135,7 +1149,6 @@ export function StatCard({ title, value, icon, color = "amber" }) {
 
   return (
     <div className="w-full bg-white dark:bg-gray-800 rounded-xl shadow border border-gray-100 dark:border-gray-700 p-5 flex items-center justify-between transition-colors">
-      {/* TEXT */}
       <div>
         <p className="text-sm text-gray-500 dark:text-gray-400">{title}</p>
         <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
@@ -1143,7 +1156,6 @@ export function StatCard({ title, value, icon, color = "amber" }) {
         </h2>
       </div>
 
-      {/* ICON */}
       <div className={`p-3 rounded-xl ${colorMap[color] || colorMap.amber}`}>
         {icon}
       </div>
@@ -1153,8 +1165,9 @@ export function StatCard({ title, value, icon, color = "amber" }) {
 
 export default AllUsers;
 
-/* ─── Action-menu (portal-style fixed positioning) ─────────── */
+/* ─── Action-menu ─────────── */
 function ActionMenu({ user, onView, onEdit, onDelete, onPrint }) {
+  const { t } = useTranslation();
   const [open, setOpen] = useState(false);
   const btnRef = useRef(null);
   const menuRef = useRef(null);
@@ -1169,10 +1182,8 @@ function ActionMenu({ user, onView, onEdit, onDelete, onPrint }) {
     }
 
     const rect = btnRef.current.getBoundingClientRect();
-
     const menuWidth = 176;
     const menuHeight = 173;
-
     const spaceBelow = window.innerHeight - rect.bottom;
 
     const top =
@@ -1192,7 +1203,7 @@ function ActionMenu({ user, onView, onEdit, onDelete, onPrint }) {
 
     setOpen(true);
   };
-  // Close on outside click
+
   useEffect(() => {
     if (!open) return;
     const handler = (e) => {
@@ -1207,7 +1218,6 @@ function ActionMenu({ user, onView, onEdit, onDelete, onPrint }) {
     return () => document.removeEventListener("mousedown", handler);
   }, [open]);
 
-  // Close on scroll
   useEffect(() => {
     if (!open) return;
     const handler = () => setOpen(false);
@@ -1236,7 +1246,7 @@ function ActionMenu({ user, onView, onEdit, onDelete, onPrint }) {
           className="w-full text-left px-4 py-2.5 text-sm hover:bg-blue-50 dark:hover:bg-blue-900/40 hover:text-blue-700 dark:hover:text-blue-400 transition-colors flex items-center gap-2"
         >
           <Eye size={13} />
-          View
+          {t("all_users.actions_menu.view")}
         </button>
         <button
           onClick={() => {
@@ -1246,7 +1256,7 @@ function ActionMenu({ user, onView, onEdit, onDelete, onPrint }) {
           className="w-full text-left px-4 py-2.5 text-sm hover:bg-green-50 dark:hover:bg-green-900/40 hover:text-green-700 dark:hover:text-green-400 transition-colors flex items-center gap-2"
         >
           <Edit size={13} />
-          Edit
+          {t("all_users.actions_menu.edit")}
         </button>
         <button
           onClick={() => {
@@ -1256,7 +1266,7 @@ function ActionMenu({ user, onView, onEdit, onDelete, onPrint }) {
           className="w-full text-left px-4 py-2.5 text-sm hover:bg-purple-50 dark:hover:bg-purple-900/40 hover:text-purple-700 dark:hover:text-purple-400 transition-colors flex items-center gap-2"
         >
           <Printer size={13} />
-          Print
+          {t("all_users.actions_menu.print")}
         </button>
         <hr className="border-gray-100 dark:border-gray-700" />
         <button
@@ -1267,7 +1277,7 @@ function ActionMenu({ user, onView, onEdit, onDelete, onPrint }) {
           className="w-full text-left px-4 py-2.5 text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/40 transition-colors flex items-center gap-2"
         >
           <Trash2 size={13} />
-          Delete
+          {t("all_users.actions_menu.delete")}
         </button>
       </div>,
       document.body,
@@ -1280,7 +1290,7 @@ function ActionMenu({ user, onView, onEdit, onDelete, onPrint }) {
         ref={btnRef}
         onClick={openMenu}
         className="p-1.5 rounded-lg text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors cursor-pointer"
-        aria-label="Actions"
+        aria-label={t("all_users.table.actions")}
       >
         <MoreHorizontal size={18} />
       </button>
@@ -1289,22 +1299,21 @@ function ActionMenu({ user, onView, onEdit, onDelete, onPrint }) {
   );
 }
 
-const handlePrint = (user) => {
+const handlePrint = (user, t) => {
   const name = user.first_name || "—";
   const win = window.open("", "_blank", "width=700,height=600");
   win.document.write(`
       <!DOCTYPE html>
       <html>
       <head>
-        <title>User — ${name}</title>
+        <title>${t("all_users.print.document_title")} — ${name}</title>
         <style>
           * { box-sizing: border-box; margin: 0; padding: 0; }
           body { font-family: 'Segoe UI', sans-serif; color: #1a1a2e; padding: 40px; }
           .header { border-bottom: 3px solid #2563eb; padding-bottom: 16px; margin-bottom: 24px; display: flex; justify-content: space-between; align-items: flex-end; }
           .header h1 { font-size: 22px; font-weight: 700; }
           .header p  { font-size: 12px; color: #6b7280; margin-top: 4px; }
-          .badge { display: inline-block; padding: 3px 10px; border-radius: 999px; font-size: 11px; font-weight: 600;
-            background: #f3f4f6; color: #374151; }
+          .badge { display: inline-block; padding: 3px 10px; border-radius: 999px; font-size: 11px; font-weight: 600; background: #f3f4f6; color: #374151; }
           table { width: 100%; border-collapse: collapse; margin-top: 8px; }
           tr { border-bottom: 1px solid #e5e7eb; }
           td { padding: 10px 8px; font-size: 14px; }
@@ -1316,20 +1325,20 @@ const handlePrint = (user) => {
       <body>
         <div class="header">
           <div>
-            <h1>User Profile</h1>
-            <p>Generated ${new Date().toLocaleString()}</p>
+            <h1>${t("all_users.print.user_profile")}</h1>
+            <p>${t("all_users.print.generated")} ${new Date().toLocaleString()}</p>
           </div>
           <span class="badge">${user.account_status || "—"}</span>
         </div>
         <table>
-          <tr><td>ID</td><td>#${user.id}</td></tr>
-          <tr><td>Company Name</td><td>${name}</td></tr>
-          <tr><td>Email</td><td>${user.email || "—"}</td></tr>
-          <tr><td>Phone</td><td>${user.phone || "—"}</td></tr>
-          <tr><td>User Type</td><td>${user.user_type || "—"}</td></tr>
-          <tr><td>Status</td><td>${user.account_status || "—"}</td></tr>
+          <tr><td>${t("all_users.table.id")}</td><td>#${user.id}</td></tr>
+          <tr><td>${t("all_users.print.company_name")}</td><td>${name}</td></tr>
+          <tr><td>${t("all_users.table.email")}</td><td>${user.email || "—"}</td></tr>
+          <tr><td>${t("all_users.table.phone")}</td><td>${user.phone || "—"}</td></tr>
+          <tr><td>${t("all_users.table.role")}</td><td>${user.user_type || "—"}</td></tr>
+          <tr><td>${t("all_users.table.status")}</td><td>${user.account_status || "—"}</td></tr>
         </table>
-        <div class="footer">Users Management System</div>
+        <div class="footer">${t("all_users.print.footer")}</div>
         <script>window.onload = () => { window.print(); window.onafterprint = () => window.close(); }</script>
       </body>
       </html>
@@ -1337,16 +1346,17 @@ const handlePrint = (user) => {
   win.document.close();
 };
 
-/* Role Filter*/
+/* Role Filter */
 export function RoleFilter({ roleFilter, setRoleFilter }) {
+  const { t } = useTranslation();
   const [open, setOpen] = useState(false);
   const wrapperRef = useRef(null);
 
   const options = [
-    { label: "All Roles", value: "all" },
-    { label: "Admin", value: "admin" },
-    { label: "Client", value: "client" },
-    { label: "Worker", value: "worker" },
+    { label: t("all_users.filter_role.all"), value: "all" },
+    { label: t("all_users.filter_role.admin"), value: "admin" },
+    { label: t("all_users.filter_role.client"), value: "client" },
+    { label: t("all_users.filter_role.worker"), value: "worker" },
   ];
 
   const selected = options.find((o) => o.value === roleFilter);
@@ -1364,12 +1374,10 @@ export function RoleFilter({ roleFilter, setRoleFilter }) {
 
   return (
     <div ref={wrapperRef} className="relative w-full sm:w-44">
-      {/* LABEL */}
       <label className="text-xs font-medium text-gray-600 dark:text-gray-400 mb-1 block">
-        Filter By Role
+        {t("all_users.filter_role.label")}
       </label>
 
-      {/* BUTTON */}
       <button
         onClick={() => setOpen(!open)}
         className="w-full flex items-center justify-between px-3 py-2 text-sm
@@ -1390,7 +1398,6 @@ export function RoleFilter({ roleFilter, setRoleFilter }) {
         </span>
       </button>
 
-      {/* DROPDOWN */}
       {open && (
         <div
           className="absolute z-50 mt-1 w-full
@@ -1423,16 +1430,18 @@ export function RoleFilter({ roleFilter, setRoleFilter }) {
   );
 }
 
+/* Status Filter */
 export function StatusFilter({ statusFilter, setStatusFilter }) {
+  const { t } = useTranslation();
   const [open, setOpen] = useState(false);
   const wrapperRef = useRef(null);
 
   const options = [
-    { label: "All Statuses", value: "all" },
-    { label: "Pending", value: "pending" },
-    { label: "Active", value: "active" },
-    { label: "Rejected", value: "rejected" },
-    { label: "Suspended", value: "suspended" },
+    { label: t("all_users.filter_status.all"), value: "all" },
+    { label: t("all_users.filter_status.pending"), value: "pending" },
+    { label: t("all_users.filter_status.active"), value: "active" },
+    { label: t("all_users.filter_status.rejected"), value: "rejected" },
+    { label: t("all_users.filter_status.suspended"), value: "suspended" },
   ];
 
   const selected = options.find((o) => o.value === statusFilter);
@@ -1450,12 +1459,10 @@ export function StatusFilter({ statusFilter, setStatusFilter }) {
 
   return (
     <div ref={wrapperRef} className="relative w-full sm:w-48">
-      {/* LABEL */}
       <label className="text-xs font-medium text-gray-600 dark:text-gray-400 mb-1 block">
-        Filter By Status
+        {t("all_users.filter_status.label")}
       </label>
 
-      {/* BUTTON */}
       <button
         onClick={() => setOpen(!open)}
         className="w-full flex items-center justify-between px-3 py-2 text-sm
@@ -1476,7 +1483,6 @@ export function StatusFilter({ statusFilter, setStatusFilter }) {
         </span>
       </button>
 
-      {/* DROPDOWN */}
       {open && (
         <div
           className="absolute z-50 mt-1 w-full

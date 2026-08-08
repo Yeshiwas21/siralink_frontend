@@ -379,5 +379,139 @@
       "create_account": "Create Account",
       "browse_jobs": "Browse Jobs"
     }
+  },
+  "all_users": {
+    "title": "Users Management",
+    "subtitle": "Manage all registered clients and users",
+    "refresh": "Refresh",
+    "add_user": "+ Add User",
+    "search_placeholder": "Search...",
+    "export": "Export",
+    "selected": "selected",
+    "delete_selected": "Delete Selected",
+    "showing": "Showing {{count}} of {{total}} users",
+    "rows": "Rows:",
+    "pagination": {
+      "first": "« First",
+      "prev": "‹ Prev",
+      "next": "Next ›",
+      "last": "Last »"
+    },
+    "table": {
+      "id": "ID",
+      "email": "Email",
+      "phone": "Phone",
+      "role": "Role",
+      "status": "Status",
+      "linked_profile": "Linked Profile",
+      "actions": "Actions"
+    },
+    "stats": {
+      "total": "Total Users",
+      "clients": "Clients",
+      "workers": "Workers",
+      "admins": "Admins",
+      "active": "Active Users",
+      "pending": "Under Review",
+      "rejected": "Rejected Users",
+      "suspended": "Suspended Users"
+    },
+    "status_labels": {
+      "active": "Active",
+      "pending": "Pending",
+      "rejected": "Rejected",
+      "suspended": "Suspended",
+      "unknown": "Unknown"
+    },
+    "filter_role": {
+      "label": "Filter By Role",
+      "all": "All Roles",
+      "admin": "Admin",
+      "client": "Client",
+      "worker": "Worker"
+    },
+    "filter_status": {
+      "label": "Filter By Status",
+      "all": "All Statuses",
+      "pending": "Pending",
+      "active": "Active",
+      "rejected": "Rejected",
+      "suspended": "Suspended"
+    },
+    "actions_menu": {
+      "view": "View",
+      "edit": "Edit",
+      "print": "Print",
+      "delete": "Delete"
+    },
+    "view_modal": {
+      "title": "User Details",
+      "tabs": {
+        "info": "Info",
+        "system": "System",
+        "profile": "Profile"
+      },
+      "labels": {
+        "email": "Email",
+        "user_type": "User Type",
+        "phone": "Phone",
+        "no_phone": "No phone",
+        "status": "Status",
+        "active": "Active",
+        "inactive": "Inactive",
+        "user_id": "User ID",
+        "superuser": "Superuser",
+        "staff": "Staff",
+        "registered": "Registered",
+        "last_update": "Last Update",
+        "yes": "Yes",
+        "no": "No",
+        "role_client": "Client",
+        "role_worker": "Worker",
+        "client": "CLIENT",
+        "worker": "WORKER",
+        "admin": "ADMIN",
+        "system_admin": "System Administrator",
+        "not_linked": "Not linked",
+        "no_linked_profile": "No linked profile",
+        "company": "Company",
+        "name": "Name",
+        "individual": "Individual"
+      },
+      "buttons": {
+        "edit": "Edit",
+        "print": "Print"
+      }
+    },
+    "edit_modal": {
+      "title": "Edit User",
+      "subtitle": "Update user details below",
+      "first_name": "First Name",
+      "last_name": "Last Name",
+      "email": "Email",
+      "phone": "Phone",
+      "user_type": "User Type",
+      "status": "Status",
+      "cancel": "Cancel",
+      "save": "Save Changes"
+    },
+    "messages": {
+      "loading": "Loading users...",
+      "load_failed": "Failed to load users",
+      "confirm_delete_user": "Are you sure you want to delete this user?",
+      "confirm_delete_selected": "Delete selected users?",
+      "user_deleted": "User deleted",
+      "selected_deleted": "Selected users deleted",
+      "delete_failed": "Failed to delete selected users",
+      "user_updated": "User updated",
+      "update_failed": "Failed to update user"
+    },
+    "print": {
+      "document_title": "User Profile",
+      "user_profile": "User Profile",
+      "generated": "Generated",
+      "footer": "Users Management System",
+      "company_name": "Full Name / Company"
+    }
   }
 }

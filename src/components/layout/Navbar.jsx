@@ -21,6 +21,8 @@ const LANGUAGES = [
   { code: "en", name: "English" },
   { code: "am", name: "አማርኛ" },
   { code: "om", name: "Afaan Oromo" },
+  { code: "tg", name: "ትግርኛ" },
+
 ];
 
 function Navbar() {

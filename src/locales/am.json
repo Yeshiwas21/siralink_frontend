@@ -291,7 +291,7 @@
   "home": {
     "loading": "በመጫን ላይ...",
     "hero": {
-      "title": "በኢትዮጵያ ውስጥ የብቃት ባለሙያዎችን ያግኙ ወይም በፍጥነት የተቀጠሩ",
+      "title": "በኢትዮጵያ ውስጥ የብቃት ባለሙያዎችን ያግኙ ወይም በፍጥነት ይቀጠሩ",
       "description": "ሲራሊንክ ደበኞችን እና ባለሙያዎችን እንደ የቧንቧ፣ የኤሌክትሪክ፣ የጽዳት፣ የማስጠናት እና ሌሎች ስራዎች ያገናኛል።",
       "find_work": "ስራ ያግኙ",
       "hire_talent": "ባለሙያ ይቀጥሩ"
@@ -376,6 +376,140 @@
       "subheading": "በመላው ኢትዮጵያ ስራ ለመስራት፣ ባለሙያ ለመቀጠር እና ንግዶችን ለማሳደግ ሲራሊንክን የሚጠቀሙ በሺዎች የሚቆጠሩ ሰዎችን ይቀላቀሉ።",
       "create_account": "መለያ ፍጠር",
       "browse_jobs": "ስራዎችን ይመልከቱ"
+    }
+  },
+  "all_users": {
+    "title": "የተጠቃሚዎች አስተዳደር",
+    "subtitle": "ሁሉንም የተመዘገቡ ተጠቃሚዎችን ያስተዳድሩ",
+    "refresh": "አድስ",
+    "add_user": "+ ተጠቃሚ ጨምር",
+    "search_placeholder": "ፈልግ...",
+    "export": "ላክ (Export)",
+    "selected": "የተመረጡ",
+    "delete_selected": "የተመረጡትን ሰርዝ",
+    "showing": "ከ {{total}} ተጠቃሚዎች {{count}} በማሳየት ላይ",
+    "rows": "ረድፎች:",
+    "pagination": {
+      "first": "« የመጀመሪያ",
+      "prev": "‹ ቀዳሚ",
+      "next": "ቀጣይ ›",
+      "last": "መጨረሻ »"
+    },
+    "table": {
+      "id": "መለያ (ID)",
+      "email": "ኢሜይል",
+      "phone": "ስልክ",
+      "role": "ሚና",
+      "status": "ሁኔታ",
+      "linked_profile": "የተያያዘ ፕሮፋይል",
+      "actions": "እርምጃዎች"
+    },
+    "stats": {
+      "total": "ጠቅላላ ተጠቃሚዎች",
+      "clients": "አሠሪዎች",
+      "workers": "ሰራተኞች",
+      "admins": "አስተዳዳሪዎች",
+      "active": "ንቁ ተጠቃሚዎች",
+      "pending": "በግምገማ ላይ ያሉ",
+      "rejected": "የተቀበሉ ተጠቃሚዎች",
+      "suspended": "የታገዱ ተጠቃሚዎች"
+    },
+    "status_labels": {
+      "active": "ንቁ",
+      "pending": "በግምገማ ላይ",
+      "rejected": "የተከለከለ",
+      "suspended": "የታገደ",
+      "unknown": "ያልታወቀ"
+    },
+    "filter_role": {
+      "label": "በሚና ይለዩ",
+      "all": "ሁሉም ሚናዎች",
+      "admin": "አስተዳዳሪ",
+      "client": "አሠሪ",
+      "worker": "ሰራተኛ"
+    },
+    "filter_status": {
+      "label": "በሁኔታ ይለዩ",
+      "all": "ሁሉም ሁኔታዎች",
+      "pending": "በግምገማ ላይ",
+      "active": "ንቁ",
+      "rejected": "የተከለከለ",
+      "suspended": "የታገደ"
+    },
+    "actions_menu": {
+      "view": "ተመልከት",
+      "edit": "አስተካክል",
+      "print": "አትም",
+      "delete": "ሰርዝ"
+    },
+    "view_modal": {
+      "title": "የተጠቃሚ ዝርዝር",
+      "tabs": {
+        "info": "መረጃ",
+        "system": "ሲስተም",
+        "profile": "ፕሮፋይል"
+      },
+      "labels": {
+        "email": "ኢሜይል",
+        "user_type": "የተጠቃሚ ዓይነት",
+        "phone": "ስልክ",
+        "no_phone": "ስልክ የለም",
+        "status": "ሁኔታ",
+        "active": "ንቁ",
+        "inactive": "ንቁ ያልሆነ",
+        "user_id": "የተጠቃሚ መለያ",
+        "superuser": "ዋና አስተዳዳሪ",
+        "staff": "የሲስተም ሰራተኛ",
+        "registered": "የተመዘገበበት ቀን",
+        "last_update": "መጨረሻ የተሻሻለው",
+        "yes": "አዎ",
+        "no": "አይደለም",
+        "role_client": "አሠሪ",
+        "role_worker": "ሰራተኛ",
+        "client": "አሠሪ",
+        "worker": "ሰራተኛ",
+        "admin": "አስተዳዳሪ",
+        "system_admin": "የሲስተም አስተዳዳሪ",
+        "not_linked": "የተያያዘ የለም",
+        "no_linked_profile": "የተያያዘ ፕሮፋይል የለም",
+        "company": "ድርጅት",
+        "name": "ስም",
+        "individual": "የግል"
+      },
+      "buttons": {
+        "edit": "አስተካክል",
+        "print": "አትም"
+      }
+    },
+    "edit_modal": {
+      "title": "ተጠቃሚ አስተካክል",
+      "subtitle": "የተጠቃሚ መረጃን ከታች ያስተካክሉ",
+      "first_name": "ስም",
+      "last_name": "የአባት ስም",
+      "email": "ኢሜይል",
+      "phone": "ስልክ",
+      "user_type": "የተጠቃሚ ዓይነት",
+      "status": "ሁኔታ",
+      "cancel": "ሰርዝ",
+      "save": "ለውጦችን አስቀምጥ"
+    },
+    "messages": {
+      "loading": "ተጠቃሚዎች በመጫን ላይ ናቸው...",
+      "load_failed": "ተጠቃሚዎችን መጫን አልተቻለም",
+      "confirm_delete_user": "እርግጠኛ ነዎት ይህንን ተጠቃሚ መሰረዝ ይፈልጋሉ?",
+      "confirm_delete_selected": "የተመረጡትን ተጠቃሚዎች ይሰረዙ?",
+      "user_deleted": "ተጠቃሚው ተሰርዟል",
+      "selected_deleted": "የተመረጡት ተጠቃሚዎች ተሰርዘዋል",
+      "delete_failed": "የተመረጡትን ተጠቃሚዎች መሰረዝ አልተቻለም",
+      "user_updated": "የተጠቃሚ መረጃ ተሻሽሏል",
+      "update_failed": "የተጠቃሚ መረጃ ማሻሻል አልተቻለም"
+    },
+    "print": {
+      "document_title": "የተጠቃሚ ፕሮፋይል",
+      "user_profile": "የተጠቃሚ ፕሮፋይል",
+      "generated": "የተዘጋጀበት ቀን",
+      "footer": "የተጠቃሚዎች አስተዳደር ሲስተም",
+      "company_name": "ሙሉ ስም / ድርጅት"
     }
   }
 }
