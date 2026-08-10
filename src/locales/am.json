@@ -494,7 +494,7 @@
       "save": "ለውጦችን አስቀምጥ"
     },
     "messages": {
-      "loading": "ተጠቃሚዎች በመጫን ላይ ናቸው...",
+      "loading": "ተጠቃሚዎች በመጫን ላይ ...",
       "load_failed": "ተጠቃሚዎችን መጫን አልተቻለም",
       "confirm_delete_user": "እርግጠኛ ነዎት ይህንን ተጠቃሚ መሰረዝ ይፈልጋሉ?",
       "confirm_delete_selected": "የተመረጡትን ተጠቃሚዎች ይሰረዙ?",

@@ -22,7 +22,6 @@ const LANGUAGES = [
   { code: "am", name: "አማርኛ" },
   { code: "om", name: "Afaan Oromo" },
   { code: "tg", name: "ትግርኛ" },
-
 ];
 
 function Navbar() {
@@ -38,11 +37,12 @@ function Navbar() {
   const [mobileLangOpen, setMobileLangOpen] = useState(false);
 
   const location = useLocation();
-  const dropdownRef = useRef(null);
 
-  // Separate refs for Desktop and Mobile language containers
+  // Clear, explicitly named refs
+  const searchCategoryRef = useRef(null);
   const desktopLangRef = useRef(null);
   const mobileLangRef = useRef(null);
+  const profileDropdownRef = useRef(null);
 
   const { t, i18n } = useTranslation();
   const { theme, toggleTheme } = useTheme();
@@ -126,7 +126,10 @@ function Navbar() {
 
   useEffect(() => {
     const handleClickOutside = (e) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
+      if (
+        searchCategoryRef.current &&
+        !searchCategoryRef.current.contains(e.target)
+      ) {
         setOpenCategory(false);
       }
       if (
@@ -140,6 +143,12 @@ function Navbar() {
         !mobileLangRef.current.contains(e.target)
       ) {
         setMobileLangOpen(false);
+      }
+      if (
+        profileDropdownRef.current &&
+        !profileDropdownRef.current.contains(e.target)
+      ) {
+        setDropdown(false);
       }
     };
 
@@ -183,7 +192,10 @@ function Navbar() {
           {/* MOBILE LANGUAGE DROPDOWN */}
           <div className="relative inline-flex items-center" ref={mobileLangRef}>
             <button
-              onClick={() => setMobileLangOpen((prev) => !prev)}
+              onClick={() => {
+                setMobileLangOpen((prev) => !prev);
+                setMobileProfileOpen(false);
+              }}
               className="flex items-center gap-1 px-2 py-2 rounded-lg text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 transition cursor-pointer"
             >
               <Globe size={17} className="cursor-pointer" />
@@ -233,11 +245,15 @@ function Navbar() {
 
             <div
               className="relative border-l border-gray-200 dark:border-gray-700"
-              ref={dropdownRef}
+              ref={searchCategoryRef}
             >
               <button
                 type="button"
-                onClick={() => setOpenCategory((prev) => !prev)}
+                onClick={() => {
+                  setOpenCategory((prev) => !prev);
+                  setDropdown(false);
+                  setDesktopLangOpen(false);
+                }}
                 className="px-3 py-2 text-sm flex items-center gap-1 text-gray-600 dark:text-gray-300 hover:text-black dark:hover:text-gray-100 transition whitespace-nowrap"
               >
                 {category === "jobs" ? t("navbar.jobs") : t("navbar.workers")}
@@ -338,7 +354,10 @@ function Navbar() {
             {/* DESKTOP LANGUAGE DROPDOWN */}
             <div className="relative flex items-center" ref={desktopLangRef}>
               <button
-                onClick={() => setDesktopLangOpen((prev) => !prev)}
+                onClick={() => {
+                  setDesktopLangOpen((prev) => !prev);
+                  setDropdown(false);
+                }}
                 className="flex items-center gap-1 h-16 text-sm transition-colors duration-200 text-gray-800 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100 cursor-pointer"
               >
                 <Globe size={17} className="cursor-pointer" />
@@ -365,7 +384,7 @@ function Navbar() {
               )}
             </div>
 
-            {/* DESKTOP THEME  SECTION*/}
+            {/* DESKTOP THEME SECTION */}
             <button
               onClick={toggleTheme}
               className="flex items-center justify-center w-9 h-9 text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100 transition cursor-pointer"
@@ -390,9 +409,12 @@ function Navbar() {
                 </Link>
               </div>
             ) : (
-              <div className="relative">
+              <div className="relative" ref={profileDropdownRef}>
                 <button
-                  onClick={() => setDropdown(!dropdown)}
+                  onClick={() => {
+                    setDropdown((prev) => !prev);
+                    setDesktopLangOpen(false);
+                  }}
                   className="flex items-center hover:bg-gray-100 dark:hover:bg-gray-800 p-1.5 rounded-full transition"
                 >
                   <div className="w-9 h-9 rounded-full overflow-hidden bg-gray-200 dark:bg-gray-700 flex items-center justify-center border">
@@ -466,7 +488,10 @@ function Navbar() {
             {isAuth && (
               <>
                 <button
-                  onClick={() => setMobileProfileOpen((prev) => !prev)}
+                  onClick={() => {
+                    setMobileProfileOpen((prev) => !prev);
+                    setMobileLangOpen(false);
+                  }}
                   className="w-full flex items-center justify-between border-t border-gray-200 dark:border-gray-800 pt-3"
                 >
                   <div className="flex items-center gap-2">
