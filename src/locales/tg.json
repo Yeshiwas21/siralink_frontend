@@ -486,15 +486,22 @@
     },
     "edit_modal": {
       "title": "ተጠቃሚ ኣስተኻኽል",
-      "subtitle": "ኣብ ታሕቲ ዘሎ ናይ ተጠቃሚ ሓበሬታ ኣስተኻኽል",
-      "first_name": "ስም",
+      "subtitle": "መግለፂ ተጠቃሚ ኣብ ታሕቲ ኣሐድስ",
+      "first_name": "መበገሲ ስም",
       "last_name": "ስም ኣቦ",
       "email": "ኢሜይል",
-      "phone": "ስልኪ",
+      "min2_chars": "ውሕድ 2 ፊደላት የድልዩ",
+      "text_letter_start": "ብፊደል ክጅምር ኣለዎ",
+      "letters_only": "ፊደላት ጥራሕ እዮም ዝፍቀዱ",
+      "email_required": "ኢሜይል የድሊ እዩ",
+      "invalid_email": "ትክክለኛ ኢሜይል ኣእትው",
+      "phone": "ቁፅሪ ስልኪ",
+      "phone_required": "ቁፅሪ ስልኪ የድሊ እዩ",
+      "invalid_phone": "+2519XXXXXXXX ወይ ናይ ውሽጢ ዓዲ 10 ኣሃዝ ቁፅሪ ተጠቐም",
       "user_type": "ዓይነት ተጠቃሚ",
-      "status": "ኩነታት",
-      "cancel": "ሰርዝ/ተመለስ",
-      "save": "መስተኻኸሊታት ኣቐምጥ"
+      "status": "ሁኔታ",
+      "cancel": "ሰርዝ",
+      "save": "ለውጥታት ኣስምሕ"
     },
     "messages": {
       "loading": "ተጠቀምቲ ይፅዕን ኣሎ...",

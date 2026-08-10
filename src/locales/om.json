@@ -486,14 +486,21 @@
     "edit_modal": {
       "title": "Fayyadamaa Gulaali",
       "subtitle": "Odeeffannoo fayyadamaa gadii fooyyessi",
-      "first_name": "Maqaa",
+      "first_name": "Maqaa Jalqabaa",
       "last_name": "Maqaa Abbaa",
       "email": "Imeelii",
+      "min2_chars": "Xiqqaatu arfiilee 2 barbaachisa",
+      "text_letter_start": "Arfiidhaan jalqabuu qaba",
+      "letters_only": "Arfiilee qofatu hayyamama",
+      "email_required": "Imeeliin barbaachisaadha",
+      "invalid_email": "Imeelii sirrii galchu",
       "phone": "Lakk. Bilbilaa",
+      "phone_required": "Lakkoofsi bilbilaa barbaachisaadha",
+      "invalid_phone": "+2519XXXXXXXX fiiladhu yookiin lakkoofsa biyya keessaa dijiitii 10 fayyadami",
       "user_type": "Gosa Fayyadamaa",
       "status": "Haala",
       "cancel": "Dhiisi",
-      "save": "Jijjiama Ol-kaa'i"
+      "save": "Jijjiirama Galmeessi"
     },
     "messages": {
       "loading": "Fayyadamtoota fe'aa jira...",
