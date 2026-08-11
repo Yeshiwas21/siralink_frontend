@@ -458,13 +458,8 @@ function AllUsers() {
                 <tr
                   key={user?.id}
                   onClick={() => openViewModal(user)}
-                  className={`
-                    cursor-pointer transition
-                    hover:bg-gray-100 dark:hover:bg-gray-700
-                    ${index % 2 === 0
-                      ? "bg-white dark:bg-gray-800"
-                      : "bg-gray-50 dark:bg-gray-900/40"
-                    }
+                  className={`cursor-pointer transition hover:bg-gray-100 dark:hover:bg-gray-700
+                    ${index % 2 === 0 ? "bg-white dark:bg-gray-800" : "bg-gray-50 dark:bg-gray-900/40"}
                   `}
                 >
                   <td

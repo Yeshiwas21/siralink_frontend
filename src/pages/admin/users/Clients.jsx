@@ -364,7 +364,7 @@ function Clients() {
               </tr>
             </thead>
 
-            <tbody className="divide-y divide-gray-100 dark:divide-gray-700/60">
+            <tbody className="divide-y divide-gray-100 dark:divide-gray-700">
               {filteredClients.length === 0 ? (
                 <tr>
                   <td
@@ -379,8 +379,8 @@ function Clients() {
                   <tr
                     key={c.id}
                     onClick={() => openViewModal(c)}
-                    className={`cursor-pointer transition-colors hover:bg-blue-50 dark:hover:bg-blue-950/20
-                      ${index % 2 === 0 ? "bg-white dark:bg-gray-800" : "bg-gray-50/50 dark:bg-gray-800/40"}
+                    className={`cursor-pointer transition hover:bg-gray-100 dark:hover:bg-gray-700
+                      ${index % 2 === 0 ? "bg-white dark:bg-gray-800" : "bg-gray-50 dark:bg-gray-900/40"}
                     `}
                   >
                     <td
@@ -395,7 +395,7 @@ function Clients() {
                       />
                     </td>
 
-                    <td className="px-4 py-3 text-gray-500 dark:text-gray-400 font-mono text-xs">
+                    <td className="px-4 py-3 text-gray-500 dark:text-gray-300 font-mono text-xs">
                       #{c.id}
                     </td>
                     <td className="px-4 py-3 font-semibold text-gray-800 dark:text-gray-200 whitespace-nowrap">
