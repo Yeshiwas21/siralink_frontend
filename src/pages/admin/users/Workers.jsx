@@ -1,189 +1,16 @@
-import React, {
-  useEffect,
-  useMemo,
-  useState,
-  useRef,
-  useCallback,
-} from "react";
+import React, { useEffect, useMemo, useState, useCallback, } from "react";
 import {
-  Users,
-  Search,
-  Clock,
-  RefreshCw,
-  CircleCheck,
-  HelpCircle,
-  XCircle,
-  Download,
-  MoreHorizontal,
-  Printer,
-  X,
-  Edit,
-  Eye,
-  Trash2,
+  Users, Search, Clock, RefreshCw, CircleCheck, HelpCircle, XCircle, Download, Printer, X, Edit,
 } from "lucide-react";
-import ReactDOM from "react-dom";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import { listWorker, deleteWorker } from "../../../services/userServices";
 import { StatCard } from "./AllUsers";
-import { StatusFilter } from "./Clients";
+import StatusFilter from "../../../components/common/StatusFilter";
+import StatusBadge from "../../../components/common/StatusBadge";
+import ActionMenu from "../../../components/common/ActionMenu";
+import { handlePrintWorker } from "../../../utils/workerPrint";
 
-/* ─── Status badge ─────────────────────────────────────────── */
-const STATUS_STYLES = {
-  pending: "bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400",
-  verified: "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400",
-  unverified: "bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-400",
-  rejected: "bg-red-100 text-red-600 dark:bg-red-900/30 dark:text-red-400",
-};
-
-function StatusBadge({ status, label }) {
-  const cls = STATUS_STYLES[status] ?? "bg-gray-100 text-gray-500 dark:bg-gray-800 dark:text-gray-400";
-  return (
-    <span
-      className={`inline-block px-2 py-0.5 text-xs font-medium rounded-full whitespace-nowrap ${cls}`}
-    >
-      {label || status || "—"}
-    </span>
-  );
-}
-
-/* ─── Action-menu ─────────── */
-function ActionMenu({ worker, onView, onEdit, onDelete, onPrint }) {
-  const [open, setOpen] = useState(false);
-  const btnRef = useRef(null);
-  const menuRef = useRef(null);
-  const [pos, setPos] = useState({ top: 0, left: 0 });
-
-  const openMenu = (e) => {
-    e.stopPropagation();
-
-    if (open) {
-      setOpen(false);
-      return;
-    }
-
-    const rect = btnRef.current.getBoundingClientRect();
-
-    const menuWidth = 176;
-    const menuHeight = 173;
-
-    const spaceBelow = window.innerHeight - rect.bottom;
-
-    const top =
-      spaceBelow >= menuHeight
-        ? rect.bottom + 4
-        : Math.max(8, rect.top - menuHeight - 4);
-
-    const left = Math.min(
-      rect.right - menuWidth,
-      window.innerWidth - menuWidth - 8,
-    );
-
-    setPos({
-      top,
-      left: Math.max(8, left),
-    });
-
-    setOpen(true);
-  };
-  // Close on outside click
-  useEffect(() => {
-    if (!open) return;
-    const handler = (e) => {
-      if (
-        !menuRef.current?.contains(e.target) &&
-        !btnRef.current?.contains(e.target)
-      ) {
-        setOpen(false);
-      }
-    };
-    document.addEventListener("mousedown", handler);
-    return () => document.removeEventListener("mousedown", handler);
-  }, [open]);
-
-  // Close on scroll
-  useEffect(() => {
-    if (!open) return;
-    const handler = () => setOpen(false);
-    window.addEventListener("scroll", handler, true);
-    return () => window.removeEventListener("scroll", handler, true);
-  }, [open]);
-
-  const dropdown = open
-    ? ReactDOM.createPortal(
-      <div
-        ref={menuRef}
-        style={{
-          position: "fixed",
-          top: pos.top,
-          left: pos.left,
-          zIndex: 9999,
-        }}
-        className="w-44 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 shadow-2xl overflow-hidden text-gray-700 dark:text-gray-200"
-        onClick={(e) => e.stopPropagation()}
-      >
-        <button
-          onClick={() => {
-            onView(worker);
-            setOpen(false);
-          }}
-          className="w-full text-left px-4 py-2.5 text-sm hover:bg-blue-50 dark:hover:bg-blue-900/40 hover:text-blue-700 dark:hover:text-blue-400 transition-colors flex items-center gap-2"
-        >
-          <Eye size={13} />
-          View
-        </button>
-        <button
-          onClick={() => {
-            onEdit(worker);
-            setOpen(false);
-          }}
-          className="w-full text-left px-4 py-2.5 text-sm hover:bg-green-50 dark:hover:bg-green-900/40 hover:text-green-700 dark:hover:text-green-400 transition-colors flex items-center gap-2"
-        >
-          <Edit size={13} />
-          Edit
-        </button>
-        <button
-          onClick={() => {
-            onPrint(worker);
-            setOpen(false);
-          }}
-          className="w-full text-left px-4 py-2.5 text-sm hover:bg-purple-50 dark:hover:bg-purple-900/40 hover:text-purple-700 dark:hover:text-purple-400 transition-colors flex items-center gap-2"
-        >
-          <Printer size={13} />
-          Print
-        </button>
-        <hr className="border-gray-100 dark:border-gray-700" />
-        <button
-          onClick={() => {
-            onDelete(worker.id);
-            setOpen(false);
-          }}
-          className="w-full text-left px-4 py-2.5 text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/40 transition-colors flex items-center gap-2"
-        >
-          <Trash2 size={13} />
-          Delete
-        </button>
-      </div>,
-      document.body,
-    )
-    : null;
-
-  return (
-    <>
-      <button
-        ref={btnRef}
-        onClick={openMenu}
-        className="p-1.5 rounded-lg text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors cursor-pointer"
-        aria-label="Actions"
-      >
-        <MoreHorizontal size={18} />
-      </button>
-      {dropdown}
-    </>
-  );
-}
-
-/* ─── Main component ────────────────────────────────────────── */
 function Workers() {
   const navigate = useNavigate();
 
@@ -321,7 +148,7 @@ function Workers() {
     URL.revokeObjectURL(url);
   };
 
-  //pagintion
+  // pagination
   useEffect(() => {
     setCurrentPage(1);
   }, [searchTerm, statusFilter]);
@@ -343,58 +170,6 @@ function Workers() {
   const activeBtn =
     "bg-black text-white border-black dark:bg-white dark:text-black dark:border-white";
 
-  /* print */
-  const handlePrint = (worker) => {
-    const name =
-      [worker.first_name, worker.last_name].filter(Boolean).join(" ") || "—";
-    const win = window.open("", "_blank", "width=700,height=600");
-    win.document.write(`
-      <!DOCTYPE html>
-      <html>
-      <head>
-        <title>Worker — ${name}</title>
-        <style>
-          * { box-sizing: border-box; margin: 0; padding: 0; }
-          body { font-family: 'Segoe UI', sans-serif; color: #1a1a2e; padding: 40px; }
-          .header { border-bottom: 3px solid #2563eb; padding-bottom: 16px; margin-bottom: 24px; display: flex; justify-content: space-between; align-items: flex-end; }
-          .header h1 { font-size: 22px; font-weight: 700; }
-          .header p  { font-size: 12px; color: #6b7280; margin-top: 4px; }
-          .badge { display: inline-block; padding: 3px 10px; border-radius: 999px; font-size: 11px; font-weight: 600;
-            background: #f3f4f6; color: #374151; }
-          table { width: 100%; border-collapse: collapse; margin-top: 8px; }
-          tr { border-bottom: 1px solid #e5e7eb; }
-          td { padding: 10px 8px; font-size: 14px; }
-          td:first-child { width: 160px; font-weight: 600; color: #6b7280; }
-          .footer { margin-top: 32px; font-size: 11px; color: #9ca3af; text-align: center; }
-          @media print { body { padding: 20px; } }
-        </style>
-      </head>
-      <body>
-        <div class="header">
-          <div>
-            <h1>Worker Profile</h1>
-            <p>Generated ${new Date().toLocaleString()}</p>
-          </div>
-          <span class="badge">${worker.verification_status_display || worker.verification_status || "—"}</span>
-        </div>
-        <table>
-          <tr><td>ID</td><td>#${worker.id}</td></tr>
-          <tr><td>Full Name</td><td>${name}</td></tr>
-          <tr><td>Email</td><td>${worker.email || "—"}</td></tr>
-          <tr><td>Phone</td><td>${worker.phone || "—"}</td></tr>
-          <tr><td>National ID</td><td>${worker.national_id || "—"}</td></tr>
-          <tr><td>Location</td><td>${worker.location || "—"}</td></tr>
-          <tr><td>Status</td><td>${worker.verification_status_display || worker.verification_status || "—"}</td></tr>
-        </table>
-        <div class="footer">Workers Management System</div>
-        <script>window.onload = () => { window.print(); window.onafterprint = () => window.close(); }</script>
-      </body>
-      </html>
-    `);
-    win.document.close();
-  };
-
-  // Lock the background scroll when the modal is open
   useEffect(() => {
     if (isViewModalOpen) {
       document.body.style.overflow = "hidden";
@@ -432,7 +207,6 @@ function Workers() {
     );
   }
 
-  /* ── RENDER ── */
   return (
     <div className="p-4 sm:p-6 lg:p-8 bg-gray-100 dark:bg-gray-950 min-h-screen transition-colors">
       {/* HEADER */}
@@ -500,7 +274,6 @@ function Workers() {
 
       {/* SEARCH + FILTER */}
       <div className="bg-white dark:bg-gray-900 p-3 sm:p-4 rounded-xl shadow border border-gray-200 dark:border-gray-800 mb-4 flex flex-col sm:flex-row gap-4 sm:items-end">
-        {/* SEARCH */}
         <div className="relative w-full sm:w-64">
           <Search
             className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-500"
@@ -515,7 +288,6 @@ function Workers() {
           />
         </div>
 
-        {/* FILTER */}
         <StatusFilter
           statusFilter={statusFilter}
           setStatusFilter={setStatusFilter}
@@ -600,7 +372,7 @@ function Workers() {
                   </td>
                 </tr>
               ) : (
-                filteredWorkers.map((w, index) => (
+                paginatedWorkers.map((w, index) => (
                   <tr
                     key={w.id}
                     onClick={() => openViewModal(w)}
@@ -651,13 +423,13 @@ function Workers() {
                       onClick={(e) => e.stopPropagation()}
                     >
                       <ActionMenu
-                        worker={w}
+                        item={w}
                         onView={openViewModal}
                         onEdit={(worker) =>
                           navigate(`/admin/edit/worker/${worker.id}`)
                         }
                         onDelete={handleDeleteWorker}
-                        onPrint={handlePrint}
+                        onPrint={handlePrintWorker}
                       />
                     </td>
                   </tr>
@@ -667,17 +439,15 @@ function Workers() {
           </table>
         </div>
 
-        {/* Row count footer */}
         {workers.length > 0 && (
           <div className="px-4 py-2.5 border-t border-gray-100 dark:border-gray-800 bg-gray-50 dark:bg-gray-800/50 text-xs text-gray-600 dark:text-gray-300">
-            Showing {paginatedWorkers.length} of {workers.length} clients
+            Showing {paginatedWorkers.length} of {workers.length} workers
           </div>
         )}
       </div>
 
       {/* PAGINATION */}
       <div className="flex flex-col sm:flex-row items-center justify-between gap-3 mt-4">
-        {/* Rows per page */}
         <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-300">
           <span>Rows:</span>
           <select
@@ -687,7 +457,7 @@ function Workers() {
               setCurrentPage(1);
             }}
             className="border border-gray-300 dark:border-gray-600 rounded px-2 py-1 
-                   bg-white dark:bg-gray-800 text-gray-800 dark:text-white"
+                 bg-white dark:bg-gray-800 text-gray-800 dark:text-white"
           >
             {[5, 10, 20, 50].map((size) => (
               <option key={size} value={size}>
@@ -697,10 +467,8 @@ function Workers() {
           </select>
         </div>
 
-        {/* Pagination (CENTER) */}
         <div className="flex justify-center flex-1">
           <div className="flex items-center gap-1">
-            {/* FIRST */}
             {currentPage > 1 && (
               <button
                 onClick={() => setCurrentPage(1)}
@@ -710,7 +478,6 @@ function Workers() {
               </button>
             )}
 
-            {/* PREV */}
             {currentPage > 1 && (
               <button
                 onClick={() => setCurrentPage((p) => p - 1)}
@@ -720,7 +487,6 @@ function Workers() {
               </button>
             )}
 
-            {/* PAGE NUMBERS */}
             {Array.from({ length: totalPages }, (_, i) => i + 1)
               .slice(
                 Math.max(0, currentPage - 3),
@@ -737,7 +503,6 @@ function Workers() {
                 </button>
               ))}
 
-            {/* NEXT */}
             {currentPage < totalPages && (
               <button
                 onClick={() => setCurrentPage((p) => p + 1)}
@@ -747,7 +512,6 @@ function Workers() {
               </button>
             )}
 
-            {/* LAST */}
             {currentPage < totalPages && (
               <button
                 onClick={() => setCurrentPage(totalPages)}
@@ -782,7 +546,6 @@ function Workers() {
               </button>
             </div>
 
-            {/* Tabs */}
             <div className="flex border-b border-gray-200 dark:border-gray-700 mb-4">
               <button
                 onClick={() => setActiveTab("personal")}
@@ -815,7 +578,6 @@ function Workers() {
               </button>
             </div>
 
-            {/* Data rows */}
             <div className="space-y-3 text-sm text-gray-800 dark:text-gray-200">
               {activeTab === "personal" && (
                 <>
@@ -899,7 +661,7 @@ function Workers() {
                 Edit
               </button>
               <button
-                onClick={() => handlePrint(selectedWorker)}
+                onClick={() => handlePrintWorker(selectedWorker)}
                 className="px-4 py-2 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-800 dark:text-gray-200 rounded-lg text-sm font-medium transition-colors flex items-center gap-2 cursor-pointer"
               >
                 <Printer size={13} />

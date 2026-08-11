@@ -1,34 +1,17 @@
 import {
-  Eye,
-  Edit,
-  Trash2,
-  Search,
-  Download,
-  Users,
-  Shield,
-  Briefcase,
-  UserCheck,
-  RefreshCw,
-  Printer,
-  X,
-  Ban,
-  UserLock,
-  MoreHorizontal,
-  Clock,
+  Search, Download, Users, Shield, Briefcase, UserCheck, RefreshCw, X, Ban,
+  UserLock, Clock,
 } from "lucide-react";
 import React, { useEffect, useState, useMemo, useRef, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
-import ReactDOM from "react-dom";
 import { useTranslation } from "react-i18next";
 
-import {
-  fetchUsers,
-  deleteUser,
-} from "../../../services/userServices";
-
+import { fetchUsers, deleteUser } from "../../../services/userServices";
 import { useAuth } from "../../../contexts/AuthContext";
-import EditUserModal from "./EditUserModal"; // Import extracted modal component
+import EditUserModal from "./EditUserModal";
+import ActionMenu from "../../../components/common/ActionMenu";
+import { handleUserPrint } from "../../../utils/userPrint";
 
 function AllUsers() {
   const { t } = useTranslation();
@@ -49,7 +32,6 @@ function AllUsers() {
   const [editForm, setEditForm] = useState(null);
 
   const [selectedRows, setSelectedRows] = useState([]);
-
   const [activeTab, setActiveTab] = useState("info");
 
   const [currentPage, setCurrentPage] = useState(1);
@@ -82,7 +64,7 @@ function AllUsers() {
     setFilteredUsers(data);
   }, [users, searchTerm, roleFilter, statusFilter]);
 
-  // Pagination
+  // Pagination resetting
   useEffect(() => {
     setCurrentPage(1);
   }, [searchTerm, roleFilter, statusFilter]);
@@ -90,9 +72,7 @@ function AllUsers() {
   const loadUsers = useCallback(async () => {
     try {
       setLoading(true);
-
       const data = await fetchUsers();
-
       setUsers(data);
       setFilteredUsers(data);
     } catch (err) {
@@ -135,11 +115,8 @@ function AllUsers() {
 
     try {
       await Promise.all(selectedRows.map((id) => deleteUser(id)));
-
       setUsers((prev) => prev.filter((u) => !selectedRows.includes(u.id)));
-
       setSelectedRows([]);
-
       toast.success(t("all_users.messages.selected_deleted"));
     } catch {
       toast.error(t("all_users.messages.delete_failed"));
@@ -148,13 +125,11 @@ function AllUsers() {
 
   const handleExport = () => {
     const data = users.filter((u) => selectedRows.includes(u.id));
-
     const blob = new Blob([JSON.stringify(data, null, 2)], {
       type: "application/json",
     });
 
     const url = URL.createObjectURL(blob);
-
     const a = document.createElement("a");
     a.href = url;
     a.download = "users-export.json";
@@ -199,7 +174,6 @@ function AllUsers() {
 
     try {
       await deleteUser(id);
-
       setUsers((prev) => prev.filter((u) => u.id !== id));
       closeModal();
       toast.success(t("all_users.messages.user_deleted"));
@@ -228,8 +202,7 @@ function AllUsers() {
       activeUsers: users.filter((u) => u.account_status === "active").length,
       pendingUsers: users.filter((u) => u.account_status === "pending").length,
       rejectedUsers: users.filter((u) => u.account_status === "rejected").length,
-      suspendedUsers: users.filter((u) => u.account_status === "suspended")
-        .length,
+      suspendedUsers: users.filter((u) => u.account_status === "suspended").length,
     };
   }, [users]);
 
@@ -293,7 +266,6 @@ function AllUsers() {
           <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">
             {t("all_users.title")}
           </h1>
-
           <p className="text-sm mt-0.5 text-gray-500 dark:text-gray-400">
             {t("all_users.subtitle")}
           </p>
@@ -348,7 +320,6 @@ function AllUsers() {
           icon={<Shield />}
           color="purple"
         />
-
         <StatCard
           title={t("all_users.stats.active")}
           value={stats.activeUsers}
@@ -382,7 +353,6 @@ function AllUsers() {
             className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-500"
             size={16}
           />
-
           <input
             className="w-full pl-9 pr-4 py-2 rounded-lg text-sm
                  border border-gray-200 dark:border-gray-600
@@ -473,7 +443,6 @@ function AllUsers() {
                     onChange={toggleAll}
                   />
                 </th>
-
                 <th className="px-4 py-3 text-left">{t("all_users.table.id")}</th>
                 <th className="px-4 py-3 text-left">{t("all_users.table.email")}</th>
                 <th className="px-4 py-3 text-left">{t("all_users.table.phone")}</th>
@@ -490,13 +459,13 @@ function AllUsers() {
                   key={user?.id}
                   onClick={() => openViewModal(user)}
                   className={`
-              cursor-pointer transition
-              hover:bg-gray-100 dark:hover:bg-gray-700
-              ${index % 2 === 0
+                    cursor-pointer transition
+                    hover:bg-gray-100 dark:hover:bg-gray-700
+                    ${index % 2 === 0
                       ? "bg-white dark:bg-gray-800"
                       : "bg-gray-50 dark:bg-gray-900/40"
                     }
-            `}
+                  `}
                 >
                   <td
                     className="px-4 py-4"
@@ -525,17 +494,16 @@ function AllUsers() {
                   <td className="px-4 py-3 capitalize text-gray-700 dark:text-gray-300">
                     {user.user_type === "client"
                       ? t("all_users.view_modal.labels.role_client")
-                      : user.user_type === "worker" ?
-                        t("all_users.view_modal.labels.role_worker")
-                        :
-                        t("all_users.view_modal.labels.admin")
+                      : user.user_type === "worker"
+                        ? t("all_users.view_modal.labels.role_worker")
+                        : t("all_users.view_modal.labels.admin")
                     }
                   </td>
 
                   <td className="px-4 py-3">
                     <span
                       className="px-2 py-1 rounded-full text-xs font-medium
-                bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200"
+                      bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200"
                     >
                       {statusLabels[user.account_status] ||
                         t("all_users.status_labels.unknown")}
@@ -557,11 +525,11 @@ function AllUsers() {
                     onClick={(e) => e.stopPropagation()}
                   >
                     <ActionMenu
-                      user={user}
+                      item={user}
                       onView={openViewModal}
                       onEdit={(user) => handleEditUser(user)}
                       onDelete={handleDeleteUser}
-                      onPrint={(user) => handlePrint(user, t)}
+                      onPrint={(user) => handleUserPrint(user, t)}
                     />
                   </td>
                 </tr>
@@ -630,8 +598,7 @@ function AllUsers() {
                 <button
                   key={page}
                   onClick={() => setCurrentPage(page)}
-                  className={`${baseBtn} ${currentPage === page ? activeBtn : themeBtn
-                    }`}
+                  className={`${baseBtn} ${currentPage === page ? activeBtn : themeBtn}`}
                 >
                   {page}
                 </button>
@@ -831,10 +798,8 @@ function AllUsers() {
 
                       <p className="mt-2 font-semibold text-blue-900 dark:text-blue-200">
                         {selectedUser.client.client_type === "company"
-                          ? `${t("all_users.view_modal.labels.company")}: ${selectedUser.client.company_name || "N/A"
-                          }`
-                          : `${t("all_users.view_modal.labels.name")}: ${full_name || "N/A"
-                          }`
+                          ? `${t("all_users.view_modal.labels.company")}: ${selectedUser.client.company_name || "N/A"}`
+                          : `${t("all_users.view_modal.labels.name")}: ${full_name || "N/A"}`
                         }
                       </p>
                     </div>
@@ -894,7 +859,7 @@ function AllUsers() {
                 </button>
 
                 <button
-                  onClick={() => handlePrint(selectedUser, t)}
+                  onClick={() => handleUserPrint(selectedUser, t)}
                   className="flex-1 px-4 py-2 rounded-lg bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-white font-medium"
                 >
                   {t("all_users.view_modal.buttons.print")}
@@ -947,189 +912,6 @@ export function StatCard({ title, value, icon, color = "amber" }) {
     </div>
   );
 }
-
-export default AllUsers;
-
-/* ─── Action-menu ─────────── */
-function ActionMenu({ user, onView, onEdit, onDelete, onPrint }) {
-  const { t } = useTranslation();
-  const [open, setOpen] = useState(false);
-  const btnRef = useRef(null);
-  const menuRef = useRef(null);
-  const [pos, setPos] = useState({ top: 0, left: 0 });
-
-  const openMenu = (e) => {
-    e.stopPropagation();
-
-    if (open) {
-      setOpen(false);
-      return;
-    }
-
-    const rect = btnRef.current.getBoundingClientRect();
-    const menuWidth = 176;
-    const menuHeight = 173;
-    const spaceBelow = window.innerHeight - rect.bottom;
-
-    const top =
-      spaceBelow >= menuHeight
-        ? rect.bottom + 4
-        : Math.max(8, rect.top - menuHeight - 4);
-
-    const left = Math.min(
-      rect.right - menuWidth,
-      window.innerWidth - menuWidth - 8,
-    );
-
-    setPos({
-      top,
-      left: Math.max(8, left),
-    });
-
-    setOpen(true);
-  };
-
-  useEffect(() => {
-    if (!open) return;
-    const handler = (e) => {
-      if (
-        !menuRef.current?.contains(e.target) &&
-        !btnRef.current?.contains(e.target)
-      ) {
-        setOpen(false);
-      }
-    };
-    document.addEventListener("mousedown", handler);
-    return () => document.removeEventListener("mousedown", handler);
-  }, [open]);
-
-  useEffect(() => {
-    if (!open) return;
-    const handler = () => setOpen(false);
-    window.addEventListener("scroll", handler, true);
-    return () => window.removeEventListener("scroll", handler, true);
-  }, [open]);
-
-  const dropdown = open
-    ? ReactDOM.createPortal(
-      <div
-        ref={menuRef}
-        style={{
-          position: "fixed",
-          top: pos.top,
-          left: pos.left,
-          zIndex: 9999,
-        }}
-        className="w-44 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 shadow-2xl overflow-hidden text-gray-700 dark:text-gray-200"
-        onClick={(e) => e.stopPropagation()}
-      >
-        <button
-          onClick={() => {
-            onView(user);
-            setOpen(false);
-          }}
-          className="w-full text-left px-4 py-2.5 text-sm hover:bg-blue-50 dark:hover:bg-blue-900/40 hover:text-blue-700 dark:hover:text-blue-400 transition-colors flex items-center gap-2"
-        >
-          <Eye size={13} />
-          {t("all_users.actions_menu.view")}
-        </button>
-        <button
-          onClick={() => {
-            onEdit(user);
-            setOpen(false);
-          }}
-          className="w-full text-left px-4 py-2.5 text-sm hover:bg-green-50 dark:hover:bg-green-900/40 hover:text-green-700 dark:hover:text-green-400 transition-colors flex items-center gap-2"
-        >
-          <Edit size={13} />
-          {t("all_users.actions_menu.edit")}
-        </button>
-        <button
-          onClick={() => {
-            onPrint(user);
-            setOpen(false);
-          }}
-          className="w-full text-left px-4 py-2.5 text-sm hover:bg-purple-50 dark:hover:bg-purple-900/40 hover:text-purple-700 dark:hover:text-purple-400 transition-colors flex items-center gap-2"
-        >
-          <Printer size={13} />
-          {t("all_users.actions_menu.print")}
-        </button>
-        <hr className="border-gray-100 dark:border-gray-700" />
-        <button
-          onClick={() => {
-            onDelete(user.id);
-            setOpen(false);
-          }}
-          className="w-full text-left px-4 py-2.5 text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/40 transition-colors flex items-center gap-2"
-        >
-          <Trash2 size={13} />
-          {t("all_users.actions_menu.delete")}
-        </button>
-      </div>,
-      document.body,
-    )
-    : null;
-
-  return (
-    <>
-      <button
-        ref={btnRef}
-        onClick={openMenu}
-        className="p-1.5 rounded-lg text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors cursor-pointer"
-        aria-label={t("all_users.table.actions")}
-      >
-        <MoreHorizontal size={18} />
-      </button>
-      {dropdown}
-    </>
-  );
-}
-
-const handlePrint = (user, t) => {
-  const name = user.first_name || "—";
-  const win = window.open("", "_blank", "width=700,height=600");
-  win.document.write(`
-      <!DOCTYPE html>
-      <html>
-      <head>
-        <title>${t("all_users.print.document_title")} — ${name}</title>
-        <style>
-          * { box-sizing: border-box; margin: 0; padding: 0; }
-          body { font-family: 'Segoe UI', sans-serif; color: #1a1a2e; padding: 40px; }
-          .header { border-bottom: 3px solid #2563eb; padding-bottom: 16px; margin-bottom: 24px; display: flex; justify-content: space-between; align-items: flex-end; }
-          .header h1 { font-size: 22px; font-weight: 700; }
-          .header p  { font-size: 12px; color: #6b7280; margin-top: 4px; }
-          .badge { display: inline-block; padding: 3px 10px; border-radius: 999px; font-size: 11px; font-weight: 600; background: #f3f4f6; color: #374151; }
-          table { width: 100%; border-collapse: collapse; margin-top: 8px; }
-          tr { border-bottom: 1px solid #e5e7eb; }
-          td { padding: 10px 8px; font-size: 14px; }
-          td:first-child { width: 160px; font-weight: 600; color: #6b7280; }
-          .footer { margin-top: 32px; font-size: 11px; color: #9ca3af; text-align: center; }
-          @media print { body { padding: 20px; } }
-        </style>
-      </head>
-      <body>
-        <div class="header">
-          <div>
-            <h1>${t("all_users.print.user_profile")}</h1>
-            <p>${t("all_users.print.generated")} ${new Date().toLocaleString()}</p>
-          </div>
-          <span class="badge">${user.account_status || "—"}</span>
-        </div>
-        <table>
-          <tr><td>${t("all_users.table.id")}</td><td>#${user.id}</td></tr>
-          <tr><td>${t("all_users.print.company_name")}</td><td>${name}</td></tr>
-          <tr><td>${t("all_users.table.email")}</td><td>${user.email || "—"}</td></tr>
-          <tr><td>${t("all_users.table.phone")}</td><td>${user.phone || "—"}</td></tr>
-          <tr><td>${t("all_users.table.role")}</td><td>${user.user_type || "—"}</td></tr>
-          <tr><td>${t("all_users.table.status")}</td><td>${user.account_status || "—"}</td></tr>
-        </table>
-        <div class="footer">${t("all_users.print.footer")}</div>
-        <script>window.onload = () => { window.print(); window.onafterprint = () => window.close(); }</script>
-      </body>
-      </html>
-    `);
-  win.document.close();
-};
 
 /* Role Filter */
 export function RoleFilter({ roleFilter, setRoleFilter }) {
@@ -1299,3 +1081,5 @@ export function StatusFilter({ statusFilter, setStatusFilter }) {
     </div>
   );
 }
+
+export default AllUsers;

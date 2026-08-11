@@ -8,6 +8,7 @@ import {
   FaLinkedinIn,
   FaXTwitter,
   FaApple,
+  FaTelegram
 } from "react-icons/fa6";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import { AiFillAndroid } from "react-icons/ai";
@@ -244,20 +245,23 @@ function Footer() {
                 {t("footer.follow_us")}
               </span>
 
-              <a href="https://facebook.com" className={footerIconClass}>
+              <a href="https://facebook.com/siralink" target="_blank" rel="noopener noreferrer" className={footerIconClass}>
                 <FaFacebookF size={18} />
               </a>
 
-              <a href="https://instagram.com" className={footerIconClass}>
+              <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className={footerIconClass}>
                 <FaInstagram size={18} />
               </a>
 
-              <a href="https://linkedin.com" className={footerIconClass}>
+              <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" className={footerIconClass}>
                 <FaLinkedinIn size={18} />
               </a>
 
-              <a href="https://x.com" className={footerIconClass}>
+              <a href="https://x.com" target="_blank" rel="noopener noreferrer" className={footerIconClass}>
                 <FaXTwitter size={18} />
+              </a>
+              <a href="https://t.me/siralink_ethiopia" target="_blank" rel="noopener noreferrer" className={footerIconClass}>
+                <FaTelegram size={18} />
               </a>
             </div>
 
