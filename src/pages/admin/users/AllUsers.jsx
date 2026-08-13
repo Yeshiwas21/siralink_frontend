@@ -214,6 +214,7 @@ function AllUsers() {
     suspended: t("all_users.status_labels.suspended"),
   };
 
+  // Manage body scroll locking
   useEffect(() => {
     if (isViewModalOpen || isEditModalOpen) {
       document.body.style.overflow = "hidden";

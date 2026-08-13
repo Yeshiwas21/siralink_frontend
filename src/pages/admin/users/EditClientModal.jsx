@@ -14,6 +14,7 @@ export default function EditClientModal({
 }) {
     const { t } = useTranslation();
 
+    // Manage body scroll locking
     useEffect(() => {
         if (isEditOpen) {
             document.body.style.overflow = "hidden";
