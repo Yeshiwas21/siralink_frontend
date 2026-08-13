@@ -323,7 +323,7 @@ function CreateUser() {
           <button
             type="submit"
             disabled={loading}
-            className={`w-full py-3 rounded-xl font-semibold transition-all shadow-sm ${loading
+            className={`w-full py-3 rounded-xl font-semibold transition-all shadow-sm cursor-pointer ${loading
               ? "bg-gray-400 cursor-not-allowed"
               : "bg-gray-900 dark:bg-white dark:text-gray-900 text-white hover:opacity-90"
               }`}

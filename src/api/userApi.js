@@ -50,6 +50,11 @@ export const clientSignupApi = (data) => {
   return api.post("/users/signup/client/", data);
 };
 
+/* CLIENT UPDATE */
+export const clientUpdateApi = (id, data) => {
+  return api.put(`/users/client/${id}/update/`, data);
+};
+
 
 /* WORKER SIGNUP */
 export const workerSignupApi = (data) => {

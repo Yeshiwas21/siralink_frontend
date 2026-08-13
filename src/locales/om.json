@@ -438,12 +438,6 @@
       "rejected": "Didameera",
       "suspended": "Dhorkameera"
     },
-    "actions_menu": {
-      "view": "Ilaali",
-      "edit": "Gulaali",
-      "print": "Maxxansi",
-      "delete": "Haqii"
-    },
     "view_modal": {
       "title": "Odeeffannoo Fayyadamaa",
       "tabs": {
@@ -486,14 +480,21 @@
     "edit_modal": {
       "title": "Fayyadamaa Gulaali",
       "subtitle": "Odeeffannoo fayyadamaa gadii fooyyessi",
-      "first_name": "Maqaa",
+      "first_name": "Maqaa Jalqabaa",
       "last_name": "Maqaa Abbaa",
       "email": "Imeelii",
+      "min2_chars": "Xiqqaatu arfiilee 2 barbaachisa",
+      "text_letter_start": "Arfiidhaan jalqabuu qaba",
+      "letters_only": "Arfiilee qofatu hayyamama",
+      "email_required": "Imeeliin barbaachisaadha",
+      "invalid_email": "Imeelii sirrii galchu",
       "phone": "Lakk. Bilbilaa",
+      "phone_required": "Lakkoofsi bilbilaa barbaachisaadha",
+      "invalid_phone": "+2519XXXXXXXX fiiladhu yookiin lakkoofsa biyya keessaa dijiitii 10 fayyadami",
       "user_type": "Gosa Fayyadamaa",
       "status": "Haala",
       "cancel": "Dhiisi",
-      "save": "Jijjiama Ol-kaa'i"
+      "save": "Jijjiirama Galmeessi"
     },
     "messages": {
       "loading": "Fayyadamtoota fe'aa jira...",
@@ -512,6 +513,294 @@
       "generated": "Kan Qophaa'e",
       "footer": "Sirna Bulchiinsa Fayyadamtootaa",
       "company_name": "Maqaa Guutuu / Dhaabbata"
+    }
+  },
+  "createClient": {
+    "title": "Kaffaltii/Maamila Uumi",
+    "subtitle": "Fayyadamaa jiru irraa proobaayilii maamilaa uumi",
+    "fields": {
+      "selectUserLabel": "Fayyadamaa Maamila Hin Walqabatin Filadhu",
+      "selectUserPlaceholder": "-- Fayyadamaa Filadhu --",
+      "idLabel": "Eenyummeessaa",
+      "email": "Imeelii",
+      "phone": "Lakkoofsa Bilbilaa",
+      "clientType": "Gosa Maamilaa",
+      "companyName": "Maqaa Dhaabbataa",
+      "nationalId": "Waraqaa Eenyummeessaa Biyyooolessaa",
+      "location": "Teessoo",
+      "profileImage": "Suuraa Piroofaayilii"
+    },
+    "placeholders": {
+      "email": "Imeelii",
+      "phone": "Lakkoofsa Bilbilaa",
+      "companyName": "Maqaa Dhaabbataa",
+      "nationalId": "Waraqaa Eenyummeessaa",
+      "location": "Teessoo"
+    },
+    "options": {
+      "individual": "Dhuunfaa",
+      "company": "Dhaabbata"
+    },
+    "hints": {
+      "maxFileSize": "Hammi faayilii inni guddaan: 2MB"
+    },
+    "buttons": {
+      "creating": "Uumaa jira...",
+      "create": "Maamila Uumi",
+      "backToClients": "Gara Maamiltootaatti Deebi'i"
+    },
+    "validation": {
+      "userRequired": "Maaloo fayyadamaa filadhu",
+      "min2Chars": "Yoo xiqqaate qubee 2 barbaachisa",
+      "mustStartWithLetter": "Qubeedhaan eegaluu qaba",
+      "lettersAndSpacesOnly": "Qubeewwanii fi iddoo duwwaa qofa qabaachuu qaba",
+      "nationalIdRequired": "Waraqaan eenyummeessaa barbaachisaadha",
+      "finExact12Digits": "Lakkoofsa FIN dijiitii 12 sirriitti galchi",
+      "companyNameRequired": "Maqaan dhaabbataa barbaachisaadha",
+      "mustBeImage": "Faayiliin suuraa ta'uu qaba",
+      "maxSize2MB": "Hammi inni guddaan 2MB dha"
+    },
+    "messages": {
+      "success": "Maamilli haaraa uumameera",
+      "error": "Maamila uumuu hin danda'amne"
+    }
+  },
+  "createWorker": {
+    "title": "Hojjetaa Uumi",
+    "subtitle": "Fayyadamaa hojjetaa jiru irraa porofayilii hojjetaa uumi",
+    "fields": {
+      "selectUserLabel": "Fayyadamaa Hojjetaa Hinhidaamne Filadhu",
+      "selectUserPlaceholder": "-- Fayyadamaa Filadhu --",
+      "idLabel": "Eenyummeessaa (ID)",
+      "email": "Imeelii",
+      "phone": "Lakk. Bilbilaa",
+      "firstName": "Maqaa",
+      "lastName": "Maqaa Abbaa",
+      "nationalId": "Waraqaa Eenyummaa Biyyaalessaa",
+      "location": "Bakka / Teessoo",
+      "skills": "Dandeettiiwwan / Ogummaa",
+      "bio": "Waa'ee Keeti/Seenaa Gabaabaa",
+      "experienceYears": "Muuxannoo Hojii (Waggaadhaan)",
+      "portfolioLink": "Liinkii Porotofooliyoo / Weebsaayitii",
+      "profileImage": "Fakkii Porofayilii"
+    },
+    "placeholders": {
+      "email": "Imeelii",
+      "phone": "Lakk. Bilbilaa",
+      "firstName": "Maqaa",
+      "lastName": "Maqaa Abbaa",
+      "nationalId": "Waraqaa Eenyummaa Biyyaalessaa",
+      "location": "Bakka / Teessoo",
+      "skills": "fk. Plumber, Electrician",
+      "bio": "Waa'ee muuxannoo hojii keeti gabaabsii barreessi...",
+      "experienceYears": "fk. 3",
+      "portfolioLink": "https://example.com"
+    },
+    "hints": {
+      "maxFileSize": "Hanga faayilii olaanaa: 2MB"
+    },
+    "buttons": {
+      "create": "Hojjetaa Uumi",
+      "creating": "Uumaa jira...",
+      "backToWorkers": "Gara Tarree Hojjettootaatti Deebi'i"
+    },
+    "messages": {
+      "success": "Hojjetaan haaraa uumameera"
+    },
+    "validation": {
+      "userRequired": "Moochoo fayyadamaa filadhu",
+      "finExact12Digits": "Lakkoofsa FIN dijiitii 12 sirriitti galchi",
+      "min2Chars": "Yoo xiqqaate qubee 2 barbaachisa",
+      "mustStartWithLetter": "Qubeedhaan jalqabuu qaba",
+      "lettersAndSpacesOnly": "Qubeewwan fi bakka duoddaa (space) qofa qabaachuu qaba",
+      "skillsMin2": "Dandeettiin yoo xiqqaate qubee 2 ta'uu qaba",
+      "bioMin10": "Ibsi gabaabaan yoo xiqqaate qubee 10 ta'uu qaba",
+      "validExperience": "Moochoo lakkoofsa muuxannoo sirrii galchaa",
+      "validUrl": "Moochoo teessoo Weebsaayitii (URL) sirrii galchaa",
+      "mustBeImage": "Faayiliin suuraa ta'uu qaba",
+      "maxSize2MB": "Hangiti inni olaanaan 2MB dha"
+    }
+  },
+  "clients": {
+    "title": "Bulchiinsa Maamiltootaa",
+    "subtitle": "Maamiltoota galmeeffaman hunda bulchi",
+    "refresh": "Haaromsi",
+    "add_client": "+ Maamila Dabali",
+    "search_placeholder": "Barbaadi...",
+    "export": "Eergii (Export)",
+    "delete_selected": "Fooramtoota Haqi",
+    "id": "ID",
+    "name": "Maqaa",
+    "email": "Imeelii",
+    "phone": "Bilbila",
+    "location": "Bakka/Teessoo",
+    "status": "Haala",
+    "actions": "Gochaalee",
+    "rows": "Tarroota:",
+    "first": "« Jalqaba",
+    "prev": "‹ Kan Duraa",
+    "next": "Kan Itti Aanu ›",
+    "last": "Dhuma »",
+    "edit": "Gulaali",
+    "print": "Maxxansi",
+    "loading": "Maamiltoonni fe'amaa jiru…",
+    "error_fetch": "Maamiltoota fe'uun hin danda'amne",
+    "no_clients_found": "Maamilli argame hin jiru",
+    "client_type": "Gosa Maamilaa",
+    "type_individual": "Nama Dhunfaa",
+    "type_company": "Dhaabbata/Kampaanii",
+    "selected_count": "{{count}} filatamaniiru",
+    "selected_count_one": "Maamilli {{count}} filatameera",
+    "selected_count_other": "Maamiltoonni {{count}} filatamaniiru",
+    "showing_count": "Maamiltoota {{total}} keessaa {{count}} agarsiisaa jira",
+    "confirm_delete": "Maamila kana haquu ni barbaadduu?",
+    "toast_deleted": "Maamilli haqameera",
+    "confirm_bulk_delete": "Maamiltoota {{count}} haquu ni barbaadduu?",
+    "toast_bulk_deleted": "Maamiltoonni filataman haqamaniiru",
+    "messages": {
+      "client_updated": "Odeeffannoon maamilaa milkaa'inaan haaromeera"
+    },
+    "types": {
+      "individual": "Nama Dhunfaa",
+      "company": "Dhaabbata/Kampaanii"
+    },
+    "status_options": {
+      "pending": "Madaallii Irra Jalatti",
+      "verified": "Mirkanaa'aa",
+      "unverified": "Kan Hin Mirkanaa'in",
+      "rejected": "Kan Kuffifame"
+    },
+    "stats": {
+      "total": "Ida'ama",
+      "under_review": "Madaallii Irra",
+      "verified": "Mirkanaa'an",
+      "unverified": "Kan Hin Mirkanaa'in",
+      "rejected": "Kuffifaman"
+    },
+    "modal": {
+      "title": "Tarseessoo Maamilaa",
+      "tabs": {
+        "personal": "Kallattii Dhunfaa",
+        "contact": "Qunnamtii",
+        "others": "Kan Biroo",
+        "company": "Dhaabbata"
+      }
+    },
+    "edit_modal": {
+      "title": "Odeeffannoo Maamilaa Gulaali",
+      "subtitle": "Haalaa fi qindaa'ina maamilaa haaromsi.",
+      "min2_chars": "Yoo xiqqaate qubee 2 barbaachisa",
+      "national_id_required": "Waraqaan Womaatummaa/Eenyummaa ni barbaachisa",
+      "location_required": "Teessoon/Bakkon ni barbaachisa",
+      "status_required": "Haalli mirkaneessaa ni barbaachisa",
+      "cancel": "Dhiisi",
+      "save": "Jijjiirama Galmeessi"
+    },
+    "placeholders": {
+      "company_name": "Maqaa dhaabbataa galchi",
+      "national_id": "Lakk. waraqaa eenyummaa galchi",
+      "location": "Bakka/Teessoo galchi"
+    },
+    "fields": {
+      "id": "ID",
+      "first_name": "Maqaa",
+      "last_name": "Maqaa Abbaa",
+      "company_name": "Maqaa Dhaabbataa",
+      "contact_first_name": "Maqaa Bakka Bu'aa",
+      "contact_last_name": "Maqaa Abbaa Bakka Bu'aa",
+      "email": "Imeelii",
+      "phone": "Lakk. Bilbilaa",
+      "location": "Bakka/Teessoo",
+      "status": "Haala Mirkaneessaa",
+      "national_id": "Waraqaa Eenyummaa",
+      "client_type": "Gosa Maamilaa"
+    }
+  },
+  "actions_menu": {
+      "view": "Ilaali",
+      "edit": "Gulaali",
+      "print": "Maxxansi",
+      "delete": "Haqii"
+  },
+  "verification_status": {
+    "all": "Hunda",
+    "unverified": "Hin Mirkanaa'e",
+    "pending": "Madaallii Irra",
+    "verified": "Mirkanaa'eera",
+    "rejected": "Gatamaa"
+  },
+  "workers": {
+    "loading": "Hojjettoonni fe'amaa jiru…",
+    "searchPlaceholder": "Barbaadi...",
+    "noWorkersFound": "Hojjetaan argame hin jiru",
+    "selectedCount_one": "Hojjetaa {{count}} filatameera",
+    "selectedCount_other": "Hojjettoota {{count}} filatamaniiru",
+    "showingCount": "Hojjettoota {{total}} keessaa {{shown}} agarsiisaa jira",
+    "header": {
+      "title": "Bulchiinsa Hojjettootaa",
+      "subtitle": "Hojjettoota galmeeffaman hunda bulchi"
+    },
+    "buttons": {
+      "refresh": "Haaromsi",
+      "addWorker": "+ Hojjetaa Dabali",
+      "export": "Eeruu (Export)",
+      "deleteSelected": "Warra Filataman Haqi"
+    },
+    "stats": {
+      "total": "Ida'ama",
+      "underReview": "Gamaaggama Irra",
+      "verified": "Mirkanaa'e",
+      "unverified": "Mirkanaa'uu Kan Hin Standard",
+      "rejected": "Kakuun Alaa / Kuffifame"
+    },
+    "table": {
+      "id": "Lakk.(ID)",
+      "name": "Maqaa",
+      "email": "Imeelii",
+      "phone": "Lakkoofsa Bilbilaa",
+      "location": "Bakka",
+      "status": "Haala",
+      "actions": "Tarkaanfiiwwan"
+    },
+    "pagination": {
+      "rows": "Tarreewwan:",
+      "first": "« Jalqaba",
+      "prev": "‹ Kan Duraa",
+      "next": "Kan Aana ›",
+      "last": "Dhuma »"
+    },
+    "modal": {
+      "title": "Odeeffannoo Hojjetaa",
+      "tabs": {
+        "personal": "Dhuunfaa",
+        "contact": "Quunnamtii",
+        "others": "Kan Biraa"
+      },
+      "fields": {
+        "firstName": "Maqaa Jalqabaa",
+        "lastName": "Maqaa Abbaa",
+        "email": "Imeelii",
+        "phone": "Lakkoofsa Bilbilaa",
+        "id": "Eenyummeessaa (ID)",
+        "location": "Teessoo / Bakka",
+        "nationalId": "Waraqaa Eenyummeessaa Biyyooleessaa",
+        "status": "Haala"
+      },
+      "buttons": {
+        "edit": "Gulaali",
+        "print": "Maxxansi"
+      }
+    },
+    "confirmations": {
+      "deleteSingle": "Hojjetaa kana haquu ni barbaadduu?",
+      "deleteMultiple": "Hojjettoota {{count}} haquu ni barbaadduu?"
+    },
+    "toasts": {
+      "deleted": "Hojjetaan haqameera",
+      "deletedSelected": "Hojjettoonni filataman haqamaniiru"
+    },
+    "errors": {
+      "failedToLoad": "Hojjettoota fe'uun hin danda'amne"
     }
   }
 }

@@ -1,42 +1,20 @@
 import {
-  Eye,
-  Edit,
-  Trash2,
-  Search,
-  Filter,
-  Download,
-  Users,
-  Mail,
-  Phone,
-  Calendar,
-  Shield,
-  Briefcase,
-  UserCheck,
-  UserX,
-  RefreshCw,
-  CircleCheck,
-  MoreHorizontal,
-  Printer,
-  X,
-  ShieldAlert,
-  Ban,
-  UserLock,
-  UserRoundCheck,
-  Clock,
+  Search, Download, Users, Shield, Briefcase, UserCheck, RefreshCw, Ban,
+  UserLock, Clock,
 } from "lucide-react";
-import React, { useEffect, useState, useMemo, useRef, useCallback } from "react";
+import React, { useEffect, useState, useMemo, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
-import ReactDOM from "react-dom";
 import { useTranslation } from "react-i18next";
 
-import {
-  fetchUsers,
-  deleteUser,
-  updateUser,
-} from "../../../services/userServices";
-
-import { useAuth } from "../../../contexts/AuthContext";
+import { fetchUsers, deleteUser } from "../../../services/userServices";
+import EditUserModal from "./EditUserModal";
+import UserViewModal from "./UserViewModal";
+import AllUsersStatusFilter from "./AllUsersStatusFilter"
+import AllUSersRoleFilter from "./AllUSersRoleFilter";
+import StatCard from "../../../components/common/StatCard";
+import ActionMenu from "../../../components/common/ActionMenu";
+import { handleUserPrint } from "../../../utils/userPrint";
 
 function AllUsers() {
   const { t } = useTranslation();
@@ -58,12 +36,9 @@ function AllUsers() {
 
   const [selectedRows, setSelectedRows] = useState([]);
 
-  const [activeTab, setActiveTab] = useState("info");
-
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [errors, setErrors] = useState({});
-  const { full_name } = useAuth();
 
   const navigate = useNavigate();
 
@@ -90,7 +65,7 @@ function AllUsers() {
     setFilteredUsers(data);
   }, [users, searchTerm, roleFilter, statusFilter]);
 
-  //pagination
+  // Pagination resetting
   useEffect(() => {
     setCurrentPage(1);
   }, [searchTerm, roleFilter, statusFilter]);
@@ -98,9 +73,7 @@ function AllUsers() {
   const loadUsers = useCallback(async () => {
     try {
       setLoading(true);
-
       const data = await fetchUsers();
-
       setUsers(data);
       setFilteredUsers(data);
     } catch (err) {
@@ -143,11 +116,8 @@ function AllUsers() {
 
     try {
       await Promise.all(selectedRows.map((id) => deleteUser(id)));
-
       setUsers((prev) => prev.filter((u) => !selectedRows.includes(u.id)));
-
       setSelectedRows([]);
-
       toast.success(t("all_users.messages.selected_deleted"));
     } catch {
       toast.error(t("all_users.messages.delete_failed"));
@@ -156,13 +126,11 @@ function AllUsers() {
 
   const handleExport = () => {
     const data = users.filter((u) => selectedRows.includes(u.id));
-
     const blob = new Blob([JSON.stringify(data, null, 2)], {
       type: "application/json",
     });
 
     const url = URL.createObjectURL(blob);
-
     const a = document.createElement("a");
     a.href = url;
     a.download = "users-export.json";
@@ -187,57 +155,6 @@ function AllUsers() {
     setIsViewModalOpen(false);
   };
 
-  const validate = () => {
-    let newErrors = {};
-
-    if (!editForm.first_name?.trim()) {
-      newErrors.first_name = t("all_users.edit_modal.first_name");
-    }
-
-    if (!editForm.last_name?.trim()) {
-      newErrors.last_name = t("all_users.edit_modal.last_name");
-    }
-
-    if (!editForm.email || !/^\S+@\S+\.\S+$/.test(editForm.email)) {
-      newErrors.email = t("all_users.edit_modal.email");
-    }
-
-    const phone = editForm.phone?.trim();
-    if (!/^\+2519\d{8}$/.test(phone) && !/^\d{10}$/.test(phone)) {
-      newErrors.phone = t("all_users.edit_modal.phone");
-    }
-
-    if (!editForm.user_type) {
-      newErrors.user_type = t("all_users.edit_modal.user_type");
-    }
-
-    return newErrors;
-  };
-
-  const parseErrors = (errData) => {
-    const newErrors = {};
-
-    if (!errData || typeof errData !== "object") {
-      return { general: t("all_users.messages.update_failed") };
-    }
-
-    if (errData.detail) {
-      newErrors.general = errData.detail;
-      return newErrors;
-    }
-
-    Object.entries(errData).forEach(([key, value]) => {
-      if (key === "non_field_errors") {
-        newErrors.general = Array.isArray(value) ? value.join(", ") : value;
-        return;
-      }
-
-      newErrors[key] = Array.isArray(value) ? value.join(", ") : value;
-    });
-
-    return newErrors;
-  };
-
   // ================= ACTIONS =================
   const handleEditUser = (user) => {
     setEditForm({
@@ -249,6 +166,7 @@ function AllUsers() {
       user_type: user.user_type || "",
       account_status: user.account_status,
     });
+    setErrors({});
     setIsEditModalOpen(true);
   };
 
@@ -257,7 +175,6 @@ function AllUsers() {
 
     try {
       await deleteUser(id);
-
       setUsers((prev) => prev.filter((u) => u.id !== id));
       closeModal();
       toast.success(t("all_users.messages.user_deleted"));
@@ -268,34 +185,13 @@ function AllUsers() {
     }
   };
 
-  const handleEditChange = (e) => {
-    const { name, value } = e.target;
-
-    setEditForm((prev) => ({ ...prev, [name]: value }));
-    setErrors({ ...errors, [e.target.name]: "" });
-  };
-
-  const handleUpdateUser = async () => {
-    const validationErrors = validate();
-    setErrors(validationErrors);
-
-    if (Object.keys(validationErrors).length > 0) return;
-
-    try {
-      await updateUser(editForm.id, editForm);
-
-      setUsers((prev) =>
-        prev.map((u) => (u.id === editForm.id ? { ...u, ...editForm } : u)),
-      );
-      setIsEditModalOpen(false);
-      setIsViewModalOpen(false);
-      toast.success(t("all_users.messages.user_updated"));
-    } catch (err) {
-      const backendErrors = parseErrors(err?.response?.data);
-      setErrors(backendErrors);
-
-      toast.error(t("all_users.messages.update_failed"));
-    }
+  const handleUpdateSuccess = (updatedData) => {
+    setUsers((prev) =>
+      prev.map((u) => (u.id === updatedData.id ? { ...u, ...updatedData } : u)),
+    );
+    setIsEditModalOpen(false);
+    setIsViewModalOpen(false);
+    toast.success(t("all_users.messages.user_updated"));
   };
 
   const stats = useMemo(() => {
@@ -307,8 +203,7 @@ function AllUsers() {
       activeUsers: users.filter((u) => u.account_status === "active").length,
       pendingUsers: users.filter((u) => u.account_status === "pending").length,
       rejectedUsers: users.filter((u) => u.account_status === "rejected").length,
-      suspendedUsers: users.filter((u) => u.account_status === "suspended")
-        .length,
+      suspendedUsers: users.filter((u) => u.account_status === "suspended").length,
     };
   }, [users]);
 
@@ -333,9 +228,7 @@ function AllUsers() {
 
   const baseBtn = "px-3 py-1 rounded-full border cursor-pointer transition";
 
-  const themeBtn =
-    "border-white dark:border-black " +
-    "text-black dark:text-white " +
+  const themeBtn = "border-white dark:border-black text-black dark:text-white " +
     "hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black";
 
   const activeBtn =
@@ -372,7 +265,6 @@ function AllUsers() {
           <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">
             {t("all_users.title")}
           </h1>
-
           <p className="text-sm mt-0.5 text-gray-500 dark:text-gray-400">
             {t("all_users.subtitle")}
           </p>
@@ -383,8 +275,7 @@ function AllUsers() {
           <button
             onClick={loadUsers}
             className="px-3 py-2 rounded-lg flex items-center gap-1.5 text-sm font-medium transition-colors
-                 bg-yellow-300 hover:bg-yellow-400
-                 dark:bg-yellow-500 dark:hover:bg-yellow-400 dark:text-gray-900"
+                 bg-yellow-300 hover:bg-yellow-400 dark:bg-yellow-500 dark:hover:bg-yellow-400 dark:text-gray-900 cursor-pointer"
           >
             <RefreshCw size={14} />
             <span className="hidden xs:inline">{t("all_users.refresh")}</span>
@@ -392,9 +283,8 @@ function AllUsers() {
 
           <button
             onClick={() => navigate("/admin/create/user")}
-            className="px-3 py-2 rounded-lg text-sm font-medium transition-colors
-                 bg-blue-600 hover:bg-blue-700 text-white
-                 dark:bg-blue-500 dark:hover:bg-blue-400 dark:text-white"
+            className="px-3 py-2 rounded-lg text-sm font-medium transition-colors bg-blue-600 hover:bg-blue-700 text-white
+                 dark:bg-blue-500 dark:hover:bg-blue-400 dark:text-white cursor-pointer"
           >
             {t("all_users.add_user")}
           </button>
@@ -419,7 +309,7 @@ function AllUsers() {
           title={t("all_users.stats.workers")}
           value={stats.workers}
           icon={<Briefcase />}
-          color="green"
+          color="purple"
         />
         <StatCard
           title={t("all_users.stats.admins")}
@@ -427,7 +317,6 @@ function AllUsers() {
           icon={<Shield />}
           color="purple"
         />
-
         <StatCard
           title={t("all_users.stats.active")}
           value={stats.activeUsers}
@@ -461,7 +350,6 @@ function AllUsers() {
             className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-500"
             size={16}
           />
-
           <input
             className="w-full pl-9 pr-4 py-2 rounded-lg text-sm
                  border border-gray-200 dark:border-gray-600
@@ -476,8 +364,8 @@ function AllUsers() {
         </div>
 
         <div className="flex gap-3 flex-wrap">
-          <RoleFilter roleFilter={roleFilter} setRoleFilter={setRoleFilter} />
-          <StatusFilter
+          <AllUSersRoleFilter roleFilter={roleFilter} setRoleFilter={setRoleFilter} />
+          <AllUsersStatusFilter
             statusFilter={statusFilter}
             setStatusFilter={setStatusFilter}
           />
@@ -552,7 +440,6 @@ function AllUsers() {
                     onChange={toggleAll}
                   />
                 </th>
-
                 <th className="px-4 py-3 text-left">{t("all_users.table.id")}</th>
                 <th className="px-4 py-3 text-left">{t("all_users.table.email")}</th>
                 <th className="px-4 py-3 text-left">{t("all_users.table.phone")}</th>
@@ -568,14 +455,9 @@ function AllUsers() {
                 <tr
                   key={user?.id}
                   onClick={() => openViewModal(user)}
-                  className={`
-              cursor-pointer transition
-              hover:bg-gray-100 dark:hover:bg-gray-700
-              ${index % 2 === 0
-                      ? "bg-white dark:bg-gray-800"
-                      : "bg-gray-50 dark:bg-gray-900/40"
-                    }
-            `}
+                  className={`cursor-pointer transition hover:bg-gray-100 dark:hover:bg-gray-700
+                    ${index % 2 === 0 ? "bg-white dark:bg-gray-800" : "bg-gray-50 dark:bg-gray-900/40"}
+                  `}
                 >
                   <td
                     className="px-4 py-4"
@@ -604,17 +486,16 @@ function AllUsers() {
                   <td className="px-4 py-3 capitalize text-gray-700 dark:text-gray-300">
                     {user.user_type === "client"
                       ? t("all_users.view_modal.labels.role_client")
-                      : user.user_type === "worker" ?
-                        t("all_users.view_modal.labels.role_worker")
-                        :
-                        t("all_users.view_modal.labels.admin")
+                      : user.user_type === "worker"
+                        ? t("all_users.view_modal.labels.role_worker")
+                        : t("all_users.view_modal.labels.admin")
                     }
                   </td>
 
                   <td className="px-4 py-3">
                     <span
                       className="px-2 py-1 rounded-full text-xs font-medium
-                bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200"
+                      bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200"
                     >
                       {statusLabels[user.account_status] ||
                         t("all_users.status_labels.unknown")}
@@ -636,11 +517,11 @@ function AllUsers() {
                     onClick={(e) => e.stopPropagation()}
                   >
                     <ActionMenu
-                      user={user}
+                      item={user}
                       onView={openViewModal}
                       onEdit={(user) => handleEditUser(user)}
                       onDelete={handleDeleteUser}
-                      onPrint={(user) => handlePrint(user, t)}
+                      onPrint={(user) => handleUserPrint(user, t)}
                     />
                   </td>
                 </tr>
@@ -709,8 +590,7 @@ function AllUsers() {
                 <button
                   key={page}
                   onClick={() => setCurrentPage(page)}
-                  className={`${baseBtn} ${currentPage === page ? activeBtn : themeBtn
-                    }`}
+                  className={`${baseBtn} ${currentPage === page ? activeBtn : themeBtn}`}
                 >
                   {page}
                 </button>
@@ -737,780 +617,27 @@ function AllUsers() {
         </div>
       </div>
 
-      {/* VIEW MODAL */}
-      {isViewModalOpen && selectedUser && (
-        <div
-          className="fixed inset-0 bg-black/30 backdrop-blur-[2px] flex items-end sm:items-center justify-center z-50 p-0 sm:p-4"
-          onClick={closeModal}
-        >
-          <div
-            className="w-full sm:max-w-md md:max-w-lg lg:max-w-xl bg-white dark:bg-gray-800 
-            rounded-t-2xl sm:rounded-2xl shadow-2xl border border-gray-200 dark:border-gray-700
-            max-h-[90vh] overflow-y-auto"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div
-              className="sticky top-0 z-10 flex items-center justify-between px-5 py-4 
-              border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800"
-            >
-              <h2 className="font-bold text-lg text-gray-900 dark:text-white">
-                {t("all_users.view_modal.title")}
-              </h2>
-
-              <button
-                onClick={closeModal}
-                className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-500 transition"
-              >
-                <X size={18} />
-              </button>
-            </div>
-
-            <div className="p-5 space-y-5">
-              <div className="flex gap-2 border-b border-gray-200 dark:border-gray-700 pb-2">
-                {["info", "system", "profile"].map((tab) => (
-                  <button
-                    key={tab}
-                    onClick={() => setActiveTab(tab)}
-                    className={`px-3 py-1.5 text-sm rounded-lg capitalize transition ${activeTab === tab
-                      ? "bg-gray-900 text-white dark:bg-white dark:text-gray-900"
-                      : "text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
-                      }`}
-                  >
-                    {t(`all_users.view_modal.tabs.${tab}`)}
-                  </button>
-                ))}
-              </div>
-
-              {/* INFO TAB */}
-              {activeTab === "info" && (
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
-                  <div className="p-3 rounded-lg bg-gray-50 dark:bg-gray-900">
-                    <p className="text-xs text-gray-800 dark:text-white">
-                      {t("all_users.view_modal.labels.email")}
-                    </p>
-                    <p className="break-all text-gray-900 dark:text-white">
-                      {selectedUser.email}
-                    </p>
-                  </div>
-
-                  <div className="p-3 rounded-lg bg-gray-50 dark:bg-gray-900">
-                    <p className="text-xs text-gray-800 dark:text-white">
-                      {t("all_users.view_modal.labels.user_type")}
-                    </p>
-                    <p className="capitalize text-gray-900 dark:text-white">
-                      {selectedUser.user_type}
-                    </p>
-                  </div>
-
-                  <div className="p-3 rounded-lg bg-gray-50 dark:bg-gray-900">
-                    <p className="text-xs text-gray-800 dark:text-white">
-                      {t("all_users.view_modal.labels.phone")}
-                    </p>
-                    <p className="text-gray-900 dark:text-white">
-                      {selectedUser.phone ||
-                        t("all_users.view_modal.labels.no_phone")}
-                    </p>
-                  </div>
-
-                  <div className="p-3 rounded-lg bg-gray-50 dark:bg-gray-900">
-                    <p className="text-xs text-gray-800 dark:text-white">
-                      {t("all_users.view_modal.labels.status")}
-                    </p>
-                    <p
-                      className={
-                        selectedUser.is_active
-                          ? "text-green-500 font-semibold"
-                          : "text-red-500 font-semibold"
-                      }
-                    >
-                      {selectedUser.is_active
-                        ? t("all_users.view_modal.labels.active")
-                        : t("all_users.view_modal.labels.inactive")}
-                    </p>
-                  </div>
-                </div>
-              )}
-
-              {/* SYSTEM TAB */}
-              {activeTab === "system" && (
-                <div className="space-y-3 text-sm">
-                  <div className="p-3 rounded-lg bg-gray-50 dark:bg-gray-900">
-                    <p className="text-xs text-gray-800 dark:text-white">
-                      {t("all_users.view_modal.labels.user_id")}
-                    </p>
-                    <p className="text-gray-900 dark:text-white">
-                      #{selectedUser.id}
-                    </p>
-                  </div>
-
-                  <div className="p-3 rounded-lg bg-gray-50 dark:bg-gray-900">
-                    <p className="text-xs text-gray-800 dark:text-white">
-                      {t("all_users.view_modal.labels.superuser")}
-                    </p>
-                    <p className="text-gray-900 dark:text-white">
-                      {selectedUser.is_superuser
-                        ? t("all_users.view_modal.labels.yes")
-                        : t("all_users.view_modal.labels.no")}
-                    </p>
-                  </div>
-
-                  <div className="p-3 rounded-lg bg-gray-50 dark:bg-gray-900">
-                    <p className="text-xs text-gray-800 dark:text-white">
-                      {t("all_users.view_modal.labels.staff")}
-                    </p>
-                    <p className="text-gray-900 dark:text-white">
-                      {selectedUser.is_staff
-                        ? t("all_users.view_modal.labels.yes")
-                        : t("all_users.view_modal.labels.no")}
-                    </p>
-                  </div>
-
-                  <div className="p-3 rounded-lg bg-gray-50 dark:bg-gray-900">
-                    <p className="text-xs text-gray-800 dark:text-white">
-                      {t("all_users.view_modal.labels.registered")}
-                    </p>
-                    <p className="text-xs text-gray-900 dark:text-white">
-                      {selectedUser.registered_date
-                        ? new Date(
-                          selectedUser.registered_date,
-                        ).toLocaleString()
-                        : "-"}
-                    </p>
-                  </div>
-
-                  <div className="p-3 rounded-lg bg-gray-50 dark:bg-gray-900">
-                    <p className="text-xs text-gray-800 dark:text-white">
-                      {t("all_users.view_modal.labels.last_update")}
-                    </p>
-                    <p className="text-xs text-gray-900 dark:text-white">
-                      {selectedUser.last_update
-                        ? new Date(selectedUser.last_update).toLocaleString()
-                        : "-"}
-                    </p>
-                  </div>
-                </div>
-              )}
-
-              {/* PROFILE TAB */}
-              {activeTab === "profile" && (
-                <div className="space-y-4">
-                  {selectedUser?.client && (
-                    <div className="p-4 rounded-xl bg-blue-50 dark:bg-blue-900/20 border border-blue-100 dark:border-blue-900">
-                      <div className="flex justify-between">
-                        <span className="text-xs font-bold text-blue-600">
-                          {`${t("all_users.view_modal.labels.client")} (${selectedUser.client.client_type === "company"
-                            ? t("all_users.view_modal.labels.company")
-                            : t("all_users.view_modal.labels.individual")
-                            })`}
-                        </span>
-                        <span className="text-xs text-blue-600">
-                          {t("all_users.table.id")} #{selectedUser.client.id}
-                        </span>
-                      </div>
-
-                      <p className="mt-2 font-semibold text-blue-900 dark:text-blue-200">
-                        {selectedUser.client.client_type === "company"
-                          ? `${t("all_users.view_modal.labels.company")}: ${selectedUser.client.company_name || "N/A"
-                          }`
-                          : `${t("all_users.view_modal.labels.name")}: ${full_name || "N/A"
-                          }`
-                        }
-                      </p>
-                    </div>
-                  )}
-
-                  {selectedUser?.worker && (
-                    <div className="p-4 rounded-xl bg-green-50 dark:bg-green-900/20 border border-green-100 dark:border-green-900">
-                      <div className="flex justify-between">
-                        <span className="text-xs font-bold text-green-600">
-                          {t("all_users.view_modal.labels.worker")}
-                        </span>
-                        <span className="text-xs text-green-600">
-                          {t("all_users.table.id")} #{selectedUser.worker.id}
-                        </span>
-                      </div>
-
-                      <p className="mt-2 font-semibold text-green-900 dark:text-green-200">
-                        {selectedUser.worker.first_name}{" "}
-                        {selectedUser.worker.last_name}
-                      </p>
-                    </div>
-                  )}
-
-                  {selectedUser.user_type === "admin" && (
-                    <div className="p-4 rounded-xl bg-purple-50 dark:bg-purple-900/20 border border-purple-100 dark:border-purple-900">
-                      <span className="text-xs font-bold text-purple-600">
-                        {t("all_users.view_modal.labels.admin")}
-                      </span>
-                      <p className="mt-2 text-purple-900 dark:text-purple-200 font-semibold">
-                        {t("all_users.view_modal.labels.system_admin")}
-                      </p>
-                    </div>
-                  )}
-
-                  {!selectedUser.client &&
-                    !selectedUser.worker &&
-                    selectedUser.user_type !== "admin" && (
-                      <div className="p-4 text-center rounded-xl bg-gray-50 dark:bg-gray-900">
-                        <p className="text-gray-500">
-                          {t("all_users.view_modal.labels.no_linked_profile")}
-                        </p>
-                      </div>
-                    )}
-                </div>
-              )}
-
-              {/* ACTIONS */}
-              <div className="flex flex-col sm:flex-row gap-2 pt-3">
-                <button
-                  onClick={() => {
-                    handleEditUser(selectedUser);
-                    closeModal();
-                  }}
-                  className="flex-1 px-4 py-2 rounded-lg bg-gray-900 dark:bg-white text-white dark:text-gray-900 font-medium"
-                >
-                  {t("all_users.view_modal.buttons.edit")}
-                </button>
-
-                <button
-                  onClick={() => handlePrint(selectedUser, t)}
-                  className="flex-1 px-4 py-2 rounded-lg bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-white font-medium"
-                >
-                  {t("all_users.view_modal.buttons.print")}
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
+      {/* VIEW USER MODAL */}
+      <UserViewModal
+        isOpen={isViewModalOpen}
+        user={selectedUser}
+        onClose={closeModal}
+        onEdit={handleEditUser}
+      />
 
       {/* EDIT MODAL */}
-      {isEditModalOpen && editForm && (
-        <div
-          className="fixed inset-0 bg-black/30 backdrop-blur-[2px] flex items-center justify-center z-50 p-4"
-          onClick={() => setIsEditModalOpen(false)}
-        >
-          <div
-            className="w-full max-w-md rounded-2xl shadow-2xl bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 overflow-hidden"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900">
-              <h2 className="text-lg font-bold text-gray-900 dark:text-white">
-                {t("all_users.edit_modal.title")}
-              </h2>
-              <p className="text-sm text-gray-500 dark:text-gray-400">
-                {t("all_users.edit_modal.subtitle")}
-              </p>
-            </div>
-
-            <div className="p-6 space-y-4 max-h-[70vh] overflow-y-auto">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                  {t("all_users.edit_modal.first_name")}
-                </label>
-                <input
-                  name="first_name"
-                  value={editForm.first_name}
-                  onChange={handleEditChange}
-                  className="w-full px-3 py-2 rounded-lg border bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white border-gray-200 dark:border-gray-600 focus:ring-2 focus:ring-gray-500 outline-none"
-                  placeholder={t("all_users.edit_modal.first_name")}
-                />
-                {errors.first_name && (
-                  <p className="text-red-500 text-sm mt-1">{errors.first_name}</p>
-                )}
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                  {t("all_users.edit_modal.last_name")}
-                </label>
-                <input
-                  name="last_name"
-                  value={editForm.last_name}
-                  onChange={handleEditChange}
-                  className="w-full px-3 py-2 rounded-lg border bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white border-gray-200 dark:border-gray-600 focus:ring-2 focus:ring-gray-500 outline-none"
-                  placeholder={t("all_users.edit_modal.last_name")}
-                />
-                {errors.last_name && (
-                  <p className="text-red-500 text-sm mt-1">{errors.last_name}</p>
-                )}
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                  {t("all_users.edit_modal.email")}
-                </label>
-                <input
-                  name="email"
-                  value={editForm.email}
-                  onChange={handleEditChange}
-                  className="w-full px-3 py-2 rounded-lg border bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white border-gray-200 dark:border-gray-600 focus:ring-2 focus:ring-gray-500 outline-none"
-                  placeholder={t("all_users.edit_modal.email")}
-                />
-                {errors.email && (
-                  <p className="text-red-500 text-sm mt-1">{errors.email}</p>
-                )}
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                  {t("all_users.edit_modal.phone")}
-                </label>
-                <input
-                  name="phone"
-                  value={editForm.phone || ""}
-                  onChange={handleEditChange}
-                  className="w-full px-3 py-2 rounded-lg border bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white border-gray-200 dark:border-gray-600 focus:ring-2 focus:ring-gray-500 outline-none"
-                  placeholder={t("all_users.edit_modal.phone")}
-                />
-                {errors.phone && (
-                  <p className="text-red-500 text-sm mt-1">{errors.phone}</p>
-                )}
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                    {t("all_users.edit_modal.user_type")}
-                  </label>
-                  <select
-                    name="user_type"
-                    value={editForm.user_type}
-                    onChange={handleEditChange}
-                    className="w-full px-3 py-2 rounded-lg border bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white border-gray-200 dark:border-gray-600 focus:ring-2 focus:ring-gray-500 outline-none"
-                  >
-                    <option value="admin">{t("all_users.filter_role.admin")}</option>
-                    <option value="client">{t("all_users.filter_role.client")}</option>
-                    <option value="worker">{t("all_users.filter_role.worker")}</option>
-                  </select>
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                    {t("all_users.edit_modal.status")}
-                  </label>
-                  <select
-                    name="account_status"
-                    value={editForm.account_status}
-                    onChange={(e) =>
-                      setEditForm((prev) => ({
-                        ...prev,
-                        account_status: e.target.value,
-                      }))
-                    }
-                    className="w-full px-3 py-2 rounded-lg border bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white border-gray-200 dark:border-gray-600 focus:ring-2 focus:ring-gray-500 outline-none"
-                  >
-                    <option value="active">{t("all_users.status_labels.active")}</option>
-                    <option value="pending">{t("all_users.status_labels.pending")}</option>
-                    <option value="rejected">{t("all_users.status_labels.rejected")}</option>
-                    <option value="suspended">{t("all_users.status_labels.suspended")}</option>
-                  </select>
-                </div>
-              </div>
-              {errors.user_type && (
-                <p className="text-red-500 text-sm mt-1">{errors.user_type}</p>
-              )}
-            </div>
-
-            <div className="flex justify-end gap-2 px-6 py-4 border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900">
-              <button
-                onClick={() => setIsEditModalOpen(false)}
-                className="px-4 py-2 rounded-lg bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 hover:opacity-80 transition cursor-pointer"
-              >
-                {t("all_users.edit_modal.cancel")}
-              </button>
-
-              <button
-                onClick={handleUpdateUser}
-                className="px-4 py-2 rounded-lg bg-gray-900 dark:bg-white text-white dark:text-gray-900 hover:opacity-90 transition font-medium cursor-pointer"
-              >
-                {t("all_users.edit_modal.save")}
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      <EditUserModal
+        isOpen={isEditModalOpen}
+        editForm={editForm}
+        setEditForm={setEditForm}
+        errors={errors}
+        setErrors={setErrors}
+        onClose={() => setIsEditModalOpen(false)}
+        onSuccess={handleUpdateSuccess}
+      />
     </div>
   );
 }
 
-export function StatCard({ title, value, icon, color = "amber" }) {
-  const colorMap = {
-    amber:
-      "bg-amber-100 text-amber-700 dark:bg-amber-500/20 dark:text-amber-300",
-    blue: "bg-blue-100 text-blue-700 dark:bg-blue-500/20 dark:text-blue-300",
-    green:
-      "bg-green-100 text-green-700 dark:bg-green-500/20 dark:text-green-300",
-    red: "bg-red-100 text-red-700 dark:bg-red-500/20 dark:text-red-300",
-    purple:
-      "bg-purple-100 text-purple-700 dark:bg-purple-500/20 dark:text-purple-300",
-    gray: "bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-200",
-  };
-
-  return (
-    <div className="w-full bg-white dark:bg-gray-800 rounded-xl shadow border border-gray-100 dark:border-gray-700 p-5 flex items-center justify-between transition-colors">
-      <div>
-        <p className="text-sm text-gray-500 dark:text-gray-400">{title}</p>
-        <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
-          {value}
-        </h2>
-      </div>
-
-      <div className={`p-3 rounded-xl ${colorMap[color] || colorMap.amber}`}>
-        {icon}
-      </div>
-    </div>
-  );
-}
 
 export default AllUsers;
-
-/* ─── Action-menu ─────────── */
-function ActionMenu({ user, onView, onEdit, onDelete, onPrint }) {
-  const { t } = useTranslation();
-  const [open, setOpen] = useState(false);
-  const btnRef = useRef(null);
-  const menuRef = useRef(null);
-  const [pos, setPos] = useState({ top: 0, left: 0 });
-
-  const openMenu = (e) => {
-    e.stopPropagation();
-
-    if (open) {
-      setOpen(false);
-      return;
-    }
-
-    const rect = btnRef.current.getBoundingClientRect();
-    const menuWidth = 176;
-    const menuHeight = 173;
-    const spaceBelow = window.innerHeight - rect.bottom;
-
-    const top =
-      spaceBelow >= menuHeight
-        ? rect.bottom + 4
-        : Math.max(8, rect.top - menuHeight - 4);
-
-    const left = Math.min(
-      rect.right - menuWidth,
-      window.innerWidth - menuWidth - 8,
-    );
-
-    setPos({
-      top,
-      left: Math.max(8, left),
-    });
-
-    setOpen(true);
-  };
-
-  useEffect(() => {
-    if (!open) return;
-    const handler = (e) => {
-      if (
-        !menuRef.current?.contains(e.target) &&
-        !btnRef.current?.contains(e.target)
-      ) {
-        setOpen(false);
-      }
-    };
-    document.addEventListener("mousedown", handler);
-    return () => document.removeEventListener("mousedown", handler);
-  }, [open]);
-
-  useEffect(() => {
-    if (!open) return;
-    const handler = () => setOpen(false);
-    window.addEventListener("scroll", handler, true);
-    return () => window.removeEventListener("scroll", handler, true);
-  }, [open]);
-
-  const dropdown = open
-    ? ReactDOM.createPortal(
-      <div
-        ref={menuRef}
-        style={{
-          position: "fixed",
-          top: pos.top,
-          left: pos.left,
-          zIndex: 9999,
-        }}
-        className="w-44 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 shadow-2xl overflow-hidden text-gray-700 dark:text-gray-200"
-        onClick={(e) => e.stopPropagation()}
-      >
-        <button
-          onClick={() => {
-            onView(user);
-            setOpen(false);
-          }}
-          className="w-full text-left px-4 py-2.5 text-sm hover:bg-blue-50 dark:hover:bg-blue-900/40 hover:text-blue-700 dark:hover:text-blue-400 transition-colors flex items-center gap-2"
-        >
-          <Eye size={13} />
-          {t("all_users.actions_menu.view")}
-        </button>
-        <button
-          onClick={() => {
-            onEdit(user);
-            setOpen(false);
-          }}
-          className="w-full text-left px-4 py-2.5 text-sm hover:bg-green-50 dark:hover:bg-green-900/40 hover:text-green-700 dark:hover:text-green-400 transition-colors flex items-center gap-2"
-        >
-          <Edit size={13} />
-          {t("all_users.actions_menu.edit")}
-        </button>
-        <button
-          onClick={() => {
-            onPrint(user);
-            setOpen(false);
-          }}
-          className="w-full text-left px-4 py-2.5 text-sm hover:bg-purple-50 dark:hover:bg-purple-900/40 hover:text-purple-700 dark:hover:text-purple-400 transition-colors flex items-center gap-2"
-        >
-          <Printer size={13} />
-          {t("all_users.actions_menu.print")}
-        </button>
-        <hr className="border-gray-100 dark:border-gray-700" />
-        <button
-          onClick={() => {
-            onDelete(user.id);
-            setOpen(false);
-          }}
-          className="w-full text-left px-4 py-2.5 text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/40 transition-colors flex items-center gap-2"
-        >
-          <Trash2 size={13} />
-          {t("all_users.actions_menu.delete")}
-        </button>
-      </div>,
-      document.body,
-    )
-    : null;
-
-  return (
-    <>
-      <button
-        ref={btnRef}
-        onClick={openMenu}
-        className="p-1.5 rounded-lg text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors cursor-pointer"
-        aria-label={t("all_users.table.actions")}
-      >
-        <MoreHorizontal size={18} />
-      </button>
-      {dropdown}
-    </>
-  );
-}
-
-const handlePrint = (user, t) => {
-  const name = user.first_name || "—";
-  const win = window.open("", "_blank", "width=700,height=600");
-  win.document.write(`
-      <!DOCTYPE html>
-      <html>
-      <head>
-        <title>${t("all_users.print.document_title")} — ${name}</title>
-        <style>
-          * { box-sizing: border-box; margin: 0; padding: 0; }
-          body { font-family: 'Segoe UI', sans-serif; color: #1a1a2e; padding: 40px; }
-          .header { border-bottom: 3px solid #2563eb; padding-bottom: 16px; margin-bottom: 24px; display: flex; justify-content: space-between; align-items: flex-end; }
-          .header h1 { font-size: 22px; font-weight: 700; }
-          .header p  { font-size: 12px; color: #6b7280; margin-top: 4px; }
-          .badge { display: inline-block; padding: 3px 10px; border-radius: 999px; font-size: 11px; font-weight: 600; background: #f3f4f6; color: #374151; }
-          table { width: 100%; border-collapse: collapse; margin-top: 8px; }
-          tr { border-bottom: 1px solid #e5e7eb; }
-          td { padding: 10px 8px; font-size: 14px; }
-          td:first-child { width: 160px; font-weight: 600; color: #6b7280; }
-          .footer { margin-top: 32px; font-size: 11px; color: #9ca3af; text-align: center; }
-          @media print { body { padding: 20px; } }
-        </style>
-      </head>
-      <body>
-        <div class="header">
-          <div>
-            <h1>${t("all_users.print.user_profile")}</h1>
-            <p>${t("all_users.print.generated")} ${new Date().toLocaleString()}</p>
-          </div>
-          <span class="badge">${user.account_status || "—"}</span>
-        </div>
-        <table>
-          <tr><td>${t("all_users.table.id")}</td><td>#${user.id}</td></tr>
-          <tr><td>${t("all_users.print.company_name")}</td><td>${name}</td></tr>
-          <tr><td>${t("all_users.table.email")}</td><td>${user.email || "—"}</td></tr>
-          <tr><td>${t("all_users.table.phone")}</td><td>${user.phone || "—"}</td></tr>
-          <tr><td>${t("all_users.table.role")}</td><td>${user.user_type || "—"}</td></tr>
-          <tr><td>${t("all_users.table.status")}</td><td>${user.account_status || "—"}</td></tr>
-        </table>
-        <div class="footer">${t("all_users.print.footer")}</div>
-        <script>window.onload = () => { window.print(); window.onafterprint = () => window.close(); }</script>
-      </body>
-      </html>
-    `);
-  win.document.close();
-};
-
-/* Role Filter */
-export function RoleFilter({ roleFilter, setRoleFilter }) {
-  const { t } = useTranslation();
-  const [open, setOpen] = useState(false);
-  const wrapperRef = useRef(null);
-
-  const options = [
-    { label: t("all_users.filter_role.all"), value: "all" },
-    { label: t("all_users.filter_role.admin"), value: "admin" },
-    { label: t("all_users.filter_role.client"), value: "client" },
-    { label: t("all_users.filter_role.worker"), value: "worker" },
-  ];
-
-  const selected = options.find((o) => o.value === roleFilter);
-
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (wrapperRef.current && !wrapperRef.current.contains(event.target)) {
-        setOpen(false);
-      }
-    };
-
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
-
-  return (
-    <div ref={wrapperRef} className="relative w-full sm:w-44">
-      <label className="text-xs font-medium text-gray-600 dark:text-gray-400 mb-1 block">
-        {t("all_users.filter_role.label")}
-      </label>
-
-      <button
-        onClick={() => setOpen(!open)}
-        className="w-full flex items-center justify-between px-3 py-2 text-sm
-                   border border-gray-200 dark:border-gray-600
-                   bg-white dark:bg-gray-900
-                   text-gray-800 dark:text-gray-200
-                   rounded-lg
-                   focus:outline-none focus:ring-2 focus:ring-blue-500
-                   dark:focus:ring-blue-400
-                   transition-colors"
-      >
-        <span className="flex items-center gap-2">
-          {selected?.label}
-
-          {roleFilter !== "all" && (
-            <span className="w-2 h-2 bg-blue-500 dark:bg-blue-400 rounded-full" />
-          )}
-        </span>
-      </button>
-
-      {open && (
-        <div
-          className="absolute z-50 mt-1 w-full
-                        bg-white dark:bg-gray-800
-                        border border-gray-200 dark:border-gray-700
-                        rounded-lg shadow-lg overflow-hidden
-                        transition-colors"
-        >
-          {options.map((opt) => (
-            <div
-              key={opt.value}
-              onClick={() => {
-                setRoleFilter(opt.value);
-                setOpen(false);
-              }}
-              className={`px-3 py-2 text-sm cursor-pointer transition-colors
-                hover:bg-gray-100 dark:hover:bg-gray-700
-                text-gray-800 dark:text-gray-200
-                ${roleFilter === opt.value
-                  ? "bg-gray-50 dark:bg-gray-700 font-medium"
-                  : ""
-                }`}
-            >
-              {opt.label}
-            </div>
-          ))}
-        </div>
-      )}
-    </div>
-  );
-}
-
-/* Status Filter */
-export function StatusFilter({ statusFilter, setStatusFilter }) {
-  const { t } = useTranslation();
-  const [open, setOpen] = useState(false);
-  const wrapperRef = useRef(null);
-
-  const options = [
-    { label: t("all_users.filter_status.all"), value: "all" },
-    { label: t("all_users.filter_status.pending"), value: "pending" },
-    { label: t("all_users.filter_status.active"), value: "active" },
-    { label: t("all_users.filter_status.rejected"), value: "rejected" },
-    { label: t("all_users.filter_status.suspended"), value: "suspended" },
-  ];
-
-  const selected = options.find((o) => o.value === statusFilter);
-
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (wrapperRef.current && !wrapperRef.current.contains(event.target)) {
-        setOpen(false);
-      }
-    };
-
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
-
-  return (
-    <div ref={wrapperRef} className="relative w-full sm:w-48">
-      <label className="text-xs font-medium text-gray-600 dark:text-gray-400 mb-1 block">
-        {t("all_users.filter_status.label")}
-      </label>
-
-      <button
-        onClick={() => setOpen(!open)}
-        className="w-full flex items-center justify-between px-3 py-2 text-sm
-                   border border-gray-200 dark:border-gray-600
-                   bg-white dark:bg-gray-900
-                   text-gray-800 dark:text-gray-200
-                   rounded-lg
-                   focus:outline-none focus:ring-2 focus:ring-blue-500
-                   dark:focus:ring-blue-400
-                   transition-colors"
-      >
-        <span className="flex items-center gap-2">
-          {selected?.label}
-
-          {statusFilter !== "all" && (
-            <span className="w-2 h-2 bg-blue-500 dark:bg-blue-400 rounded-full" />
-          )}
-        </span>
-      </button>
-
-      {open && (
-        <div
-          className="absolute z-50 mt-1 w-full
-                        bg-white dark:bg-gray-800
-                        border border-gray-200 dark:border-gray-700
-                        rounded-lg shadow-lg overflow-hidden
-                        transition-colors"
-        >
-          {options.map((opt) => (
-            <div
-              key={opt.value}
-              onClick={() => {
-                setStatusFilter(opt.value);
-                setOpen(false);
-              }}
-              className={`px-3 py-2 text-sm cursor-pointer transition-colors
-                text-gray-800 dark:text-gray-200
-                hover:bg-gray-100 dark:hover:bg-gray-700
-                ${statusFilter === opt.value
-                  ? "bg-gray-50 dark:bg-gray-700 font-medium"
-                  : ""
-                }`}
-            >
-              {opt.label}
-            </div>
-          ))}
-        </div>
-      )}
-    </div>
-  );
-}

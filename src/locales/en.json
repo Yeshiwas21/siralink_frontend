@@ -205,7 +205,7 @@
       "nationalIdExists": "Worker with this national id already exists."
     },
     "client": {
-      "companyNameExists": "A company with this name is already registered.",
+      "companyNameExists": "Client with this company name already exists.",
       "nationalIdExists": "Client with this national id already exists."
     },
     "generic": "Something went wrong"
@@ -438,12 +438,6 @@
       "rejected": "Rejected",
       "suspended": "Suspended"
     },
-    "actions_menu": {
-      "view": "View",
-      "edit": "Edit",
-      "print": "Print",
-      "delete": "Delete"
-    },
     "view_modal": {
       "title": "User Details",
       "tabs": {
@@ -489,7 +483,14 @@
       "first_name": "First Name",
       "last_name": "Last Name",
       "email": "Email",
-      "phone": "Phone",
+      "min2_chars": "Minimum 2 characters required",
+      "text_letter_start": "Must start with a letter",
+      "letters_only": "Only letters are allowed",
+      "email_required": "Email is required",
+      "invalid_email": "Enter valid email",
+      "phone": "Phone Number",
+      "phone_required": "Phone is required",
+      "invalid_phone": "Use +2519XXXXXXXX or 10 digit local number",
       "user_type": "User Type",
       "status": "Status",
       "cancel": "Cancel",
@@ -512,6 +513,295 @@
       "generated": "Generated",
       "footer": "Users Management System",
       "company_name": "Full Name / Company"
+    }
+  },
+  "createClient": {
+    "title": "Create Client",
+    "subtitle": "Create a client profile from an existing client user",
+    "fields": {
+      "selectUserLabel": "Select A Non-linked Client User",
+      "selectUserPlaceholder": "-- Select User --",
+      "idLabel": "ID",
+      "email": "Email",
+      "phone": "Phone",
+      "clientType": "Client Type",
+      "companyName": "Company Name",
+      "nationalId": "National ID",
+      "location": "Location",
+      "profileImage": "Profile Image"
+    },
+    "placeholders": {
+      "email": "Email",
+      "phone": "Phone",
+      "companyName": "Company Name",
+      "nationalId": "National ID",
+      "location": "Location"
+    },
+    "options": {
+      "individual": "Individual",
+      "company": "Company"
+    },
+    "hints": {
+      "maxFileSize": "Maximum file size: 2MB"
+    },
+    "buttons": {
+      "creating": "Creating...",
+      "create": "Create Client",
+      "backToClients": "Back to Clients"
+    },
+    "validation": {
+      "userRequired": "Please select a user",
+      "min2Chars": "Minimum 2 characters required",
+      "mustStartWithLetter": "Must start with a letter",
+      "lettersAndSpacesOnly": "Must contain letters and spaces only",
+      "nationalIdRequired": "National ID is required",
+      "finExact12Digits": "Enter exactly 12 digit FIN number",
+      "companyNameRequired": "Company name is required",
+      "mustBeImage": "File must be an image",
+      "maxSize2MB": "Max size is 2MB"
+    },
+    "messages": {
+      "success": "New client created",
+      "error": "Failed to create a client"
+    }
+  },
+  "createWorker": {
+    "title": "Create Worker",
+    "subtitle": "Create a worker profile from an existing worker user",
+    "fields": {
+      "selectUserLabel": "Select A Non-linked Worker User",
+      "selectUserPlaceholder": "-- Select User --",
+      "idLabel": "ID",
+      "email": "Email",
+      "phone": "Phone",
+      "firstName": "First Name",
+      "lastName": "Last Name",
+      "nationalId": "National ID",
+      "location": "Location",
+      "skills": "Skills / Specialties",
+      "bio": "Bio / Short Description",
+      "experienceYears": "Years of Experience",
+      "portfolioLink": "Portfolio / Website Link",
+      "profileImage": "Profile Image"
+    },
+    "placeholders": {
+      "email": "Email",
+      "phone": "Phone",
+      "firstName": "First Name",
+      "lastName": "Last Name",
+      "nationalId": "National ID",
+      "location": "Location",
+      "skills": "e.g. Plumber, Electrician",
+      "bio": "Brief introduction about your experience...",
+      "experienceYears": "e.g. 3",
+      "portfolioLink": "https://example.com"
+    },
+    "hints": {
+      "maxFileSize": "Maximum file size: 2MB"
+    },
+    "buttons": {
+      "create": "Create Worker",
+      "creating": "Creating...",
+      "backToWorkers": "Back to Workers"
+    },
+    "messages": {
+      "success": "New worker created"
+    },
+    "validation": {
+      "userRequired": "Please select a user",
+      "finExact12Digits": "Enter exactly 12 digit FIN number",
+      "min2Chars": "Minimum 2 characters required",
+      "mustStartWithLetter": "Must start with a letter",
+      "lettersAndSpacesOnly": "Must contain letters and spaces only",
+      "skillsMin2": "At least 2 characters required for skills",
+      "bioMin10": "Bio must be at least 10 characters long",
+      "validExperience": "Please enter a valid experience year count",
+      "validUrl": "Please enter a valid URL (e.g., https://example.com)",
+      "mustBeImage": "File must be an image",
+      "maxSize2MB": "Max size is 2MB"
+    }
+  },
+  "clients": {
+    "title": "Clients Management",
+    "subtitle": "Manage all registered clients",
+    "refresh": "Refresh",
+    "add_client": "+ Add Client",
+    "search_placeholder": "Search...",
+    "export": "Export",
+    "delete_selected": "Delete Selected",
+    "id": "ID",
+    "name": "Name",
+    "email": "Email",
+    "phone": "Phone",
+    "location": "Location",
+    "status": "Status",
+    "actions": "Actions",
+    "rows": "Rows:",
+    "first": "« First",
+    "prev": "‹ Prev",
+    "next": "Next ›",
+    "last": "Last »",
+    "edit": "Edit",
+    "print": "Print",
+    "loading": "Loading clients…",
+    "error_fetch": "Failed to load Clients",
+    "no_clients_found": "No clients found",
+    "client_type": "Client Type",
+    "type_individual": "Individual",
+    "type_company": "Company",
+    "selected_count": "{{count}} selected",
+    "selected_count_one": "{{count}} client selected",
+    "selected_count_other": "{{count}} clients selected",
+    "showing_count": "Showing {{count}} of {{total}} clients",
+    "confirm_delete": "Delete this client?",
+    "toast_deleted": "Client deleted",
+    "confirm_bulk_delete": "Delete {{count}} clients?",
+    "toast_bulk_deleted": "Deleted selected clients",
+    "messages": {
+      "client_updated": "Client updated successfully"
+    },
+    "types": {
+      "individual": "Individual",
+      "company": "Company"
+    },
+    
+    "status_options": {
+      "pending": "Pending",
+      "verified": "Verified",
+      "unverified": "Unverified",
+      "rejected": "Rejected"
+    },
+    "stats": {
+      "total": "Total",
+      "under_review": "Under Review",
+      "verified": "Verified",
+      "unverified": "Unverified",
+      "rejected": "Rejected"
+    },
+    "modal": {
+      "title": "Client Details",
+      "tabs": {
+        "personal": "Personal",
+        "contact": "Contact",
+        "others": "Others",
+        "company": "Company"
+      }
+    },
+    "edit_modal": {
+      "title": "Edit Client Details",
+      "subtitle": "Update client profile settings and status.",
+      "min2_chars": "Minimum 2 characters required",
+      "national_id_required": "National ID is required",
+      "location_required": "Location is required",
+      "status_required": "Verification status is required",
+      "cancel": "Cancel",
+      "save": "Save Changes"
+    },
+    "placeholders": {
+      "company_name": "Enter company name",
+      "national_id": "Enter national ID",
+      "location": "Enter location/address"
+    },
+    "fields": {
+      "id": "ID",
+      "first_name": "First Name",
+      "last_name": "Last Name",
+      "company_name": "Company Name",
+      "contact_first_name": "Contact First Name",
+      "contact_last_name": "Contact Last Name",
+      "email": "Email",
+      "phone": "Phone",
+      "location": "Location",
+      "status": "Verification Status",
+      "national_id": "National ID",
+      "client_type": "Client Type"
+    }
+  },
+  "actions_menu": {
+    "view": "View",
+    "edit": "Edit",
+    "print": "Print",
+    "delete": "Delete"
+  },
+  "verification_status": {
+    "all": "All",
+    "unverified": "Unverified",
+    "pending": "Under Review",
+    "verified": "Verified",
+    "rejected": "Rejected"
+  },
+  "workers": {
+    "loading": "Loading workers…",
+    "searchPlaceholder": "Search...",
+    "noWorkersFound": "No workers found",
+    "selectedCount_one": "{{count}} worker selected",
+    "selectedCount_other": "{{count}} workers selected",
+    "showingCount": "Showing {{shown}} of {{total}} workers",
+    "header": {
+      "title": "Workers Management",
+      "subtitle": "Manage all registered workers"
+    },
+    "buttons": {
+      "refresh": "Refresh",
+      "addWorker": "+ Add Worker",
+      "export": "Export",
+      "deleteSelected": "Delete Selected"
+    },
+    "stats": {
+      "total": "Total",
+      "underReview": "Under Review",
+      "verified": "Verified",
+      "unverified": "Unverified",
+      "rejected": "Rejected"
+    },
+    "table": {
+      "id": "ID",
+      "name": "Name",
+      "email": "Email",
+      "phone": "Phone",
+      "location": "Location",
+      "status": "Status",
+      "actions": "Actions"
+    },
+    "pagination": {
+      "rows": "Rows:",
+      "first": "« First",
+      "prev": "‹ Prev",
+      "next": "Next ›",
+      "last": "Last »"
+    },
+    "modal": {
+      "title": "Worker Details",
+      "tabs": {
+        "personal": "Personal",
+        "contact": "Contact",
+        "others": "Others"
+      },
+      "fields": {
+        "firstName": "First Name",
+        "lastName": "Last Name",
+        "email": "Email",
+        "phone": "Phone",
+        "id": "ID",
+        "location": "Location",
+        "nationalId": "National ID",
+        "status": "Status"
+      },
+      "buttons": {
+        "edit": "Edit",
+        "print": "Print"
+      }
+    },
+    "confirmations": {
+      "deleteSingle": "Delete this worker?",
+      "deleteMultiple": "Delete {{count}} workers?"
+    },
+    "toasts": {
+      "deleted": "Worker deleted",
+      "deletedSelected": "Deleted selected workers"
+    },
+    "errors": {
+      "failedToLoad": "Failed to load Workers"
     }
   }
 }

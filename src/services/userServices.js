@@ -10,7 +10,8 @@ import {
   clientCreateApi,
   workerCreateApi,
   clientDeleteApi,
-  workerDeleteApi
+  workerDeleteApi,
+  clientUpdateApi
 } from "../api/userApi";
 
 /* USERS LIST */
@@ -84,6 +85,13 @@ export const listWorker = async () => {
   const response = await workerListApi();
   return response.data;
 };
+
+/* UPDATE CLIENT */
+export const updateClient = async (id, data) => {
+  const response = await clientUpdateApi(id, data)
+  return response.data;
+}
+
 
 /* LIST CLIENT */
 export const listClient = async () => {
