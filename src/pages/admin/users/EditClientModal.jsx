@@ -1,20 +1,31 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { updateClient } from "../../../services/userServices";
 import { translateApiError } from "../../../utils/translateApiError";
 
 export default function EditClientModal({
-    isOpen,
+    isEditOpen,
     formData,
     setFormData,
-    errors,
-    setErrors,
-    onClose,
-    onSuccess,
+    editErrors,
+    setEditErrors,
+    onEditClose,
+    onEditSuccess,
 }) {
     const { t } = useTranslation();
 
-    if (!isOpen || !formData) return null;
+    useEffect(() => {
+        if (isEditOpen) {
+            document.body.style.overflow = "hidden";
+        } else {
+            document.body.style.overflow = "";
+        }
+        return () => {
+            document.body.style.overflow = "hidden";
+        }
+    }, [isEditOpen])
+
+    if (!isEditOpen || !formData) return null;
 
     const validateTextField = (value) => {
         const val = value?.trim();
@@ -93,12 +104,12 @@ export default function EditClientModal({
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData((prev) => ({ ...prev, [name]: value }));
-        setErrors((prev) => ({ ...prev, [name]: "" }));
+        setEditErrors((prev) => ({ ...prev, [name]: "" }));
     };
 
     const handleSave = async () => {
         const validationErrors = validate();
-        setErrors(validationErrors);
+        setEditErrors(validationErrors);
 
         if (Object.keys(validationErrors).length > 0) return;
         // Prepare cleaned payload based on client_type
@@ -113,17 +124,17 @@ export default function EditClientModal({
         };
         try {
             await updateClient(payload.id, payload);
-            onSuccess(formData);
+            onEditSuccess(formData);
         } catch (err) {
             const backendErrors = parseErrors(err?.response?.data);
-            setErrors(backendErrors);
+            setEditErrors(backendErrors);
         }
     };
 
     return (
         <div
             className="fixed inset-0 bg-black/30 backdrop-blur-[0.5px] flex items-center justify-center z-50 p-4"
-            onClick={onClose}
+            onClick={onEditClose}
         >
             <div
                 className="w-full max-w-md rounded-2xl shadow-2xl bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 overflow-hidden"
@@ -142,9 +153,9 @@ export default function EditClientModal({
                 {/* Form Body */}
                 <div className="p-6 space-y-4 max-h-[70vh] overflow-y-auto">
                     {/* General Error Alert */}
-                    {errors.general && (
+                    {editErrors.general && (
                         <div className="p-3 text-sm text-red-600 bg-red-50 dark:bg-red-900/30 rounded-lg border border-red-200 dark:border-red-800">
-                            {errors.general}
+                            {editErrors.general}
                         </div>
                     )}
 
@@ -178,8 +189,8 @@ export default function EditClientModal({
                                 className="w-full px-3 py-2 rounded-lg border bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white border-gray-200 dark:border-gray-600 focus:ring-2 focus:ring-gray-500 outline-none"
                                 placeholder={t("clients.placeholders.company_name", "Enter company name")}
                             />
-                            {errors.company_name && (
-                                <p className="text-red-500 text-sm mt-1">{errors.company_name}</p>
+                            {editErrors.company_name && (
+                                <p className="text-red-500 text-sm mt-1">{editErrors.company_name}</p>
                             )}
                         </div>
                     )}
@@ -198,8 +209,8 @@ export default function EditClientModal({
                                 className="w-full px-3 py-2 rounded-lg border bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white border-gray-200 dark:border-gray-600 focus:ring-2 focus:ring-gray-500 outline-none"
                                 placeholder={t("clients.placeholders.national_id", "Enter national ID")}
                             />
-                            {errors.national_id && (
-                                <p className="text-red-500 text-sm mt-1">{errors.national_id}</p>
+                            {editErrors.national_id && (
+                                <p className="text-red-500 text-sm mt-1">{editErrors.national_id}</p>
                             )}
                         </div>
                     )}
@@ -217,8 +228,8 @@ export default function EditClientModal({
                             className="w-full px-3 py-2 rounded-lg border bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white border-gray-200 dark:border-gray-600 focus:ring-2 focus:ring-gray-500 outline-none"
                             placeholder={t("clients.placeholders.location", "Enter location/address")}
                         />
-                        {errors.location && (
-                            <p className="text-red-500 text-sm mt-1">{errors.location}</p>
+                        {editErrors.location && (
+                            <p className="text-red-500 text-sm mt-1">{editErrors.location}</p>
                         )}
                     </div>
 
@@ -238,8 +249,8 @@ export default function EditClientModal({
                             <option value="unverified">{t("clients.status_options.unverified")}</option>
                             <option value="rejected">{t("clients.status_options.rejected")}</option>
                         </select>
-                        {errors.verification_status && (
-                            <p className="text-red-500 text-sm mt-1">{errors.verification_status}</p>
+                        {editErrors.verification_status && (
+                            <p className="text-red-500 text-sm mt-1">{editErrors.verification_status}</p>
                         )}
                     </div>
                 </div>
@@ -248,7 +259,7 @@ export default function EditClientModal({
                 <div className="flex justify-end gap-2 px-6 py-4 border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900">
                     <button
                         type="button"
-                        onClick={onClose}
+                        onClick={onEditClose}
                         className="px-4 py-2 rounded-lg bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 hover:opacity-80 transition cursor-pointer"
                     >
                         {t("clients.edit_modal.cancel")}
