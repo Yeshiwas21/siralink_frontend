@@ -575,13 +575,13 @@ function Clients() {
 
       {/* Render the modal component cleanly in JSX */}
       <EditClientModal
-        isOpen={isEditOpen}
+        isEditOpen={isEditOpen}
         formData={editFormData}
         setFormData={setEditFormData}
-        errors={editErrors}
-        setErrors={setEditErrors}
-        onClose={handleCloseEditModal}
-        onSuccess={handleEditSuccess}
+        editErrors={editErrors}
+        setEditErrors={setEditErrors}
+        onEditClose={handleCloseEditModal}
+        onEditSuccess={handleEditSuccess}
       />
     </div>
   );
