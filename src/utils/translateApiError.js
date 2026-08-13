@@ -99,7 +99,7 @@ export const translateApiError = (t, field, errorVal) => {
     }
 
     // --- Step F: Company Name & National ID Duplicates ---
-    if (lowerMsg.includes("company with this name") || lowerMsg.includes("companynameexists") || lowerMsg.includes("company_exists")) {
+    if (lowerMsg.includes("client with this company name") || lowerMsg.includes("company_name_exists") || lowerMsg.includes("company_exists")) {
         return t("backendErrors.client.companyNameExists");
     }
 

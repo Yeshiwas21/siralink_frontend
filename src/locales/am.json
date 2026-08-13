@@ -292,7 +292,7 @@
     "loading": "በመጫን ላይ...",
     "hero": {
       "title": "በኢትዮጵያ ውስጥ የብቃት ባለሙያዎችን ያግኙ ወይም በፍጥነት ይቀጠሩ",
-      "description": "ሲራሊንክ ደበኞችን እና ባለሙያዎችን እንደ የቧንቧ፣ የኤሌክትሪክ፣ የጽዳት፣ የማስጠናት እና ሌሎች ስራዎች ያገናኛል።",
+      "description": "ስራሊንክ ደበኞችን እና ባለሙያዎችን እንደ የቧንቧ፣ የኤሌክትሪክ፣ የጽዳት፣ የማስጠናት እና ሌሎች ስራዎች ያገናኛል።",
       "find_work": "ስራ ያግኙ",
       "hire_talent": "ባለሙያ ይቀጥሩ"
     },
@@ -312,7 +312,7 @@
     },
     "how_it_works": {
       "badge": "ቀላል ሂደት",
-      "heading": "ሲራሊንክ እንዴት ይሰራል",
+      "heading": "ስራሊንክ እንዴት ይሰራል",
       "subheading": "ደንበኞች እና ባለሙያዎች በቀላሉ የሚገናኙበት፣ አብረው የሚሰሩበት እና የሚያድጉበት ቀልጣፋ መንገድ።",
       "steps": {
         "step_1": {
@@ -339,7 +339,7 @@
       "platform_support": "የመድረክ ድጋፍ"
     },
     "why_us": {
-      "badge": "ለማን ሲራሊንክ",
+      "badge": "ለማን ስራሊንክ",
       "heading": "ለኢትዮጵያ የሰራተኛ ኃይል የተገነባ",
       "subheading": "ደንበኞች እና ባለሙያዎች በፍጥነት እንዲገናኙ፣ በብቃት እንዲሰሩ እና በራስ መተማመን እንዲያድጉ የሚረዳ ዘመናዊ መድረክ።",
       "reasons": {
@@ -361,7 +361,7 @@
       "badge": "ምስክርነቶች",
       "heading": "በደንበኞች እና ሰራተኞች የታመነ",
       "items": {
-        "abel": "ሲራሊንክ በአንድ ቀን ውስጥ ብቃት ያለው የኤሌክትሪክ ባለሙያ እንድቀጥር ረድቶኛል።",
+        "abel": "ስራሊንክ በአንድ ቀን ውስጥ ብቃት ያለው የኤሌክትሪክ ባለሙያ እንድቀጥር ረድቶኛል።",
         "meron": "ቋሚ የፍሪላንስ ስራ እና አስተማማኝ ደንበኞችን አግኝቻለሁ።",
         "samuel": "መድረኩ ጽዱ፣ ሙያዊ እና ለመጠቀም በጣም ቀላል ነው።"
       },
@@ -435,12 +435,6 @@
       "active": "ንቁ",
       "rejected": "የተከለከለ",
       "suspended": "የታገደ"
-    },
-    "actions_menu": {
-      "view": "ተመልከት",
-      "edit": "አስተካክል",
-      "print": "አትም",
-      "delete": "ሰርዝ"
     },
     "view_modal": {
       "title": "የተጠቃሚ ዝርዝር",
@@ -517,6 +511,294 @@
       "generated": "የተዘጋጀበት ቀን",
       "footer": "የተጠቃሚዎች አስተዳደር ሲስተም",
       "company_name": "ሙሉ ስም / ድርጅት"
+    }
+  },
+  "createClient": {
+    "title": "ደንበኛ ፍጠር",
+    "subtitle": "ከተመዘገበ ተጠቃሚ የደንበኛ ፕሮፋይል ይፍጠሩ",
+    "fields": {
+      "selectUserLabel": "ያልተያያዘ ደንበኛ ተጠቃሚ ይምረጡ",
+      "selectUserPlaceholder": "-- ተጠቃሚ ይምረጡ --",
+      "idLabel": "መታወቂያ",
+      "email": "ኢሜይል",
+      "phone": "ስልክ ቁጥር",
+      "clientType": "የደንበኛ ዓይነት",
+      "companyName": "የድርጅት ስም",
+      "nationalId": "ብሔራዊ መታወቂያ",
+      "location": "አድራሻ",
+      "profileImage": "የፕሮፋይል ምስል"
+    },
+    "placeholders": {
+      "email": "ኢሜይል",
+      "phone": "ስልክ ቁጥር",
+      "companyName": "የድርጅት ስም",
+      "nationalId": "ብሔራዊ መታወቂያ",
+      "location": "አድራሻ"
+    },
+    "options": {
+      "individual": "ግለሰብ",
+      "company": "ድርጅት"
+    },
+    "hints": {
+      "maxFileSize": "ከፍተኛው የፋይል መጠን: 2MB"
+    },
+    "buttons": {
+      "creating": "በመፍጠር ላይ...",
+      "create": "ደንበኛ ፍጠር",
+      "backToClients": "ወደ ደንበኞች ዝርዝር ተመለስ"
+    },
+    "validation": {
+      "userRequired": "እባክዎን ተጠቃሚ ይምረጡ",
+      "min2Chars": "ቢያንስ 2 ፊደላት ያስፈልጋሉ",
+      "mustStartWithLetter": "በፊደል መጀመር አለበት",
+      "lettersAndSpacesOnly": "ፊደላትን እና ክፍተቶችን ብቻ መያዝ አለበት",
+      "nationalIdRequired": "ብሔራዊ መታወቂያ ያስፈልጋል",
+      "finExact12Digits": "ትክክለኛ 12 ዲጂት FIN ቁጥር ያስገቡ",
+      "companyNameRequired": "የድርጅት ስም ያስፈልጋል",
+      "mustBeImage": "ፋይሉ ምስል መሆን አለበት",
+      "maxSize2MB": "ከፍተኛው መጠን 2MB ነው"
+    },
+    "messages": {
+      "success": "አዲስ ደንበኛ ተፈጥሯል",
+      "error": "ደንበኛ መፍጠር አልተቻለም"
+    }
+  },
+  "createWorker": {
+    "title": "ሰራተኛ ፍጠር",
+    "subtitle": "ከተመዘገበ የሰራተኛ ተጠቃሚ የሰራተኛ ፕሮፋይል ይፍጠሩ",
+    "fields": {
+      "selectUserLabel": "ያልተያያዘ የሰራተኛ ተጠቃሚ ይምረጡ",
+      "selectUserPlaceholder": "-- ተጠቃሚ ይምረጡ --",
+      "idLabel": "መታወቂያ (ID)",
+      "email": "ኢሜይል",
+      "phone": "ስልክ ቁጥር",
+      "firstName": "ስም",
+      "lastName": "የአባት ስም",
+      "nationalId": "ብሔራዊ መታወቂያ",
+      "location": "አድራሻ / ቦታ",
+      "skills": "ችሎታዎች / ሙያዎች",
+      "bio": "ስለ እርሶ በአጭሩ (Bio)",
+      "experienceYears": "የሥራ ልምድ (በዓመት)",
+      "portfolioLink": "የፖርትፎሊዮ / ድህረ ገጽ ሊንክ",
+      "profileImage": "የመገለጫ ምስል"
+    },
+    "placeholders": {
+      "email": "ኢሜይል",
+      "phone": "ስልክ ቁጥር",
+      "firstName": "ስም",
+      "lastName": "የአባት ስም",
+      "nationalId": "ብሔራዊ መታወቂያ",
+      "location": "አድራሻ / ቦታ",
+      "skills": "ምሳሌ፡ ቧንቧ ሠራተኛ፣ ኤሌክትሪሻን",
+      "bio": "ስለ ሥራ ልምድዎ በአጭሩ ይጻፉ...",
+      "experienceYears": "ምሳሌ፡ 3",
+      "portfolioLink": "https://example.com"
+    },
+    "hints": {
+      "maxFileSize": "ከፍተኛ የፋይል መጠን: 2ሜጋባይት (2MB)"
+    },
+    "buttons": {
+      "create": "ሰራተኛ ፍጠር",
+      "creating": "እየፈጠረ ነው...",
+      "backToWorkers": "ወደ ሰራተኞች ዝርዝር ተመለስ"
+    },
+    "messages": {
+      "success": "አዲስ ሰራተኛ ተፈጥሯል"
+    },
+    "validation": {
+      "userRequired": "እባክዎን ተጠቃሚ ይምረጡ",
+      "finExact12Digits": "ትክክለኛ 12 ዲጂት FIN ቁጥር ያስገቡ",
+      "min2Chars": "ቢያንስ 2 ቁምፊዎች ያስፈልጋሉ",
+      "mustStartWithLetter": "በፊደል መጀመር አለበት",
+      "lettersAndSpacesOnly": "ፊደላት እና ክፍተቶችን (space) ብቻ የያዘ መሆን አለበት",
+      "skillsMin2": "የሙያ ዘርፍ ቢያንስ 2 ፊደላት መሆን አለበት",
+      "bioMin10": "ስለ እርሶ የሚፅፉት ቢያንስ 10 ፊደላት መሆን አለበት",
+      "validExperience": "እባክዎን ትክክለኛ የልምድ ዓመት ያስገቡ",
+      "validUrl": "እባክዎን ትክክለኛ የዌብሳይት አድራሻ (URL) ያስገቡ",
+      "mustBeImage": "ፋይሉ ምስል (Image) መሆን አለበት",
+      "maxSize2MB": "ከፍተኛው መጠን 2MB ነው"
+    }
+  },
+   "clients": {
+    "title": "የደንበኞች አስተዳደር",
+    "subtitle": "የተመዘገቡ ደንበኞችን ያደራጁ",
+    "refresh": "አድስ",
+    "add_client": "+ ደንበኛ ጨምር",
+    "search_placeholder": "ፈልግ...",
+    "export": "ላክ (Export)",
+    "delete_selected": "የተመረጡትን ሰርዝ",
+    "id": "መለያ ID",
+    "name": "ስም",
+    "email": "ኢሜይል",
+    "phone": "ስልክ",
+    "location": "አድራሻ",
+    "status": "ሁኔታ",
+    "actions": "ተግባራት",
+    "rows": "ረድፎች:",
+    "first": "« የመጀመሪያው",
+    "prev": "‹ ቀደመው",
+    "next": "ቀጣይ ›",
+    "last": "መጨረሻ »",
+    "edit": "አስተካክል",
+    "print": "አትም",
+    "loading": "ደንበኞችን በማስገባት ላይ…",
+    "error_fetch": "ደንበኞችን መጫን አልተቻለም",
+    "no_clients_found": "ምንም ደንበኞች አልተገኙም",
+    "client_type": "የደንበኛ ዓይነት",
+    "type_individual": "ግለሰብ",
+    "type_company": "ድርጅት",
+    "selected_count": "{{count}} ተመርጠዋል",
+    "selected_count_one": "{{count}} ደንበኛ ተመርጧል",
+    "selected_count_other": "{{count}} ደንበኞች ተመርጠዋል",
+    "showing_count": "ከ {{total}} ደንበኞች {{count}} እየታዩ ነው",
+    "confirm_delete": "ይህንን ደንበኛ ማጥፋት ይፈልጋሉ?",
+    "toast_deleted": "ደንበኛው ተሰርዟል",
+    "confirm_bulk_delete": "{{count}} ደንበኞችን ማጥፋት ይፈልጋሉ?",
+    "toast_bulk_deleted": "የተመረጡት ደንበኞች ተሰርዘዋል",
+    "messages": {
+      "client_updated": "የደንበኛ መረጃ በተሳካ ሁኔታ ተሻሽሏል"
+    },
+    "types": {
+      "individual": "ግለሰብ",
+      "company": "ድርጅት"
+    },
+    "status_options": {
+      "pending": "በሂደት ላይ",
+      "verified": "የተረጋገጠ",
+      "unverified": "ያልተረጋገጠ",
+      "rejected": "የተሰረዘ/የተከለከለ"
+    },
+    "stats": {
+      "total": "ጠቅላላ",
+      "under_review": "በግምገማ ላይ",
+      "verified": "የተረጋገጡ",
+      "unverified": "ያልተረጋገጡ",
+      "rejected": "የተከለከሉ"
+    },
+    "modal": {
+      "title": "የደንበኛ ዝርዝር መረጃ",
+      "tabs": {
+        "personal": "ግላዊ መረጃ",
+        "contact": "የግንኙነት መረጃ",
+        "others": "ሌሎች",
+        "company": "ድርጅት"
+      }
+    },
+    "edit_modal": {
+      "title": "የደንበኛ መረጃ ያቅርቡ/ያስተካክሉ",
+      "subtitle": "የደንበኛውን መገለጫ እና ሁኔታ ያዘምኑ።",
+      "min2_chars": "ቢያንስ 2 ፊደላት ያስፈልጋሉ",
+      "national_id_required": "ብሔራዊ መታወቂያ ያስፈልጋል",
+      "location_required": "አድራሻ ያስፈልጋል",
+      "status_required": "የማረጋገጫ ሁኔታ ያስፈልጋል",
+      "cancel": "ሰርዝ",
+      "save": "ለውጦችን አስቀምጥ"
+    },
+    "placeholders": {
+      "company_name": "የድርጅቱን ስም ያስገቡ",
+      "national_id": "የብሔራዊ መታወቂያ ቁጥር ያስገቡ",
+      "location": "አድራሻ ያስገቡ"
+    },
+    "fields": {
+      "id": "መለያ ID",
+      "first_name": "ስም",
+      "last_name": "የአባት ስም",
+      "company_name": "የድርጅት ስም",
+      "contact_first_name": "የተወካይ ስም",
+      "contact_last_name": "የተወካይ የአባት ስም",
+      "email": "ኢሜይል",
+      "phone": "ስልክ ቁጥር",
+      "location": "አድራሻ",
+      "status": "የማረጋገጫ ሁኔታ",
+      "national_id": "ብሔራዊ መታወቂያ",
+      "client_type": "የደንበኛ ዓይነት"
+    }
+  },
+  "actions_menu": {
+    "view": "ተመልከት",
+    "edit": "አስተካክል",
+    "print": "አትም",
+    "delete": "ሰርዝ"
+  },
+ "verification_status": {
+    "all": "ሁሉም",
+    "unverified": "ያልተረጋገጠ",
+    "pending": "በግምገማ ላይ",
+    "verified": "የተረጋገጠ",
+    "rejected": "የተከለከለ"
+  },
+  "workers": {
+    "loading": "ሰራተኞችን በመጫን ላይ...",
+    "searchPlaceholder": "ፈልግ...",
+    "noWorkersFound": "ምንም ሰራተኛ አልተገኘም",
+    "selectedCount_one": "{{count}} ሰራተኛ ተመርጧል",
+    "selectedCount_other": "{{count}} ሰራተኞች ተመርጠዋል",
+    "showingCount": "ከ {{total}} ሰራተኞች ውስጥ {{shown}} እየታዩ ነው",
+    "header": {
+      "title": "የሰራተኞች አስተዳደር",
+      "subtitle": "ሁሉንም የተመዘገቡ ሰራተኞች ያስተዳድሩ"
+    },
+    "buttons": {
+      "refresh": "አድስ",
+      "addWorker": "+ ሰራተኛ ጨምር",
+      "export": "ላክ (Export)",
+      "deleteSelected": "የተመረጡትን ሰርዝ"
+    },
+    "stats": {
+      "total": "ጠቅላላ",
+      "underReview": "በግምገማ ላይ",
+      "verified": "ረጋገጠው",
+      "unverified": "ያልተረጋገጡ",
+      "rejected": "ውድቅ ተደረጉ"
+    },
+    "table": {
+      "id": "መታወቂያ",
+      "name": "ስም",
+      "email": "ኢሜይል",
+      "phone": "ስልክ",
+      "location": "ቦታ",
+      "status": "ሁኔታ",
+      "actions": "ተግባራት"
+    },
+    "pagination": {
+      "rows": "ረድፎች:",
+      "first": "« የመጀመሪያው",
+      "prev": "‹ ቀደመው",
+      "next": "ቀጣይ ›",
+      "last": "የመጨረሻው »"
+    },
+    "modal": {
+      "title": "የሰራተኛ ዝርዝር መረጃ",
+      "tabs": {
+        "personal": "ግላዊ መረጃ",
+        "contact": "የመገናኛ መረጃ",
+        "others": "ሌሎች"
+      },
+      "fields": {
+        "firstName": "ስም",
+        "lastName": "የአባት ስም",
+        "email": "ኢሜይል",
+        "phone": "ስልክ ቁጥር",
+        "id": "መታወቂያ ቁጥር",
+        "location": "አድራሻ/ቦታ",
+        "nationalId": "ብሔራዊ መታወቂያ",
+        "status": "ሁኔታ"
+      },
+      "buttons": {
+        "edit": "አስተካክል",
+        "print": "አትም"
+      }
+    },
+    "confirmations": {
+      "deleteSingle": "ይህን ሰራተኛ ማጥፋት ይፈልጋሉ?",
+      "deleteMultiple": "{{count}} ሰራተኞችን ማጥፋት ይፈልጋሉ?"
+    },
+    "toasts": {
+      "deleted": "ሰራተኛው ተሰርዟል",
+      "deletedSelected": "የተመረጡት ሰራተኞች ተሰርዘዋል"
+    },
+    "errors": {
+      "failedToLoad": "ሰራተኞችን መጫን አልተቻለም"
     }
   }
 }

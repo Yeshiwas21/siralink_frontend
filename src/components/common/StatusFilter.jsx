@@ -1,16 +1,18 @@
 import React, { useState, useRef, useEffect } from "react";
 import { ChevronDown } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 export function StatusFilter({ statusFilter, setStatusFilter }) {
     const [open, setOpen] = useState(false);
     const wrapperRef = useRef(null);
+    const { t } = useTranslation()
 
     const options = [
-        { label: "All Status", value: "all" },
-        { label: "Under Review", value: "pending" },
-        { label: "Verified", value: "verified" },
-        { label: "Not Verified", value: "unverified" },
-        { label: "Rejected", value: "rejected" },
+        { label: t("verification_status.all"), value: "all" },
+        { label: t("verification_status.pending"), value: "pending" },
+        { label: t("verification_status.verified"), value: "verified" },
+        { label: t("verification_status.unverified"), value: "unverified" },
+        { label: t("verification_status.rejected"), value: "rejected" },
     ];
 
     const selected = options.find((o) => o.value === statusFilter);

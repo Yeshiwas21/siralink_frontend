@@ -1,17 +1,27 @@
-import React, { useEffect, useMemo, useState, useCallback, } from "react";
+import React, { useEffect, useMemo, useState, useCallback } from "react";
 import {
-  Users, Search, Clock, RefreshCw, CircleCheck, HelpCircle, XCircle, Download, Printer, X, Edit,
+  Users,
+  Search,
+  Clock,
+  RefreshCw,
+  CircleCheck,
+  HelpCircle,
+  XCircle,
+  Download,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
+import { useTranslation } from "react-i18next";
 import { listWorker, deleteWorker } from "../../../services/userServices";
-import { StatCard } from "./AllUsers";
+import StatCard from "../../../components/common/StatCard";
 import StatusFilter from "../../../components/common/StatusFilter";
 import StatusBadge from "../../../components/common/StatusBadge";
 import ActionMenu from "../../../components/common/ActionMenu";
 import { handlePrintWorker } from "../../../utils/workerPrint";
+import WorkerViewModal from "./WorkerViewModal";
 
 function Workers() {
+  const { t } = useTranslation();
   const navigate = useNavigate();
 
   const [workers, setWorkers] = useState([]);
@@ -23,7 +33,6 @@ function Workers() {
   const [isViewModalOpen, setIsViewModalOpen] = useState(false);
   const [statusFilter, setStatusFilter] = useState("all");
   const [selectedRows, setSelectedRows] = useState([]);
-  const [activeTab, setActiveTab] = useState("personal");
 
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
@@ -36,11 +45,11 @@ function Workers() {
       setWorkers(data);
       setFilteredWorkers(data);
     } catch (err) {
-      setError(err?.response?.data?.detail || "Failed to load Workers");
+      setError(err?.response?.data?.detail || t("workers.errors.failedToLoad"));
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [t]);
 
   useEffect(() => {
     fetchWorkers();
@@ -79,20 +88,16 @@ function Workers() {
     () => ({
       total: workers.length,
       pending: workers.filter((w) => w.verification_status === "pending").length,
-      verified: workers.filter((w) => w.verification_status === "verified")
-        .length,
-      unverified: workers.filter((w) => w.verification_status === "unverified")
-        .length,
-      rejected: workers.filter((w) => w.verification_status === "rejected")
-        .length,
+      verified: workers.filter((w) => w.verification_status === "verified").length,
+      unverified: workers.filter((w) => w.verification_status === "unverified").length,
+      rejected: workers.filter((w) => w.verification_status === "rejected").length,
     }),
-    [workers],
+    [workers]
   );
 
-  /* modal */
+  /* modal controllers */
   const openViewModal = (worker) => {
     setSelectedWorker(worker);
-    setActiveTab("personal");
     setIsViewModalOpen(true);
   };
   const closeModal = () => {
@@ -102,36 +107,40 @@ function Workers() {
 
   /* delete */
   const handleDeleteWorker = async (id) => {
-    if (!window.confirm("Delete this worker?")) return;
+    if (!window.confirm(t("workers.confirmations.deleteSingle"))) return;
     await deleteWorker(id);
     setWorkers((prev) => prev.filter((w) => w.id !== id));
-    toast.success("Worker deleted");
+    toast.success(t("workers.toasts.deleted"));
   };
 
   /* selection */
   const toggleRow = (id) =>
     setSelectedRows((prev) =>
-      prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id],
+      prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]
     );
   const toggleAll = () =>
     setSelectedRows(
       selectedRows.length === filteredWorkers.length
         ? []
-        : filteredWorkers.map((w) => w.id),
+        : filteredWorkers.map((w) => w.id)
     );
   const allSelected =
-    selectedRows.length === filteredWorkers.length &&
-    filteredWorkers.length > 0;
+    selectedRows.length === filteredWorkers.length && filteredWorkers.length > 0;
   const someSelected =
     selectedRows.length > 0 && selectedRows.length < filteredWorkers.length;
 
   /* bulk delete */
   const handleBulkDelete = async () => {
-    if (!window.confirm(`Delete ${selectedRows.length} workers?`)) return;
+    if (
+      !window.confirm(
+        t("workers.confirmations.deleteMultiple", { count: selectedRows.length })
+      )
+    )
+      return;
     await Promise.all(selectedRows.map((id) => deleteWorker(id)));
     setWorkers((prev) => prev.filter((w) => !selectedRows.includes(w.id)));
     setSelectedRows([]);
-    toast.success("Deleted selected workers");
+    toast.success(t("workers.toasts.deletedSelected"));
   };
 
   /* export */
@@ -148,7 +157,7 @@ function Workers() {
     URL.revokeObjectURL(url);
   };
 
-  // pagination
+  /* pagination */
   useEffect(() => {
     setCurrentPage(1);
   }, [searchTerm, statusFilter]);
@@ -170,33 +179,21 @@ function Workers() {
   const activeBtn =
     "bg-black text-white border-black dark:bg-white dark:text-black dark:border-white";
 
-  useEffect(() => {
-    if (isViewModalOpen) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "";
-    }
-
-    return () => {
-      document.body.style.overflow = "";
-    };
-  }, [isViewModalOpen]);
-
-  /* loading */
+  /* loading state */
   if (loading) {
     return (
       <div className="p-4 sm:p-8 bg-gray-50 dark:bg-gray-950 transition-colors">
         <div className="bg-white dark:bg-gray-900 p-8 text-center rounded-xl shadow flex flex-col items-center gap-3 border border-gray-200 dark:border-gray-800">
           <RefreshCw className="animate-spin text-blue-500" size={28} />
           <span className="text-gray-500 dark:text-gray-400 text-sm">
-            Loading workers…
+            {t("workers.loading")}
           </span>
         </div>
       </div>
     );
   }
 
-  /* error */
+  /* error state */
   if (error) {
     return (
       <div className="p-8 bg-gray-50 dark:bg-gray-950 transition-colors">
@@ -213,27 +210,27 @@ function Workers() {
       <header className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
         <div>
           <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">
-            Workers Management
+            {t("workers.header.title")}
           </h1>
           <p className="text-gray-500 dark:text-gray-400 text-sm mt-0.5">
-            Manage all registered workers
+            {t("workers.header.subtitle")}
           </p>
         </div>
 
         <div className="flex gap-2 flex-wrap">
           <button
             onClick={fetchWorkers}
-            className="px-3 py-2 bg-yellow-300 dark:bg-yellow-500 hover:bg-yellow-400 dark:hover:bg-yellow-600 text-gray-900 dark:text-white rounded-lg flex items-center gap-1.5 text-sm font-medium transition-colors"
+            className="px-3 py-2 bg-yellow-300 dark:bg-yellow-500 hover:bg-yellow-400 dark:hover:bg-yellow-600 text-gray-900 dark:text-white rounded-lg flex items-center gap-1.5 text-sm font-medium transition-colors cursor-pointer"
           >
             <RefreshCw size={14} />
-            <span className="hidden xs:inline">Refresh</span>
+            <span className="hidden xs:inline">{t("workers.buttons.refresh")}</span>
           </button>
 
           <button
             onClick={() => navigate("/admin/create/worker")}
-            className="px-3 py-2 bg-blue-600 dark:bg-blue-500 hover:bg-blue-700 dark:hover:bg-blue-600 text-white rounded-lg text-sm font-medium transition-colors"
+            className="px-3 py-2 bg-blue-600 dark:bg-blue-500 hover:bg-blue-700 dark:hover:bg-blue-600 text-white rounded-lg text-sm font-medium transition-colors cursor-pointer"
           >
-            + Add Worker
+            {t("workers.buttons.addWorker")}
           </button>
         </div>
       </header>
@@ -241,31 +238,31 @@ function Workers() {
       {/* STATS */}
       <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-5 gap-3 mb-6">
         <StatCard
-          title="Total"
+          title={t("workers.stats.total")}
           value={stats.total}
           icon={<Users />}
           color="blue"
         />
         <StatCard
-          title="Under Review"
+          title={t("workers.stats.underReview")}
           value={stats.pending}
           icon={<Clock />}
           color="yellow"
         />
         <StatCard
-          title="Verified"
+          title={t("workers.stats.verified")}
           value={stats.verified}
           icon={<CircleCheck />}
           color="green"
         />
         <StatCard
-          title="Unverified"
+          title={t("workers.stats.unverified")}
           value={stats.unverified}
           icon={<HelpCircle />}
           color="gray"
         />
         <StatCard
-          title="Rejected"
+          title={t("workers.stats.rejected")}
           value={stats.rejected}
           icon={<XCircle />}
           color="red"
@@ -280,9 +277,8 @@ function Workers() {
             size={16}
           />
           <input
-            className="bg-white dark:bg-gray-900 w-full pl-9 pr-4 py-2 rounded-lg text-sm text-gray-800 dark:text-white border border-gray-200 dark:border-gray-800
-                       focus:outline-none focus:ring-2 focus:ring-blue-300 dark:focus:ring-blue-500"
-            placeholder="Search..."
+            className="bg-white dark:bg-gray-900 w-full pl-9 pr-4 py-2 rounded-lg text-sm text-gray-800 dark:text-white border border-gray-200 dark:border-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-300 dark:focus:ring-blue-500"
+            placeholder={t("workers.searchPlaceholder")}
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
@@ -298,23 +294,22 @@ function Workers() {
       {selectedRows.length > 0 && (
         <div className="flex flex-wrap justify-between items-center bg-blue-50 dark:bg-blue-950/40 border border-blue-200 dark:border-blue-800 p-3 rounded-xl mb-3 gap-2">
           <span className="text-sm text-blue-700 dark:text-blue-400 font-medium">
-            {selectedRows.length} worker{selectedRows.length > 1 ? "s" : ""}{" "}
-            selected
+            {t("workers.selectedCount", { count: selectedRows.length })}
           </span>
 
           <div className="flex gap-2">
             <button
               onClick={handleExport}
-              className="px-3 py-1.5 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-lg flex items-center gap-1.5 text-sm transition-colors"
+              className="px-3 py-1.5 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-lg flex items-center gap-1.5 text-sm transition-colors cursor-pointer"
             >
               <Download size={13} />
-              Export
+              {t("workers.buttons.export")}
             </button>
             <button
               onClick={handleBulkDelete}
-              className="px-3 py-1.5 bg-red-500 dark:bg-red-600 text-white hover:bg-red-600 dark:hover:bg-red-700 rounded-lg text-sm transition-colors"
+              className="px-3 py-1.5 bg-red-500 dark:bg-red-600 text-white hover:bg-red-600 dark:hover:bg-red-700 rounded-lg text-sm transition-colors cursor-pointer"
             >
-              Delete Selected
+              {t("workers.buttons.deleteSelected")}
             </button>
           </div>
         </div>
@@ -338,25 +333,25 @@ function Workers() {
                   />
                 </th>
                 <th className="px-4 py-3 text-left font-semibold text-gray-600 dark:text-gray-300 whitespace-nowrap">
-                  ID
+                  {t("workers.table.id")}
                 </th>
                 <th className="px-4 py-3 text-left font-semibold text-gray-600 dark:text-gray-300 whitespace-nowrap">
-                  Name
+                  {t("workers.table.name")}
                 </th>
                 <th className="px-4 py-3 text-left font-semibold text-gray-600 dark:text-gray-300 whitespace-nowrap">
-                  Email
+                  {t("workers.table.email")}
                 </th>
                 <th className="px-4 py-3 text-left font-semibold text-gray-600 dark:text-gray-300 whitespace-nowrap">
-                  Phone
+                  {t("workers.table.phone")}
                 </th>
                 <th className="px-4 py-3 text-left font-semibold text-gray-600 dark:text-gray-300 whitespace-nowrap">
-                  Location
+                  {t("workers.table.location")}
                 </th>
                 <th className="px-4 py-3 text-left font-semibold text-gray-600 dark:text-gray-300 whitespace-nowrap">
-                  Status
+                  {t("workers.table.status")}
                 </th>
                 <th className="px-4 py-3 text-center font-semibold text-gray-600 dark:text-gray-300 w-16">
-                  Actions
+                  {t("workers.table.actions")}
                 </th>
               </tr>
             </thead>
@@ -368,7 +363,7 @@ function Workers() {
                     colSpan={8}
                     className="py-12 text-center text-gray-500 dark:text-gray-400 text-sm"
                   >
-                    No workers found
+                    {t("workers.noWorkersFound")}
                   </td>
                 </tr>
               ) : (
@@ -397,8 +392,7 @@ function Workers() {
                     </td>
 
                     <td className="px-4 py-3 font-semibold text-gray-800 dark:text-gray-200 whitespace-nowrap">
-                      {[w.first_name, w.last_name].filter(Boolean).join(" ") ||
-                        "—"}
+                      {[w.first_name, w.last_name].filter(Boolean).join(" ") || "—"}
                     </td>
 
                     <td className="px-4 py-3 text-gray-600 dark:text-gray-300 max-w-45 truncate">
@@ -441,7 +435,10 @@ function Workers() {
 
         {workers.length > 0 && (
           <div className="px-4 py-2.5 border-t border-gray-100 dark:border-gray-800 bg-gray-50 dark:bg-gray-800/50 text-xs text-gray-600 dark:text-gray-300">
-            Showing {paginatedWorkers.length} of {workers.length} workers
+            {t("workers.showingCount", {
+              shown: paginatedWorkers.length,
+              total: workers.length,
+            })}
           </div>
         )}
       </div>
@@ -449,15 +446,14 @@ function Workers() {
       {/* PAGINATION */}
       <div className="flex flex-col sm:flex-row items-center justify-between gap-3 mt-4">
         <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-300">
-          <span>Rows:</span>
+          <span>{t("workers.pagination.rows")}</span>
           <select
             value={rowsPerPage}
             onChange={(e) => {
               setRowsPerPage(Number(e.target.value));
               setCurrentPage(1);
             }}
-            className="border border-gray-300 dark:border-gray-600 rounded px-2 py-1 
-                 bg-white dark:bg-gray-800 text-gray-800 dark:text-white"
+            className="border border-gray-300 dark:border-gray-600 rounded px-2 py-1 bg-white dark:bg-gray-800 text-gray-800 dark:text-white"
           >
             {[5, 10, 20, 50].map((size) => (
               <option key={size} value={size}>
@@ -474,7 +470,7 @@ function Workers() {
                 onClick={() => setCurrentPage(1)}
                 className={`${baseBtn} ${themeBtn}`}
               >
-                « First
+                {t("workers.pagination.first")}
               </button>
             )}
 
@@ -483,14 +479,14 @@ function Workers() {
                 onClick={() => setCurrentPage((p) => p - 1)}
                 className={`${baseBtn} ${themeBtn}`}
               >
-                ‹ Prev
+                {t("workers.pagination.prev")}
               </button>
             )}
 
             {Array.from({ length: totalPages }, (_, i) => i + 1)
               .slice(
                 Math.max(0, currentPage - 3),
-                Math.min(totalPages, currentPage + 2),
+                Math.min(totalPages, currentPage + 2)
               )
               .map((page) => (
                 <button
@@ -508,7 +504,7 @@ function Workers() {
                 onClick={() => setCurrentPage((p) => p + 1)}
                 className={`${baseBtn} ${themeBtn}`}
               >
-                Next ›
+                {t("workers.pagination.next")}
               </button>
             )}
 
@@ -517,160 +513,19 @@ function Workers() {
                 onClick={() => setCurrentPage(totalPages)}
                 className={`${baseBtn} ${themeBtn}`}
               >
-                Last »
+                {t("workers.pagination.last")}
               </button>
             )}
           </div>
         </div>
       </div>
 
-      {/* VIEW MODAL */}
-      {isViewModalOpen && selectedWorker && (
-        <div
-          className="fixed inset-0 bg-black/40 backdrop-blur-[2px] flex items-end sm:items-center justify-center z-50 p-0 sm:p-4"
-          onClick={closeModal}
-        >
-          <div
-            className="bg-white dark:bg-gray-900 w-full sm:max-w-md sm:rounded-2xl rounded-t-2xl p-6 shadow-2xl border border-transparent dark:border-gray-800"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="flex items-center justify-between mb-5">
-              <h2 className="text-lg font-bold text-gray-900 dark:text-white">
-                Worker Details
-              </h2>
-              <button
-                onClick={closeModal}
-                className="p-1.5 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-500 dark:text-gray-400 transition-colors"
-              >
-                <X size={18} />
-              </button>
-            </div>
-
-            <div className="flex border-b border-gray-200 dark:border-gray-700 mb-4">
-              <button
-                onClick={() => setActiveTab("personal")}
-                className={`px-4 py-2 text-sm font-medium ${activeTab === "personal"
-                  ? "border-b-2 border-blue-600 text-blue-600 dark:border-blue-500 dark:text-blue-400"
-                  : "text-gray-500 dark:text-gray-400"
-                  }`}
-              >
-                Personal
-              </button>
-
-              <button
-                onClick={() => setActiveTab("contact")}
-                className={`px-4 py-2 text-sm font-medium ${activeTab === "contact"
-                  ? "border-b-2 border-blue-600 text-blue-600 dark:border-blue-500 dark:text-blue-400"
-                  : "text-gray-500 dark:text-gray-400"
-                  }`}
-              >
-                Contact
-              </button>
-
-              <button
-                onClick={() => setActiveTab("others")}
-                className={`px-4 py-2 text-sm font-medium ${activeTab === "others"
-                  ? "border-b-2 border-blue-600 text-blue-600 dark:border-blue-500 dark:text-blue-400"
-                  : "text-gray-500 dark:text-gray-400"
-                  }`}
-              >
-                Others
-              </button>
-            </div>
-
-            <div className="space-y-3 text-sm text-gray-800 dark:text-gray-200">
-              {activeTab === "personal" && (
-                <>
-                  <div className="flex gap-2">
-                    <span className="font-semibold text-gray-500 dark:text-gray-400 w-32">
-                      First Name
-                    </span>
-                    <span>{selectedWorker.first_name || "—"}</span>
-                  </div>
-
-                  <div className="flex gap-2">
-                    <span className="font-semibold text-gray-500 dark:text-gray-400 w-32">
-                      Last Name
-                    </span>
-                    <span>{selectedWorker.last_name || "—"}</span>
-                  </div>
-                </>
-              )}
-
-              {activeTab === "contact" && (
-                <>
-                  <div className="flex gap-2">
-                    <span className="font-semibold text-gray-500 dark:text-gray-400 w-32">
-                      Email
-                    </span>
-                    <span className="truncate">{selectedWorker.email || "—"}</span>
-                  </div>
-
-                  <div className="flex gap-2">
-                    <span className="font-semibold text-gray-500 dark:text-gray-400 w-32">
-                      Phone
-                    </span>
-                    <span>{selectedWorker.phone || "—"}</span>
-                  </div>
-                </>
-              )}
-
-              {activeTab === "others" && (
-                <>
-                  <div className="flex gap-2">
-                    <span className="font-semibold text-gray-500 dark:text-gray-400 w-32">ID</span>
-                    <span>#{selectedWorker.id}</span>
-                  </div>
-
-                  <div className="flex gap-2">
-                    <span className="font-semibold text-gray-500 dark:text-gray-400 w-32">
-                      Location
-                    </span>
-                    <span>{selectedWorker.location || "—"}</span>
-                  </div>
-
-                  <div className="flex gap-2">
-                    <span className="font-semibold text-gray-500 dark:text-gray-400 w-32">
-                      National ID
-                    </span>
-                    <span>{selectedWorker.national_id || "—"}</span>
-                  </div>
-
-                  <div className="flex gap-2 items-center">
-                    <span className="font-semibold text-gray-500 dark:text-gray-400 w-32">
-                      Status
-                    </span>
-                    <StatusBadge
-                      status={selectedWorker.verification_status}
-                      label={selectedWorker.verification_status_display}
-                    />
-                  </div>
-                </>
-              )}
-            </div>
-
-            <div className="flex gap-2 mt-6">
-              <button
-                onClick={() => {
-                  navigate(`/admin/edit/worker/${selectedWorker.id}`);
-                  closeModal();
-                }}
-                className="px-4 py-2 bg-blue-600 dark:bg-blue-500 hover:bg-blue-700 dark:hover:bg-blue-600 text-white rounded-lg text-sm font-medium transition-colors flex items-center gap-2 cursor-pointer"
-              >
-                <Edit size={13} />
-                Edit
-              </button>
-              <button
-                onClick={() => handlePrintWorker(selectedWorker)}
-                className="px-4 py-2 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-800 dark:text-gray-200 rounded-lg text-sm font-medium transition-colors flex items-center gap-2 cursor-pointer"
-              >
-                <Printer size={13} />
-                Print
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      {/* VIEW MODAL (EXTRACTED COMPONENT) */}
+      <WorkerViewModal
+        isOpen={isViewModalOpen}
+        worker={selectedWorker}
+        onClose={closeModal}
+      />
     </div>
   );
 }

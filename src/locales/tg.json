@@ -13,7 +13,7 @@
     "help": "ሓግዝ",
     "howItWorks": "ከመይ ይሰራሕ",
     "login": "እቶ",
-    "loginTitle": "ናብ SiraLink እቶ",
+    "loginTitle": "ናብ ስራሕሊንክ እቶ",
     "loginSubtitle": "ንመምረጺታትካ ብምእታው ቀጽል",
     "getStarted": "ጀምር",
     "profile": "ፕሮፋይል",
@@ -25,7 +25,7 @@
     "user": "ተጠቃሚ"
   },
   "login": {
-    "title": "ናብ SiraLink እቶ",
+    "title": "ናብ ስራሕሊንክ እቶ",
     "subtitle": "ንመምረጺታትካ ብምእታው ቀጽል",
     "identifierPlaceholder": "ኢሜይል ወይ ስልኪ",
     "passwordPlaceholder": "ፓስወርድ",
@@ -65,7 +65,7 @@
     "earnings": "ኣታዊታት"
   },
   "signup": {
-    "title": "ናብ SiraLink ተሓወስ",
+    "title": "ናብ ስራሕሊንክ ተሓወስ",
     "subtitle": "በየናይ መገዲ ክትጥቀመሉ ከም እትደሊ ሓሪኻ እቶ",
     "clientTitle": "ከም ኣስራሒ ተሓወስ",
     "clientSubtitle": "ሰራሕተኛታት ቑጸርን ስራሕ ለጥፍን",
@@ -266,7 +266,7 @@
     "tagline": "ኣብ መላእ ኢትዮጵያ ንዝርከቡ ኣስራሕቲ ምስ ክኢላታት ሰራሕተኛታት የራኽብ። ብቀሊሉ ህነጽ፣ ቑጸር፣ ዕበ።",
     "follow_us": "ስዐቡና",
     "mobile_app": "ሞባይል ኣፕሊኬሽን",
-    "copyright": "SiraLink ኢትዮጵያ። መሰሉ ብሕጊ ዝተሓለወ እዩ።",
+    "copyright": "ስራሕሊንክ ኢትዮጵያ። መሰሉ ብሕጊ ዝተሓለወ እዩ።",
     "sections": {
       "quick_links": "ቀልጣፍ ኣጋጣሚታት",
       "for_workers": "ንሰራሕተኛታት",
@@ -294,8 +294,7 @@
     "loading": "ይፅዕን ኣሎ...",
     "hero": {
       "title": "ኣብ ኢትዮጵያ ክኢላታት ሰራሕተኛታት ረክብ ወይ ብቕልጡፍ ተቖጸር",
-      "title_comment": "Find Skilled Workers or Get Hired Fast in Ethiopia",
-      "description": "SiraLink ንኣስራሕቲን ክኢላታት ሰራሕተኛታትን ከም ቧንቧኛ፣ ኤሌክትሪሻን፣ ጽሬት፣ መምህርን ካልኦትን ስራሓት የራኽብ።",
+      "description": "ስራሕሊንክ ንኣስራሕቲን ክኢላታት ሰራሕተኛታትን ከም ቧንቧኛ፣ ኤሌክትሪሻን፣ ጽሬት፣ መምህርን ካልኦትን ስራሓት የራኽብ።",
       "find_work": "ስራሕ ድለይ",
       "hire_talent": "ክኢላታት ቑጸር"
     },
@@ -315,7 +314,7 @@
     },
     "how_it_works": {
       "badge": "ቀሊል መስርሕ",
-      "heading": "SiraLink ከመይ ይሰራሕ",
+      "heading": "ስራሕሊንክ ከመይ ይሰራሕ",
       "subheading": "ንኣስራሕትን ክኢላታት ሰራሕተኛታትን ንምርኻብ፣ ንምትሕግጋዝን ብሓደ ንምዕባይን ቅልጡፍን ጽፉፍን መገዲ።",
       "steps": {
         "step_1": {
@@ -335,14 +334,14 @@
     "stats": {
       "badge": "ሓበሬታ ፕላትፎርም",
       "heading": "ኣብ መላእ ኢትዮጵያ ዝተኣመነ",
-      "subheading": "ኣሽሓት ክኢላታትን ኣስራሕትን መዓልታዊ ክራኸቡ፣ ክቆፅሩን ዕድላት ክፈጥሩን ንSiraLink ይጠቀሙ።",
+      "subheading": "ኣሽሓት ክኢላታትን ኣስራሕትን መዓልታዊ ክራኸቡ፣ ክቆፅሩን ዕድላት ክፈጥሩን ንስራሕሊንክ ይጠቀሙ።",
       "active_workers": "ነቃሓት ሰራሕተኛታት",
       "jobs_posted": "ዝተለጥፉ ስራሓት",
       "successful_hires": "ዝተሳኸዑ ቖፅራታት",
       "platform_support": "ደገፍ ፕላትፎርም"
     },
     "why_us": {
-      "badge": "ስለምንታይ SiraLink",
+      "badge": "ስለምንታይ ስራሕሊንክ",
       "heading": "ንናይ ኢትዮጵያ ሓይሊ ሰራሕተኛ ዝተሰርሐ",
       "subheading": "ኣስራሕትን ክኢላታትን ብቕልጡፍ ክራኸቡ፣ ብብልሓት ክሰርሑን ብተኣማንነት ክዓብዩን ዝሕግዝ ዘመናዊ ፕላትፎርም ።",
       "reasons": {
@@ -364,7 +363,7 @@
       "badge": "ምስክረነታት",
       "heading": "ብኣስራሕትን ብሰራሕተኛታትን ዝተኣመነ",
       "items": {
-        "abel": "SiraLink ኣብ ውሽጢ ሓደ መዓልቲ ክኢላ ኤሌክትሪሻን ክቆጽር ሓጊዙኒ።",
+        "abel": "ስራሕሊንክ ኣብ ውሽጢ ሓደ መዓልቲ ክኢላ ኤሌክትሪሻን ክቆጽር ሓጊዙኒ።",
         "meron": "ቀጻሊ ዝኾነ ናይ ብሕቲ ስራሕን እሙናት ኣስራሕትን ረኺበ።",
         "samuel": "እዚ ፕላትፎርም ጽፉፍ፣ ሞያዊን ንምጥቃም ቀሊልን እዩ።"
       },
@@ -376,7 +375,7 @@
     "cta": {
       "badge": "ናይ ኢትዮጵያ ዘመናዊ ናይ ምቆጻር ፕላትፎርም",
       "heading": "ንምጅማር ድሉው ኢኻ?",
-      "subheading": "ኣብ መላእ ኢትዮጵያ ሞያ ንምህናጽ፣ ክኢላታት ንምቆጻርን ንግዲ ንምዕባይን SiraLink ዝጠቀሙ ዘለዉ ኣሽሓት ክኢላታትን ኣስራሕትን ተሓወስ።",
+      "subheading": "ኣብ መላእ ኢትዮጵያ ሞያ ንምህናጽ፣ ክኢላታት ንምቆጻርን ንግዲ ንምዕባይን ስራሕሊንክ ዝጠቀሙ ዘለዉ ኣሽሓት ክኢላታትን ኣስራሕትን ተሓወስ።",
       "create_account": "መለያ ፍጠር",
       "browse_jobs": "ስራሓት ቃኚ"
     }
@@ -438,12 +437,6 @@
       "active": "ነቃሕ",
       "rejected": "ዝተነጸገ",
       "suspended": "ዝተኣገደ"
-    },
-    "actions_menu": {
-      "view": "ርአ",
-      "edit": "ኣስተኻኽል",
-      "print": "ሕተም",
-      "delete": "ሰርዝ"
     },
     "view_modal": {
       "title": "ዝርዝር ሓበሬታ ተጠቃሚ",
@@ -520,6 +513,294 @@
       "generated": "ዝተዳለወሉ",
       "footer": "ስርዓት ምሕደራ ተጠቀምቲ",
       "company_name": "ስም ትካል / ሙሉእ ስም"
+    }
+  },
+  "createClient": {
+    "title": "ዓሚል ፍጠር",
+    "subtitle": "ካብ ዘሎ ተጠቃሚ ናይ ዓሚል ፕሮፋይል ፍጠር",
+    "fields": {
+      "selectUserLabel": "ዝይተኣሳሰረ ተጠቃሚ ዓሚል ሕረይ",
+      "selectUserPlaceholder": "-- ተጠቃሚ ሕረይ --",
+      "idLabel": "መነጽር መለለዪ",
+      "email": "ኢሜይል",
+      "phone": "ቁጽሪ ስልኪ",
+      "clientType": "ዓይነት ዓሚል",
+      "companyName": "ስም ትካል",
+      "nationalId": "ሃገራዊ መታወቂ",
+      "location": "ቦታ/ኣድራሻ",
+      "profileImage": "ስእሊ ፕሮፋይል"
+    },
+    "placeholders": {
+      "email": "ኢሜይል",
+      "phone": "ቁጽሪ ስልኪ",
+      "companyName": "ስም ትካል",
+      "nationalId": "ሃገራዊ መታወቂ",
+      "location": "ቦታ/ኣድራሻ"
+    },
+    "options": {
+      "individual": "ግልሰብ",
+      "company": "ትካል"
+    },
+    "hints": {
+      "maxFileSize": "ዝለዓለ ዓቐን ፋይል: 2MB"
+    },
+    "buttons": {
+      "creating": "ይምህናጽ/ይፍጠር ኣሎ...",
+      "create": "ዓሚል ፍጠር",
+      "backToClients": "ናብ ዝርዝር ዓማዊል ተመለስ"
+    },
+    "validation": {
+      "userRequired": "ብኽብረትኩም ተጠቃሚ ሕረዩ",
+      "min2Chars": "ብውሕዱ 2 ፊደላት የድልዩ",
+      "mustStartWithLetter": "ብፊደል ክጅምር ኣለዎ",
+      "lettersAndSpacesOnly": "ፊደላትን ክፍተታትን ጥራሕ ክሕዝ ኣለዎ",
+      "nationalIdRequired": "ሃገራዊ መታወቂ የድሊ",
+      "finExact12Digits": "ትክክለኛ 12 ኣሃዝ ዘለዎ FIN ቁጽሪ ኣእትው",
+      "companyNameRequired": "ስም ትካል የድሊ",
+      "mustBeImage": "እቲ ፋይል ስእሊ ክኸውን ኣለዎ",
+      "maxSize2MB": "ዝለዓለ ዓቐን 2MB እዩ"
+    },
+    "messages": {
+      "success": "ሓዲሽ ዓሚል ተፈጢሩ ኣሎ",
+      "error": "ዓሚል ምፍጣር ኣይተኻእለን"
+    }
+  },
+  "createWorker": {
+    "title": "ሰራሕተኛ ፍጠር",
+    "subtitle": "ካብ ዘሎ ተጠቃሚ ሰራሕተኛ ፕሮፋይል ሰራሕተኛ ፍጠር",
+    "fields": {
+      "selectUserLabel": "ዘይተኣሳሰረ ተጠቃሚ ሰራሕተኛ ምረፅ",
+      "selectUserPlaceholder": "-- ተጠቃሚ ምረፅ --",
+      "idLabel": "መነጸሪ (ID)",
+      "email": "ኢመይል",
+      "phone": "ቁፅሪ ስልኪ",
+      "firstName": "ስም",
+      "lastName": "ስም ኣቦ",
+      "nationalId": "ሃገራዊ መታወቂያ",
+      "location": "ቦታ / ኣድራሻ",
+      "skills": "ክእለታት / ሙያታት",
+      "bio": "ብዛዕባኻ ብሓፂሩ (Bio)",
+      "experienceYears": "ልምዲ ስራሕ (ብዓመት)",
+      "portfolioLink": "ሊንክ ፖርትፎሊዮ / ዌብሳይት",
+      "profileImage": "ምስሊ ፕሮፋይል"
+    },
+    "placeholders": {
+      "email": "ኢመይል",
+      "phone": "ቁፅሪ ስልኪ",
+      "firstName": "ስም",
+      "lastName": "ስም ኣቦ",
+      "nationalId": "ሃገራዊ መታወቂያ",
+      "location": "ቦታ / ኣድራሻ",
+      "skills": "ኣብነት፡ ብልጭታ፣ ኤሌክትሪሻን",
+      "bio": "ብዛዕባ ልምዲ ስራሕካ ብሓፂሩ ፅሓፍ...",
+      "experienceYears": "ኣብነት፡ 3",
+      "portfolioLink": "https://example.com"
+    },
+    "hints": {
+      "maxFileSize": "ዝለዓለ ዓቐን ፋይል፡ 2MB"
+    },
+    "buttons": {
+      "create": "ሰራሕተኛ ፍጠር",
+      "creating": "ይፍጠር ኣሎ...",
+      "backToWorkers": "ናብ ዝርዝር ሰራሕተኛታት ተመለስ"
+    },
+    "messages": {
+      "success": "ሓዱሽ ሰራሕተኛ ተፈጢሩ ኣሎ"
+    },
+    "validation": {
+      "userRequired": "በጃኹም ተጠቃሚ ምረፁ",
+      "finExact12Digits": "ትክክለኛ 12 ኣሃዝ ዘለዎ FIN ቁጽሪ ኣእትው",
+      "min2Chars": "ብውሑዱ 2 ፊደላት የድልዩ",
+      "mustStartWithLetter": "ብፊደል ክጅምር ኣለዎ",
+      "lettersAndSpacesOnly": "ፊደላትን ባዶ ቦታን (space) ጥራሕ ክሕዝ ኣለዎ",
+      "skillsMin2": "ክእለት ብውሑዱ 2 ፊደላት ክኸውን ኣለዎ",
+      "bioMin10": "ብዛዕባኻ እትፅሕፎ ብውሑዱ 10 ፊደላት ክኸውን ኣለዎ",
+      "validExperience": "በጃኹም ትክክለኛ ዓመት ልምዲ ኣእትዉ",
+      "validUrl": "በጃኹም ትክክለኛ ናይ ዌብሳይት ኣድራሻ (URL) ኣእትዉ",
+      "mustBeImage": "ፋይል ምስሊ (Image) ክኸውን ኣለዎ",
+      "maxSize2MB": "ዝለዓለ ዓቐን 2MB እዩ"
+    }
+  },
+  "actions_menu": {
+    "view": "ርአ",
+    "edit": "ኣስተኻኽል",
+    "print": "ሕተም",
+    "delete": "ሰርዝ"
+  },
+  "clients": {
+    "title": "ምሕደራ ዓደግቲ",
+    "subtitle": "ኩሎም ዝተመዝገቡ ዓደግቲ ኣመሓድር",
+    "refresh": "ኣሐድስ",
+    "add_client": "+ ዓማዊል ወስኽ",
+    "search_placeholder": "ድለይ...",
+    "export": "ላእኽ (Export)",
+    "delete_selected": "ዝተሓረዩ ሰርዝ",
+    "id": "መለያ ID",
+    "name": "ስም",
+    "email": "ኢመይል",
+    "phone": "ስልኪ",
+    "location": "ቦታ/ኣድራሻ",
+    "status": "ኩነታት",
+    "actions": "ተግባራት",
+    "rows": "መስመራት:",
+    "first": "« ቀዳማይ",
+    "prev": "‹ ዝሓለፈ",
+    "next": "ዝቕጽል ›",
+    "last": "መወዳእታ »",
+    "edit": "ኣስተኻኽል",
+    "print": "ሕተም",
+    "loading": "ዓደግቲ ይጽዓኑ ኣለዉ…",
+    "error_fetch": "ዓደግቲ ምጽዓን ኣይተኻእለን",
+    "no_clients_found": "ዝተረኽበ ዓማዊል የለን",
+    "client_type": "ዓይነት ዓማዊል",
+    "type_individual": "ግለሰብ",
+    "type_company": "ኩባንያ/ትካል",
+    "selected_count": "{{count}} ተሓርዮም",
+    "selected_count_one": "{{count}} ዓማዊል ተሓርዩ",
+    "selected_count_other": "{{count}} ዓደግቲ ተሓርዮም",
+    "showing_count": "ካብ  {{total}} ዓደግቲ {{count}} የርኢ ኣሎ",
+    "confirm_delete": "ነዚ ዓማዊል ክትሰርዞ ትደሊዶ?",
+    "toast_deleted": "ዓማዊል ተሰሪዙ ኣሎ",
+    "confirm_bulk_delete": "{{count}} ዓደግቲ ክትሰርዝ ትደሊዶ?",
+    "toast_bulk_deleted": "ዝተሓረዩ ዓደግቲ ተሰሪዞም ኣለዉ",
+    "messages": {
+      "client_updated": "ሓበሬታ ዓማዊል ብተዓወተ መንገዲ ተመሓይሹ"
+    },
+    "types": {
+      "individual": "ግለሰብ",
+      "company": "ኩባንያ/ትካል"
+    },
+    "status_options": {
+      "pending": "ኣብ መስርሕ ዝርከብ",
+      "verified": "ዝተረጋገጸ",
+      "unverified": "ዘይተረጋገጸ",
+      "rejected": "ዝተነጸገ"
+    },
+    "stats": {
+      "total": "ጠቕላላ",
+      "under_review": "ኣብ ገምጋም ዝርከብ",
+      "verified": "ዝተረጋገጹ",
+      "unverified": "ዘይተረጋገጹ",
+      "rejected": "ዝተነጸጉ"
+    },
+    "modal": {
+      "title": "ዝርዝር ሓበሬታ ዓማዊል",
+      "tabs": {
+        "personal": "ግላዊ",
+        "contact": "ርክብ",
+        "others": "ካልኦት",
+        "company": "ኩባንያ"
+      }
+    },
+    "edit_modal": {
+      "title": "መግለጺ ዓማዊል ኣስተኻኽል",
+      "subtitle": "ሓበሬታን ኩነታትን ዓማዊል ኣሐድስ።",
+      "min2_chars": "ብውሑዱ 2 ፊደላት የድልዩ",
+      "national_id_required": "ሃገራዊ መነጸሪ (ID) የድሊ",
+      "location_required": "ቦታ/ኣድራሻ የድሊ",
+      "status_required": "ኩነታት ምረጋገጽ የድሊ",
+      "cancel": "ሰርዝ",
+      "save": "ለውጥታት ኣስምሕ"
+    },
+    "placeholders": {
+      "company_name": "ስም ኩባንያ ኣእትው",
+      "national_id": "ቁጽሪ ሃገራዊ መነጸሪ ኣእትው",
+      "location": "ኣድራሻ/ቦታ ኣእትው"
+    },
+    "fields": {
+      "id": "መለያ ID",
+      "first_name": "ስም",
+      "last_name": "ስም ኣቦ",
+      "company_name": "ስም ኩባንያ",
+      "contact_first_name": "ስም ተወካሊ",
+      "contact_last_name": "ስም ኣቦ ተወካሊ",
+      "email": "ኢመይል",
+      "phone": "ቁጽሪ ስልኪ",
+      "location": "ቦታ/ኣድራሻ",
+      "status": "ኩነታት ምረጋገጽ",
+      "national_id": "ሃገራዊ መነጸሪ",
+      "client_type": "ዓይነት ዓማዊል"
+    }
+  },
+  "verification_status": {
+    "all": "ኩሎም",
+    "unverified": "ዘይተረጋገጸ",
+    "pending": "ኣብ ምግምጋም",
+    "verified": "ዝተረጋገጸ",
+    "rejected": "ዝተነጸገ"
+  },
+  "workers": {
+    "loading": "ሰራሕተኛታት ይጽዓኑ ኣለው...",
+    "searchPlaceholder": "ድለይ...",
+    "noWorkersFound": "ዝተረኽበ ሰራሕተኛ የለን",
+    "selectedCount_one": "{{count}} ሰራሕተኛ ተመሪፁ",
+    "selectedCount_other": "{{count}} ሰራሕተኛታት ተመሪፆም",
+    "showingCount": "ካብ {{total}} ሰራሕተኛታት {{shown}} የርእይ ኣሎ",
+    "header": {
+      "title": "ምሕደራ ሰራሕተኛታት",
+      "subtitle": "ኩሎም ዝተመዝገቡ ሰራሕተኛታት ኣመሓድር"
+    },
+    "buttons": {
+      "refresh": "ሕደስ",
+      "addWorker": "+ ሰራሕተኛ ወስኽ",
+      "export": "ላእኽ (Export)",
+      "deleteSelected": "ዝተመረጹ ሰርዝ"
+    },
+    "stats": {
+      "total": "ጠቕላላ",
+      "underReview": "ኣብ ምፅራይ ዝርከብ",
+      "verified": "ዝተረጋገፀ",
+      "unverified": "ዘይተረጋገፀ",
+      "rejected": "ዝተነጸገ"
+    },
+    "table": {
+      "id": "መለዪ (ID)",
+      "name": "ስም",
+      "email": "ኢሜይል",
+      "phone": "ቴሌፎን",
+      "location": "ቦታ",
+      "status": "ኩነታት",
+      "actions": "ተግባራት"
+    },
+    "pagination": {
+      "rows": "መስመራት:",
+      "first": "« ቀዳማይ",
+      "prev": "‹ ዝሓለፈ",
+      "next": "ዝቕጽል ›",
+      "last": "መወዳእታ »"
+    },
+    "modal": {
+      "title": "ዝርዝር ሓበሬታ ሰራሕተኛ",
+      "tabs": {
+        "personal": "ግላዊ ሓበሬታ",
+        "contact": "ርክብ",
+        "others": "ካልኦት"
+      },
+      "fields": {
+        "firstName": "ስም",
+        "lastName": "ስም ኣቦ",
+        "email": "ኢሜይል",
+        "phone": "ቁጽሪ ቴሌፎን",
+        "id": "መለዪ ቁጽሪ",
+        "location": "ቦታ",
+        "nationalId": "ብሄራዊ መነጽሪ",
+        "status": "ኩነታት"
+      },
+      "buttons": {
+        "edit": "ኣስተኻኽል",
+        "print": "ሕተም"
+      }
+    },
+    "confirmations": {
+      "deleteSingle": "ነዚ ሰራሕተኛ ክትሰርዞ ትደሊዶ?",
+      "deleteMultiple": "ን {{count}} ሰራሕተኛታት ክትሰርዞም ትደሊዶ?"
+    },
+    "toasts": {
+      "deleted": "ሰራሕተኛ ተሰሪዙ ኣሎ",
+      "deletedSelected": "ዝተመረጹ ሰራሕተኛታት ተሰሪዞም ኣለው"
+    },
+    "errors": {
+      "failedToLoad": "ሰራሕተኛታት ምጽዓን ኣይተኻእለን"
     }
   }
 }

@@ -1,15 +1,18 @@
 import {
-  Search, Download, Users, Shield, Briefcase, UserCheck, RefreshCw, X, Ban,
+  Search, Download, Users, Shield, Briefcase, UserCheck, RefreshCw, Ban,
   UserLock, Clock,
 } from "lucide-react";
-import React, { useEffect, useState, useMemo, useRef, useCallback } from "react";
+import React, { useEffect, useState, useMemo, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import { useTranslation } from "react-i18next";
 
 import { fetchUsers, deleteUser } from "../../../services/userServices";
-import { useAuth } from "../../../contexts/AuthContext";
 import EditUserModal from "./EditUserModal";
+import UserViewModal from "./UserViewModal";
+import AllUsersStatusFilter from "./AllUsersStatusFilter"
+import AllUSersRoleFilter from "./AllUSersRoleFilter";
+import StatCard from "../../../components/common/StatCard";
 import ActionMenu from "../../../components/common/ActionMenu";
 import { handleUserPrint } from "../../../utils/userPrint";
 
@@ -32,12 +35,10 @@ function AllUsers() {
   const [editForm, setEditForm] = useState(null);
 
   const [selectedRows, setSelectedRows] = useState([]);
-  const [activeTab, setActiveTab] = useState("info");
 
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [errors, setErrors] = useState({});
-  const { full_name } = useAuth();
 
   const navigate = useNavigate();
 
@@ -227,9 +228,7 @@ function AllUsers() {
 
   const baseBtn = "px-3 py-1 rounded-full border cursor-pointer transition";
 
-  const themeBtn =
-    "border-white dark:border-black " +
-    "text-black dark:text-white " +
+  const themeBtn = "border-white dark:border-black text-black dark:text-white " +
     "hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black";
 
   const activeBtn =
@@ -276,8 +275,7 @@ function AllUsers() {
           <button
             onClick={loadUsers}
             className="px-3 py-2 rounded-lg flex items-center gap-1.5 text-sm font-medium transition-colors
-                 bg-yellow-300 hover:bg-yellow-400
-                 dark:bg-yellow-500 dark:hover:bg-yellow-400 dark:text-gray-900"
+                 bg-yellow-300 hover:bg-yellow-400 dark:bg-yellow-500 dark:hover:bg-yellow-400 dark:text-gray-900 cursor-pointer"
           >
             <RefreshCw size={14} />
             <span className="hidden xs:inline">{t("all_users.refresh")}</span>
@@ -285,9 +283,8 @@ function AllUsers() {
 
           <button
             onClick={() => navigate("/admin/create/user")}
-            className="px-3 py-2 rounded-lg text-sm font-medium transition-colors
-                 bg-blue-600 hover:bg-blue-700 text-white
-                 dark:bg-blue-500 dark:hover:bg-blue-400 dark:text-white"
+            className="px-3 py-2 rounded-lg text-sm font-medium transition-colors bg-blue-600 hover:bg-blue-700 text-white
+                 dark:bg-blue-500 dark:hover:bg-blue-400 dark:text-white cursor-pointer"
           >
             {t("all_users.add_user")}
           </button>
@@ -367,8 +364,8 @@ function AllUsers() {
         </div>
 
         <div className="flex gap-3 flex-wrap">
-          <RoleFilter roleFilter={roleFilter} setRoleFilter={setRoleFilter} />
-          <StatusFilter
+          <AllUSersRoleFilter roleFilter={roleFilter} setRoleFilter={setRoleFilter} />
+          <AllUsersStatusFilter
             statusFilter={statusFilter}
             setStatusFilter={setStatusFilter}
           />
@@ -620,250 +617,13 @@ function AllUsers() {
         </div>
       </div>
 
-      {/* VIEW MODAL */}
-      {isViewModalOpen && selectedUser && (
-        <div
-          className="fixed inset-0 bg-black/30 backdrop-blur-[2px] flex items-end sm:items-center justify-center z-50 p-0 sm:p-4"
-          onClick={closeModal}
-        >
-          <div
-            className="w-full sm:max-w-md md:max-w-lg lg:max-w-xl bg-white dark:bg-gray-800 
-            rounded-t-2xl sm:rounded-2xl shadow-2xl border border-gray-200 dark:border-gray-700
-            max-h-[90vh] overflow-y-auto"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div
-              className="sticky top-0 z-10 flex items-center justify-between px-5 py-4 
-              border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800"
-            >
-              <h2 className="font-bold text-lg text-gray-900 dark:text-white">
-                {t("all_users.view_modal.title")}
-              </h2>
-
-              <button
-                onClick={closeModal}
-                className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-500 transition"
-              >
-                <X size={18} />
-              </button>
-            </div>
-
-            <div className="p-5 space-y-5">
-              <div className="flex gap-2 border-b border-gray-200 dark:border-gray-700 pb-2">
-                {["info", "system", "profile"].map((tab) => (
-                  <button
-                    key={tab}
-                    onClick={() => setActiveTab(tab)}
-                    className={`px-3 py-1.5 text-sm rounded-lg capitalize transition ${activeTab === tab
-                      ? "bg-gray-900 text-white dark:bg-white dark:text-gray-900"
-                      : "text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
-                      }`}
-                  >
-                    {t(`all_users.view_modal.tabs.${tab}`)}
-                  </button>
-                ))}
-              </div>
-
-              {/* INFO TAB */}
-              {activeTab === "info" && (
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
-                  <div className="p-3 rounded-lg bg-gray-50 dark:bg-gray-900">
-                    <p className="text-xs text-gray-800 dark:text-white">
-                      {t("all_users.view_modal.labels.email")}
-                    </p>
-                    <p className="break-all text-gray-900 dark:text-white">
-                      {selectedUser.email}
-                    </p>
-                  </div>
-
-                  <div className="p-3 rounded-lg bg-gray-50 dark:bg-gray-900">
-                    <p className="text-xs text-gray-800 dark:text-white">
-                      {t("all_users.view_modal.labels.user_type")}
-                    </p>
-                    <p className="capitalize text-gray-900 dark:text-white">
-                      {selectedUser.user_type}
-                    </p>
-                  </div>
-
-                  <div className="p-3 rounded-lg bg-gray-50 dark:bg-gray-900">
-                    <p className="text-xs text-gray-800 dark:text-white">
-                      {t("all_users.view_modal.labels.phone")}
-                    </p>
-                    <p className="text-gray-900 dark:text-white">
-                      {selectedUser.phone ||
-                        t("all_users.view_modal.labels.no_phone")}
-                    </p>
-                  </div>
-
-                  <div className="p-3 rounded-lg bg-gray-50 dark:bg-gray-900">
-                    <p className="text-xs text-gray-800 dark:text-white">
-                      {t("all_users.view_modal.labels.status")}
-                    </p>
-                    <p
-                      className={
-                        selectedUser.is_active
-                          ? "text-green-500 font-semibold"
-                          : "text-red-500 font-semibold"
-                      }
-                    >
-                      {selectedUser.is_active
-                        ? t("all_users.view_modal.labels.active")
-                        : t("all_users.view_modal.labels.inactive")}
-                    </p>
-                  </div>
-                </div>
-              )}
-
-              {/* SYSTEM TAB */}
-              {activeTab === "system" && (
-                <div className="space-y-3 text-sm">
-                  <div className="p-3 rounded-lg bg-gray-50 dark:bg-gray-900">
-                    <p className="text-xs text-gray-800 dark:text-white">
-                      {t("all_users.view_modal.labels.user_id")}
-                    </p>
-                    <p className="text-gray-900 dark:text-white">
-                      #{selectedUser.id}
-                    </p>
-                  </div>
-
-                  <div className="p-3 rounded-lg bg-gray-50 dark:bg-gray-900">
-                    <p className="text-xs text-gray-800 dark:text-white">
-                      {t("all_users.view_modal.labels.superuser")}
-                    </p>
-                    <p className="text-gray-900 dark:text-white">
-                      {selectedUser.is_superuser
-                        ? t("all_users.view_modal.labels.yes")
-                        : t("all_users.view_modal.labels.no")}
-                    </p>
-                  </div>
-
-                  <div className="p-3 rounded-lg bg-gray-50 dark:bg-gray-900">
-                    <p className="text-xs text-gray-800 dark:text-white">
-                      {t("all_users.view_modal.labels.staff")}
-                    </p>
-                    <p className="text-gray-900 dark:text-white">
-                      {selectedUser.is_staff
-                        ? t("all_users.view_modal.labels.yes")
-                        : t("all_users.view_modal.labels.no")}
-                    </p>
-                  </div>
-
-                  <div className="p-3 rounded-lg bg-gray-50 dark:bg-gray-900">
-                    <p className="text-xs text-gray-800 dark:text-white">
-                      {t("all_users.view_modal.labels.registered")}
-                    </p>
-                    <p className="text-xs text-gray-900 dark:text-white">
-                      {selectedUser.registered_date
-                        ? new Date(
-                          selectedUser.registered_date,
-                        ).toLocaleString()
-                        : "-"}
-                    </p>
-                  </div>
-
-                  <div className="p-3 rounded-lg bg-gray-50 dark:bg-gray-900">
-                    <p className="text-xs text-gray-800 dark:text-white">
-                      {t("all_users.view_modal.labels.last_update")}
-                    </p>
-                    <p className="text-xs text-gray-900 dark:text-white">
-                      {selectedUser.last_update
-                        ? new Date(selectedUser.last_update).toLocaleString()
-                        : "-"}
-                    </p>
-                  </div>
-                </div>
-              )}
-
-              {/* PROFILE TAB */}
-              {activeTab === "profile" && (
-                <div className="space-y-4">
-                  {selectedUser?.client && (
-                    <div className="p-4 rounded-xl bg-blue-50 dark:bg-blue-900/20 border border-blue-100 dark:border-blue-900">
-                      <div className="flex justify-between">
-                        <span className="text-xs font-bold text-blue-600">
-                          {`${t("all_users.view_modal.labels.client")} (${selectedUser.client.client_type === "company"
-                            ? t("all_users.view_modal.labels.company")
-                            : t("all_users.view_modal.labels.individual")
-                            })`}
-                        </span>
-                        <span className="text-xs text-blue-600">
-                          {t("all_users.table.id")} #{selectedUser.client.id}
-                        </span>
-                      </div>
-
-                      <p className="mt-2 font-semibold text-blue-900 dark:text-blue-200">
-                        {selectedUser.client.client_type === "company"
-                          ? `${t("all_users.view_modal.labels.company")}: ${selectedUser.client.company_name || "N/A"}`
-                          : `${t("all_users.view_modal.labels.name")}: ${full_name || "N/A"}`
-                        }
-                      </p>
-                    </div>
-                  )}
-
-                  {selectedUser?.worker && (
-                    <div className="p-4 rounded-xl bg-green-50 dark:bg-green-900/20 border border-green-100 dark:border-green-900">
-                      <div className="flex justify-between">
-                        <span className="text-xs font-bold text-green-600">
-                          {t("all_users.view_modal.labels.worker")}
-                        </span>
-                        <span className="text-xs text-green-600">
-                          {t("all_users.table.id")} #{selectedUser.worker.id}
-                        </span>
-                      </div>
-
-                      <p className="mt-2 font-semibold text-green-900 dark:text-green-200">
-                        {selectedUser.worker.first_name}{" "}
-                        {selectedUser.worker.last_name}
-                      </p>
-                    </div>
-                  )}
-
-                  {selectedUser.user_type === "admin" && (
-                    <div className="p-4 rounded-xl bg-purple-50 dark:bg-purple-900/20 border border-purple-100 dark:border-purple-900">
-                      <span className="text-xs font-bold text-purple-600">
-                        {t("all_users.view_modal.labels.admin")}
-                      </span>
-                      <p className="mt-2 text-purple-900 dark:text-purple-200 font-semibold">
-                        {t("all_users.view_modal.labels.system_admin")}
-                      </p>
-                    </div>
-                  )}
-
-                  {!selectedUser.client &&
-                    !selectedUser.worker &&
-                    selectedUser.user_type !== "admin" && (
-                      <div className="p-4 text-center rounded-xl bg-gray-50 dark:bg-gray-900">
-                        <p className="text-gray-500">
-                          {t("all_users.view_modal.labels.no_linked_profile")}
-                        </p>
-                      </div>
-                    )}
-                </div>
-              )}
-
-              {/* ACTIONS */}
-              <div className="flex flex-col sm:flex-row gap-2 pt-3">
-                <button
-                  onClick={() => {
-                    handleEditUser(selectedUser);
-                    closeModal();
-                  }}
-                  className="flex-1 px-4 py-2 rounded-lg bg-gray-900 dark:bg-white text-white dark:text-gray-900 font-medium"
-                >
-                  {t("all_users.view_modal.buttons.edit")}
-                </button>
-
-                <button
-                  onClick={() => handleUserPrint(selectedUser, t)}
-                  className="flex-1 px-4 py-2 rounded-lg bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-white font-medium"
-                >
-                  {t("all_users.view_modal.buttons.print")}
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
+      {/* VIEW USER MODAL */}
+      <UserViewModal
+        isOpen={isViewModalOpen}
+        user={selectedUser}
+        onClose={closeModal}
+        onEdit={handleEditUser}
+      />
 
       {/* EDIT MODAL */}
       <EditUserModal
@@ -879,202 +639,5 @@ function AllUsers() {
   );
 }
 
-export function StatCard({ title, value, icon, color = "amber" }) {
-  const colorMap = {
-    amber:
-      "bg-amber-100 text-amber-700 dark:bg-amber-500/20 dark:text-amber-300",
-    blue: "bg-blue-100 text-blue-700 dark:bg-blue-500/20 dark:text-blue-300",
-    green:
-      "bg-green-100 text-green-700 dark:bg-green-500/20 dark:text-green-300",
-    red: "bg-red-100 text-red-700 dark:bg-red-500/20 dark:text-red-300",
-    purple:
-      "bg-purple-100 text-purple-700 dark:bg-purple-500/20 dark:text-purple-300",
-    gray: "bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-200",
-  };
-
-  return (
-    <div className="w-full bg-white dark:bg-gray-800 rounded-xl shadow border border-gray-100 dark:border-gray-700 p-5 flex items-center justify-between transition-colors">
-      <div>
-        <p className="text-sm text-gray-500 dark:text-gray-400">{title}</p>
-        <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
-          {value}
-        </h2>
-      </div>
-
-      <div className={`p-3 rounded-xl ${colorMap[color] || colorMap.amber}`}>
-        {icon}
-      </div>
-    </div>
-  );
-}
-
-/* Role Filter */
-export function RoleFilter({ roleFilter, setRoleFilter }) {
-  const { t } = useTranslation();
-  const [open, setOpen] = useState(false);
-  const wrapperRef = useRef(null);
-
-  const options = [
-    { label: t("all_users.filter_role.all"), value: "all" },
-    { label: t("all_users.filter_role.admin"), value: "admin" },
-    { label: t("all_users.filter_role.client"), value: "client" },
-    { label: t("all_users.filter_role.worker"), value: "worker" },
-  ];
-
-  const selected = options.find((o) => o.value === roleFilter);
-
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (wrapperRef.current && !wrapperRef.current.contains(event.target)) {
-        setOpen(false);
-      }
-    };
-
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
-
-  return (
-    <div ref={wrapperRef} className="relative w-full sm:w-44">
-      <label className="text-xs font-medium text-gray-600 dark:text-gray-400 mb-1 block">
-        {t("all_users.filter_role.label")}
-      </label>
-
-      <button
-        onClick={() => setOpen(!open)}
-        className="w-full flex items-center justify-between px-3 py-2 text-sm
-                   border border-gray-200 dark:border-gray-600
-                   bg-white dark:bg-gray-900
-                   text-gray-800 dark:text-gray-200
-                   rounded-lg
-                   focus:outline-none focus:ring-2 focus:ring-blue-500
-                   dark:focus:ring-blue-400
-                   transition-colors"
-      >
-        <span className="flex items-center gap-2">
-          {selected?.label}
-
-          {roleFilter !== "all" && (
-            <span className="w-2 h-2 bg-blue-500 dark:bg-blue-400 rounded-full" />
-          )}
-        </span>
-      </button>
-
-      {open && (
-        <div
-          className="absolute z-50 mt-1 w-full
-                        bg-white dark:bg-gray-800
-                        border border-gray-200 dark:border-gray-700
-                        rounded-lg shadow-lg overflow-hidden
-                        transition-colors"
-        >
-          {options.map((opt) => (
-            <div
-              key={opt.value}
-              onClick={() => {
-                setRoleFilter(opt.value);
-                setOpen(false);
-              }}
-              className={`px-3 py-2 text-sm cursor-pointer transition-colors
-                hover:bg-gray-100 dark:hover:bg-gray-700
-                text-gray-800 dark:text-gray-200
-                ${roleFilter === opt.value
-                  ? "bg-gray-50 dark:bg-gray-700 font-medium"
-                  : ""
-                }`}
-            >
-              {opt.label}
-            </div>
-          ))}
-        </div>
-      )}
-    </div>
-  );
-}
-
-/* Status Filter */
-export function StatusFilter({ statusFilter, setStatusFilter }) {
-  const { t } = useTranslation();
-  const [open, setOpen] = useState(false);
-  const wrapperRef = useRef(null);
-
-  const options = [
-    { label: t("all_users.filter_status.all"), value: "all" },
-    { label: t("all_users.filter_status.pending"), value: "pending" },
-    { label: t("all_users.filter_status.active"), value: "active" },
-    { label: t("all_users.filter_status.rejected"), value: "rejected" },
-    { label: t("all_users.filter_status.suspended"), value: "suspended" },
-  ];
-
-  const selected = options.find((o) => o.value === statusFilter);
-
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (wrapperRef.current && !wrapperRef.current.contains(event.target)) {
-        setOpen(false);
-      }
-    };
-
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
-
-  return (
-    <div ref={wrapperRef} className="relative w-full sm:w-48">
-      <label className="text-xs font-medium text-gray-600 dark:text-gray-400 mb-1 block">
-        {t("all_users.filter_status.label")}
-      </label>
-
-      <button
-        onClick={() => setOpen(!open)}
-        className="w-full flex items-center justify-between px-3 py-2 text-sm
-                   border border-gray-200 dark:border-gray-600
-                   bg-white dark:bg-gray-900
-                   text-gray-800 dark:text-gray-200
-                   rounded-lg
-                   focus:outline-none focus:ring-2 focus:ring-blue-500
-                   dark:focus:ring-blue-400
-                   transition-colors"
-      >
-        <span className="flex items-center gap-2">
-          {selected?.label}
-
-          {statusFilter !== "all" && (
-            <span className="w-2 h-2 bg-blue-500 dark:bg-blue-400 rounded-full" />
-          )}
-        </span>
-      </button>
-
-      {open && (
-        <div
-          className="absolute z-50 mt-1 w-full
-                        bg-white dark:bg-gray-800
-                        border border-gray-200 dark:border-gray-700
-                        rounded-lg shadow-lg overflow-hidden
-                        transition-colors"
-        >
-          {options.map((opt) => (
-            <div
-              key={opt.value}
-              onClick={() => {
-                setStatusFilter(opt.value);
-                setOpen(false);
-              }}
-              className={`px-3 py-2 text-sm cursor-pointer transition-colors
-                text-gray-800 dark:text-gray-200
-                hover:bg-gray-100 dark:hover:bg-gray-700
-                ${statusFilter === opt.value
-                  ? "bg-gray-50 dark:bg-gray-700 font-medium"
-                  : ""
-                }`}
-            >
-              {opt.label}
-            </div>
-          ))}
-        </div>
-      )}
-    </div>
-  );
-}
 
 export default AllUsers;

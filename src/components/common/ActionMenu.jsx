@@ -1,12 +1,14 @@
 import React, { useState, useRef, useEffect } from "react";
 import ReactDOM from "react-dom";
 import { Eye, Edit, Printer, Trash2, MoreHorizontal } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 export function ActionMenu({ item, onView, onEdit, onDelete, onPrint }) {
     const [open, setOpen] = useState(false);
     const btnRef = useRef(null);
     const menuRef = useRef(null);
     const [pos, setPos] = useState({ top: 0, left: 0 });
+    const { t } = useTranslation();
 
     const openMenu = (e) => {
         e.stopPropagation();
@@ -91,7 +93,7 @@ export function ActionMenu({ item, onView, onEdit, onDelete, onPrint }) {
                     className="w-full text-left px-4 py-2.5 text-sm text-gray-900 dark:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-900 transition-colors flex items-center gap-2 cursor-pointer"
                 >
                     <Eye size={13} />
-                    View
+                    {t("actions_menu.view")}
                 </button>
 
                 <button
@@ -102,7 +104,7 @@ export function ActionMenu({ item, onView, onEdit, onDelete, onPrint }) {
                     className="w-full text-left px-4 py-2.5 text-sm text-gray-900 dark:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-900 transition-colors flex items-center gap-2 cursor-pointer"
                 >
                     <Edit size={13} />
-                    Edit
+                    {t("actions_menu.edit")}
                 </button>
 
                 <button
@@ -113,7 +115,7 @@ export function ActionMenu({ item, onView, onEdit, onDelete, onPrint }) {
                     className="w-full text-left px-4 py-2.5 text-sm text-gray-900 dark:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-900 transition-colors flex items-center gap-2 cursor-pointer"
                 >
                     <Printer size={13} />
-                    Print
+                    {t("actions_menu.print")}
                 </button>
 
                 <hr className="border-gray-200 dark:border-gray-800" />
@@ -125,7 +127,7 @@ export function ActionMenu({ item, onView, onEdit, onDelete, onPrint }) {
                     }}
                     className="w-full text-left px-4 py-2.5 text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/60 transition-colors flex items-center gap-2 cursor-pointer"                >
                     <Trash2 size={13} />
-                    Delete
+                    {t("actions_menu.delete")}
                 </button>
             </div>,
             document.body
