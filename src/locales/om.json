@@ -93,6 +93,11 @@
     "alreadyHaveAccount": "Duraan akkaawuntii qabduu",
     "login": "Seenaa",
     "accountCreatedSuccess": "Akkaawuntiin milkaa'inaan uumameera",
+    "category": "Gosa Hoojii",
+    "selectCategory": "Gosa hoojii filadhu",
+    "loadingCategories": "Gosa hoojii fe'aa jira...",
+    "searchCategoryPlaceholder": "Gosa hoojii barbaadi...",
+    "noCategoriesFound": "Gosni hoojii tokkollee hin argamne",
     "validation": {
         "min2Chars": "Xiqqeenyaa qubee 2 ta'uu qaba",
         "textLetterStart": "Qubeen jalqabamuu qaba",
@@ -104,7 +109,9 @@
         "passwordsDoNotMatch": "Jeequmsi jecha iccitii wal hin simu",
         "emailRequired": "Imeeliin ni barbaachisa",
         "emailInvalid": "Teessoo imeelii sirrii ta'e galchaa",
-        "nationalIdInvalid": "Lakkoofsa waraqaa eenyummaa (FIN) dijiitii 12 sirrii ta'e galchaa"
+        "nationalIdInvalid": "Lakkoofsa waraqaa eenyummaa (FIN) dijiitii 12 sirrii ta'e galchaa",
+        "categoryRequired": "Maaloo gosa hoojii filadhu",
+        "defaultFailedWorker": "Hojjetaa uumuu hin danda'amne"
     }
   },
   "clientSignup": {
@@ -144,7 +151,8 @@
       "textLettersOnly": "Arfiilee qofatu hayyamama",
       "finRequired": "Lakkoofsa FIN digitii 12 sirriitti galchaa",
       "companyRequired": "Maqaan dhaabbataa barbaachisaa dha",
-      "companyMin": "Xiqqaate arfiilee 2 barbaachisa"
+      "companyMin": "Xiqqaate arfiilee 2 barbaachisa",
+      "defaultFailedClient": "Maamila uumuu hin danda'amne"
     }
   },
   "create_user": {
@@ -157,6 +165,11 @@
     "email": "Imeelii",
     "email_placeholder": "user@example.com",
     "phone": "Lakkoofsa Bilbilaa",
+    "gender": "Saala",
+    "male": "Dhiira",
+    "female": "Dhalaa",
+    "date_of_birth": "Guyyaa Dhalootaa",
+    "day": "Guyyaa",
     "phone_placeholder": "+2519XXXXXXXX yookiin 09XXXXXXXX",
     "user_type": "Gosa Fayyadamaa",
     "select_user_type": "Gosa fayyadamaa filadhu",
@@ -181,8 +194,20 @@
       "default_failed": "Fayyadamaa uumuun hin danda'amne",
       "min2Chars": "Xiqqeenyaa qubee 2 ta'uu qaba",
       "textLetterStart": "Qubeen jalqabamuu qaba",
-      "lettersOnly": "Qubee qofa ta'uu qaba"
+      "lettersOnly": "Qubee qofa ta'uu qaba",
+      "select_gender": "Saala Filadhu",
+      "enter_dob": "Guyyaa Dhalootaa Galchi"
     }
+  },
+  "date_picker":{
+    "date_picker_placeholder": "W-M-G",
+    "clear": "Haqi",
+    "close": "Cufi",
+    "months": [
+      "Fuulbaana", "Onkololeessa", "Sadaasa", "Muddee", "Amajjii", "Gurraandhala",
+      "Bitootessa", "Eebla", "Caamsaa", "Waxabajjii", "Adoolessa", "Hagayya", "Qaammee"
+    ],
+    "weekdays": ["Wiix", "Kib", "Roo", "Kam", "Jim", "San", "Dil"]
   },
   "backendErrors": {
     "INVALID_CREDENTIAL": "Imeelii/lakkoofsa bilbilaa ykn jecha darbii dogoggoraa",
@@ -201,6 +226,8 @@
     "password_similar_first_name": "Jechi darbii maqaa keessan isa jalqabaatiin baay'ee wal fakkaata.",
     "password_similar_last_name": "Jechi darbii maqaa abbaa keessaniin baay'ee wal fakkaata.",
     "password_similar_email": "Jechi darbii imeelii keessaniin baay'ee wal fakkaata.",
+    "date_of_birth_cannot_be_in_the_future": "Guyyaan dhalootaa gara fuulduraa ta'uu compulsory miti / ta'uu hin danda'u",
+    "min_age_must_be_at_least_18": "Umriin keessan yoo xiqqaate waggaa 18 ta'uu qaba",
     "worker": {
       "nationalIdExists": "Hojjetaan waraqaa eenyummaa kanaan galmaa'e ammas jira."
     },
@@ -446,6 +473,10 @@
         "profile": "Puroofaayilii"
       },
       "labels": {
+        "first_name": "Maqaa Jalqabaa",
+        "last_name": "Maqaa Abbaa",
+        "gender": "Saala",
+        "date_of_birth": "Guyyaa Dhalootaa",
         "email": "Imeelii",
         "user_type": "Gosa Fayyadamaa",
         "phone": "Bilbila",

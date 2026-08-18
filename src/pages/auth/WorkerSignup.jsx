@@ -1,10 +1,14 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import toast from "react-hot-toast";
 import { useTranslation } from "react-i18next";
 
 import { signupWorker } from "../../services/userServices";
+import { listWorkerCategory } from "../../services/categoryServices";
 import { translateApiError } from "../../utils/translateApiError";
+import { WorkerCategoryPicker } from "./WorkerCategoryPicker";
+import EthiopianDatePicker from "../../components/common/EthiopianDatePicker";
+import { ethiopianToGregorian } from "../../utils/ethiopianToGregorian";
 
 function WorkerSignup() {
   const navigate = useNavigate();
@@ -13,16 +17,37 @@ function WorkerSignup() {
   const [form, setForm] = useState({
     email: "",
     phone: "",
+    gender: "",
+    date_of_birth: "",
     password: "",
     password_2: "",
     first_name: "",
     last_name: "",
     national_id: "",
     location: "",
+    category: ""
   });
 
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
+  const [categories, setCategories] = useState([]);
+  const [loadingCategories, setLoadingCategories] = useState(false);
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        setLoadingCategories(true);
+        const data = await listWorkerCategory(); // Expects array: [{ id: 1, name: "Plumbing" }, ...]
+        setCategories(Array.isArray(data) ? data : data.results || []);
+      } catch (err) {
+        console.error("Failed to load categories:", err);
+      } finally {
+        setLoadingCategories(false);
+      }
+    };
+
+    fetchCategories();
+  }, []);
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -64,6 +89,7 @@ function WorkerSignup() {
       e.phone = t("workerSignup.validation.phoneInvalidFormat");
     }
 
+
     // PASSWORD
     if (!form.password || form.password.length < 8) {
       e.password = t("workerSignup.validation.min8Chars");
@@ -86,12 +112,72 @@ function WorkerSignup() {
     const locationError = validateTextField(form.location);
     if (locationError) e.location = locationError;
 
+    // GENDER & DOB
+    if (!form.gender) {
+      e.gender = t("create_user.validation.select_gender");
+    }
+    if (!form.date_of_birth) {
+      e.date_of_birth = t("create_user.validation.enter_dob");
+    }
+
     // NATIONAL ID
     if (!form.national_id || form.national_id.trim().length < 12) {
       e.national_id = t("workerSignup.validation.nationalIdInvalid");
     }
+    // CATEGORY VALIDATION
+    if (!form.category) {
+      e.category = t("workerSignup.validation.categoryRequired");
+    }
 
     return e;
+  };
+
+  // Add or reuse the unified parseErrors helper in WorkerSignup.js
+  const parseErrors = (errData) => {
+    const newErrors = {};
+
+    if (!errData || typeof errData !== "object") {
+      return { form: t("backendErrors.generic") };
+    }
+
+    if (errData.detail) {
+      newErrors.form = translateApiError(t, "detail", errData.detail);
+      return newErrors;
+    }
+
+    // Helper to unnest nested wrapper objects (e.g. client or worker)
+    const flatten = (data) => {
+      let result = {};
+      Object.entries(data).forEach(([key, val]) => {
+        if ((key === "client" || key === "worker") && typeof val === "object" && !Array.isArray(val) && val !== null) {
+          Object.assign(result, flatten(val));
+        } else {
+          result[key] = val;
+        }
+      });
+      return result;
+    };
+
+    const flatData = flatten(errData);
+
+    Object.entries(flatData).forEach(([key, value]) => {
+      const fieldKey = key === "confirm_password" ? "password_2" : key;
+
+      if (key === "non_field_errors") {
+        newErrors.form = translateApiError(t, key, value);
+        return;
+      }
+
+      if (Array.isArray(value)) {
+        newErrors[fieldKey] = value
+          .map((item) => translateApiError(t, fieldKey, item))
+          .join(" ");
+      } else {
+        newErrors[fieldKey] = translateApiError(t, fieldKey, value);
+      }
+    });
+
+    return newErrors;
   };
 
   const handleSubmit = async (e) => {
@@ -111,8 +197,11 @@ function WorkerSignup() {
         last_name: form.last_name?.trim(),
         email: form.email?.trim(),
         phone: form.phone?.trim(),
+        gender: form.gender,
+        date_of_birth: ethiopianToGregorian(form.date_of_birth),
         national_id: form.national_id?.trim(),
         location: form.location?.trim() || null,
+        category: form.category ? Number(form.category) : null, // Sends PK integer/ID
       };
 
       await signupWorker(payload);
@@ -120,69 +209,24 @@ function WorkerSignup() {
       toast.success(t("workerSignup.accountCreatedSuccess"));
       navigate("/login");
     } catch (err) {
-      const data = err?.response?.data || {};
-      let formatted = {};
+      const backendErrors = parseErrors(err?.response?.data);
 
-      const extractRawValue = (val) => {
-        if (Array.isArray(val)) return extractRawValue(val[0]);
-        if (typeof val === "object" && val !== null) {
-          return val.error_code || val.code || val.message || extractRawValue(Object.values(val)[0]);
-        }
-        return val;
-      };
+      setErrors(backendErrors);
 
-      // Helper to flatten nested DRF objects (e.g. { client: { national_id: [...] } } -> { national_id: [...] })
-      const flattenErrors = (obj) => {
-        let flat = {};
-        if (typeof obj !== "object" || obj === null) return flat;
-
-        Object.entries(obj).forEach(([key, val]) => {
-          if ((key === "client" || key === "worker") && typeof val === "object" && val !== null && !Array.isArray(val)) {
-            // Un-nest client/worker parent wrapper
-            Object.assign(flat, flattenErrors(val));
-          } else {
-            flat[key] = val;
-          }
-        });
-        return flat;
-      };
-
-      const flatData = flattenErrors(data);
-
-      Object.entries(flatData).forEach(([key, val]) => {
-        const rawVal = extractRawValue(val);
-
-        if (key === "non_field_errors" || key === "detail") {
-          formatted.form = translateApiError(t, "form", rawVal);
-          return;
-        }
-
-        let normKey = key === "confirm_password" ? "password_2" : key;
-        const cleanKey = normKey.replace(/^(client|worker)\./, "");
-
-        const translatedMessage = translateApiError(t, cleanKey, rawVal);
-
-        formatted[cleanKey] = translatedMessage;
-        formatted[normKey] = translatedMessage;
-        formatted[key] = translatedMessage;
-      });
-
-      console.log("Formatted Errors Object:", formatted);
-      setErrors(formatted);
+      toast.error(
+        backendErrors.form ||
+        Object.values(backendErrors)[0] ||
+        t("workerSignup.validation.defaultFailedWorker")
+      );
     } finally {
       setLoading(false);
     }
   };
 
   const inputClass = (field) =>
-    `w-full px-3 py-2.5 rounded-lg text-sm sm:text-base
-    bg-white dark:bg-gray-800
-    border border-gray-200 dark:border-gray-700
-    text-gray-900 dark:text-white
-    placeholder-gray-400 dark:placeholder-gray-500
-    focus:outline-none focus:ring-2 focus:ring-black/10 dark:focus:ring-white/10
-    focus:border-gray-400 dark:focus:border-gray-500
-    transition
+    `w-full px-3 py-2.5 rounded-lg text-sm sm:text-base bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700
+    text-gray-900 dark:text-white  placeholder-gray-400 dark:placeholder-gray-500  focus:outline-none focus:ring-2 focus:ring-black/10 dark:focus:ring-white/10
+    focus:border-gray-400 dark:focus:border-gray-500   transition
     ${errors[field] ? "border-red-400 focus:ring-red-200" : ""}`;
 
   return (
@@ -261,6 +305,65 @@ function WorkerSignup() {
               </div>
             </div>
 
+            {/* GENDER */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                {t("create_user.gender")}
+              </label>
+
+              <div className="flex gap-6">
+                <label className="flex items-center gap-2 cursor-pointer text-gray-700 dark:text-gray-300">
+                  <input
+                    type="radio"
+                    name="gender"
+                    value="male"
+                    checked={form.gender === "male"}
+                    onChange={handleChange}
+                    className="accent-gray-900 dark:accent-white"
+                  />
+                  <span>{t("create_user.male")}</span>
+                </label>
+
+                <label className="flex items-center gap-2 cursor-pointer text-gray-700 dark:text-gray-300">
+                  <input
+                    type="radio"
+                    name="gender"
+                    value="female"
+                    checked={form.gender === "female"}
+                    onChange={handleChange}
+                    className="accent-gray-900 dark:accent-white"
+                  />
+                  <span>{t("create_user.female")}</span>
+                </label>
+              </div>
+
+              {errors.gender && (
+                <p className="text-xs text-red-500 dark:text-red-400 mt-1">
+                  {errors.gender}</p>
+              )}
+            </div>
+
+            {/* DATE OF BIRTH */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                {t("create_user.date_of_birth")}
+              </label>
+
+              <EthiopianDatePicker
+                value={form.date_of_birth}
+                onChange={(formattedDate) => {
+                  setForm((prev) => ({ ...prev, date_of_birth: formattedDate }));
+                  setErrors((prev) => ({ ...prev, date_of_birth: "" }));
+                }}
+              />
+
+              {errors.date_of_birth && (
+                <p className="text-xs text-red-500 dark:text-red-400 mt-1">
+                  {errors.date_of_birth}
+                </p>
+              )}
+            </div>
+
             {/* NATIONAL ID */}
             <div>
               <label className="text-sm text-gray-600 dark:text-gray-300">
@@ -298,6 +401,20 @@ function WorkerSignup() {
                 </p>
               )}
             </div>
+
+            {/* CATEGORY SELECTOR */}
+            <WorkerCategoryPicker
+              categories={categories}
+              value={form.category}
+              onChange={(catId) => {
+                setForm({ ...form, category: catId });
+                setErrors({ ...errors, category: "" });
+              }}
+              error={errors.category}
+              loading={loadingCategories}
+              t={t}
+              inputClass={inputClass}
+            />
 
             {/* CONTACT */}
             <div className="grid grid-cols-2 gap-4">

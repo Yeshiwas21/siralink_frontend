@@ -3,6 +3,7 @@ import { X } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { useAuth } from "../../../contexts/AuthContext";
 import { handleUserPrint } from "../../../utils/userPrint";
+import { gregorianToEthiopian } from "../../../utils/gregorianToEthiopian";
 
 function UserViewModal({ isOpen, user, onClose, onEdit }) {
     const { t } = useTranslation();
@@ -58,15 +59,69 @@ function UserViewModal({ isOpen, user, onClose, onEdit }) {
                     {/* INFO TAB */}
                     {activeTab === "info" && (
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
+
+                            {/* FIRST NAME */}
+                            <div className="p-3 rounded-lg bg-gray-50 dark:bg-gray-900">
+                                <p className="text-xs text-gray-800 dark:text-white">
+                                    {t("all_users.view_modal.labels.first_name")}
+                                </p>
+                                <p className="text-gray-900 dark:text-white">
+                                    {user.first_name || "-"}
+                                </p>
+                            </div>
+
+                            {/* LAST NAME */}
+                            <div className="p-3 rounded-lg bg-gray-50 dark:bg-gray-900">
+                                <p className="text-xs text-gray-800 dark:text-white">
+                                    {t("all_users.view_modal.labels.last_name")}
+                                </p>
+                                <p className="text-gray-900 dark:text-white">
+                                    {user.last_name || "-"}
+                                </p>
+                            </div>
+                            {/* GENDER */}
+                            <div className="p-3 rounded-lg bg-gray-50 dark:bg-gray-900">
+                                <p className="text-xs text-gray-800 dark:text-white">
+                                    {t("all_users.view_modal.labels.gender")}
+                                </p>
+                                <p className="capitalize text-gray-900 dark:text-white">
+                                    {user.gender || "-"}
+                                </p>
+                            </div>
+
+                            {/* DATE OF BIRTH */}
+                            <div className="p-3 rounded-lg bg-gray-50 dark:bg-gray-900">
+                                <p className="text-xs text-gray-800 dark:text-white">
+                                    {t("all_users.view_modal.labels.date_of_birth")}
+                                </p>
+                                <p className="text-gray-900 dark:text-white">
+                                    {gregorianToEthiopian(user.date_of_birth) || "-"}
+                                </p>
+                            </div>
+
+                            {/* EMAIL */}
                             <div className="p-3 rounded-lg bg-gray-50 dark:bg-gray-900">
                                 <p className="text-xs text-gray-800 dark:text-white">
                                     {t("all_users.view_modal.labels.email")}
                                 </p>
                                 <p className="break-all text-gray-900 dark:text-white">
-                                    {user.email}
+                                    {user.email || "-"}
                                 </p>
                             </div>
 
+                            {/* PHONE */}
+                            <div className="p-3 rounded-lg bg-gray-50 dark:bg-gray-900">
+                                <p className="text-xs text-gray-800 dark:text-white">
+                                    {t("all_users.view_modal.labels.phone")}
+                                </p>
+                                <p className="text-gray-900 dark:text-white">
+                                    {user.phone || "-"}
+                                </p>
+                            </div>
+
+
+
+                            {/* USER TYPE */}
                             <div className="p-3 rounded-lg bg-gray-50 dark:bg-gray-900">
                                 <p className="text-xs text-gray-800 dark:text-white">
                                     {t("all_users.view_modal.labels.user_type")}
@@ -76,15 +131,7 @@ function UserViewModal({ isOpen, user, onClose, onEdit }) {
                                 </p>
                             </div>
 
-                            <div className="p-3 rounded-lg bg-gray-50 dark:bg-gray-900">
-                                <p className="text-xs text-gray-800 dark:text-white">
-                                    {t("all_users.view_modal.labels.phone")}
-                                </p>
-                                <p className="text-gray-900 dark:text-white">
-                                    {user.phone || t("all_users.view_modal.labels.no_phone")}
-                                </p>
-                            </div>
-
+                            {/* STATUS */}
                             <div className="p-3 rounded-lg bg-gray-50 dark:bg-gray-900">
                                 <p className="text-xs text-gray-800 dark:text-white">
                                     {t("all_users.view_modal.labels.status")}

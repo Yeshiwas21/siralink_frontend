@@ -93,6 +93,11 @@
     "alreadyHaveAccount": "ቀደሙ መለያ አለካ",
     "login": "እቶ",
     "accountCreatedSuccess": "መለያ ብዓወት ተፈጢሩ ኣሎ",
+    "category": "ዓውዲ ስራሕ",
+    "selectCategory": "ዓውዲ ስራሕ ምረፁ",
+    "loadingCategories": "ዓውድታት ይፅዕን ኣሎ...",
+    "searchCategoryPlaceholder": "ዓውዲ ደልዩ...",
+    "noCategoriesFound": "ዝተረኽበ ዓውዲ የለን",
     "validation": {
       "min2Chars": "ብውሕዱ 2 ፊደላት የድልዩ",
       "textLetterStart": "ብፊደል ክጅምር ኣለዎ",
@@ -104,7 +109,9 @@
       "passwordsDoNotMatch": "ፓስወርድታት ኣይተመሳሰሉን",
       "emailRequired": "ኢሜይል የድሊ እዩ",
       "emailInvalid": "ትክክለኛ ኢሜይል ኣእቱ",
-      "nationalIdInvalid": "ትክክል ናይ 12 ዲጂት FIN ቁፅሪ ኣእቱ"
+      "nationalIdInvalid": "ትክክል ናይ 12 ዲጂት FIN ቁፅሪ ኣእቱ",
+      "categoryRequired": "ብኽብረትኩም ዓውዲ ስራሕ ምረፁ",
+      "defaultFailedWorker": "ሰራሕተኛ ምፍጣር ኣይተኻእለን"
     }
   },
   "clientSignup": {
@@ -144,7 +151,8 @@
       "textLettersOnly": "ፊደላት ጥራሕ እዮም ዝፍቀዱ",
       "finRequired": "ትክክል ናይ 12 ዲጂት FIN ቁፅሪ ኣእቱ",
       "companyRequired": "ስም ትካል የድሊ እዩ",
-      "companyMin": "ብውሕዱ 2 ፊደላት የድልዩ"
+      "companyMin": "ብውሕዱ 2 ፊደላት የድልዩ",
+      "defaultFailedClient": "ተጠቃሚ (ዓሚል) ምፍጣር ኣይተኻእለን"
     }
   },
   "create_user": {
@@ -157,6 +165,11 @@
     "email": "ኢሜይል",
     "email_placeholder": "user@example.com",
     "phone": "ስልኪ",
+    "gender": "ጾታ",
+    "male": "ተባዕታይ",
+    "female": "አንስታይ",
+    "date_of_birth": "ዕለት ልደት",
+    "day": "መዓልቲ",
     "phone_placeholder": "+2519XXXXXXXX ወይ 09XXXXXXXX",
     "user_type": "ዓይነት ተጠቃሚ",
     "select_user_type": "ዓይነት ተጠቃሚ ሕረይ",
@@ -181,8 +194,20 @@
       "default_failed": "ተጠቃሚ ምፍጣር ኣይተኻእለን",
       "min2Chars": "ብውሕዱ 2 ፊደላት ክኸውን ኣለዎ።",
       "textLetterStart": "ብፊደል ክጅምር ኣለዎ።",
-      "lettersOnly": "ፊደላት ጥራሕ ክሕዝ ኣለዎ።"
+      "lettersOnly": "ፊደላት ጥራሕ ክሕዝ ኣለዎ።",
+      "select_gender": "ጾታ ምረጹ",
+      "enter_dob": "ዕለት ልደት የእትዉ"
     }
+  },
+  "date_picker": {
+    "date_picker_placeholder": "ዓዓዓዓ-ወወ-መመ",
+    "clear": "አጽሪ",
+    "close": "ዓጽው",
+    "months": [
+      "መስከረም", "ጥቅምቲ", "ሕዳር", "ታሕሣሥ", "ጥሪ", "የካቲት",
+      "መጋቢት", "ሚያዝያ", "ግንቦት", "ሰነ", "ሓምለ", "ነሓሰ", "ጳጉመን"
+    ],
+    "weekdays": ["ሰኑ", "ሠሉ", "ረቡ", "ሓሙ", "ዓር", "ቀዳ", "ሰን"]
   },
   "backendErrors": {
     "INVALID_CREDENTIAL": "ዘይቅኑዕ ኢሜይል/ስልኪ ወይ ፓስወርድ",
@@ -201,6 +226,8 @@
     "password_similar_first_name": "ፓስወርድ ምስ ስምካ ብጣዕሚ ይመሳሰል።",
     "password_similar_last_name": "ፓስወርድ ምስ ስም ኣቦኻ ብጣዕሚ ይመሳሰል።",
     "password_similar_email": "ፓስወርድ ምስ ኢሜይልካ ብጣዕሚ ይመሳሰል።",
+    "date_of_birth_cannot_be_in_the_future": "ዕለት ልደት ኣብ መጻኢ ክኸውን አይክእልን",
+    "min_age_must_be_at_least_18": "ዕድሜኻ/ኺ ቢያንስ 18 ዓመት ክኸውን ኣለዎ",
     "worker": {
       "nationalIdExists": "በዚ ሃገራዊ መታወቂያ ዝተመዝገበ ሰራሕተኛ ቀደሙ ኣሎ።"
     },
@@ -446,6 +473,10 @@
         "profile": "ፕሮፋይል"
       },
       "labels": {
+        "first_name": "ስም",
+        "last_name": "ስም አቦ",
+        "gender": "ፆታ",
+        "date_of_birth": "ዕለት ልደት",
         "email": "ኢሜይል",
         "user_type": "ዓይነት ተጠቃሚ",
         "phone": "ስልኪ",

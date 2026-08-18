@@ -27,6 +27,8 @@ export const signupClient = async (form) => {
     phone: form.phone,
     first_name: form.first_name,
     last_name: form.last_name,
+    gender: form.gender,
+    date_of_birth: form.date_of_birth,
     password: form.password,
     password_2: form.password_2,
     client: {
@@ -49,11 +51,14 @@ export const signupWorker = async (form) => {
     phone: form.phone,
     first_name: form.first_name,
     last_name: form.last_name,
+    gender: form.gender,
+    date_of_birth: form.date_of_birth,
     password: form.password,
     password_2: form.password_2,
     worker: {
       national_id: form.national_id,
       location: form.location,
+      category: form.category
 
     },
   };
