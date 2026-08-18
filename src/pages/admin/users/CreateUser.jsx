@@ -2,8 +2,11 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import { useTranslation } from "react-i18next";
+
 import { registerUser } from "../../../services/userServices";
 import { translateApiError } from "../../../utils/translateApiError";
+import EthiopianDatePicker from "../../../components/common/EthiopianDatePicker";
+import { ethiopianToGregorian } from "../../../utils/ethiopianToGregorian";
 
 function CreateUser() {
   const navigate = useNavigate();
@@ -14,6 +17,8 @@ function CreateUser() {
     last_name: "",
     email: "",
     phone: "",
+    gender: "",
+    date_of_birth: "",
     password: "",
     password_2: "",
     user_type: "",
@@ -66,6 +71,16 @@ function CreateUser() {
     // Email
     if (!form.email || !/^\S+@\S+\.\S+$/.test(form.email)) {
       newErrors.email = t("create_user.validation.invalid_email");
+    }
+
+    // Gender
+    if (!form.gender) {
+      newErrors.gender = t("create_user.validation.select_gender");
+    }
+
+    // Date of Birth
+    if (!form.date_of_birth) {
+      newErrors.date_of_birth = t("create_user.validation.enter_dob");
     }
 
     // Phone
@@ -142,7 +157,14 @@ function CreateUser() {
 
     try {
       setLoading(true);
-      await registerUser(form);
+
+      // Convert Ethiopian date to Gregorian for API payload
+      const payload = {
+        ...form,
+        date_of_birth: ethiopianToGregorian(form.date_of_birth),
+      };
+
+      await registerUser(payload);
 
       toast.success(t("create_user.success_toast"));
       navigate("/admin/users");
@@ -162,7 +184,7 @@ function CreateUser() {
   };
 
   return (
-    <div className="min-h-screen py-16 px-4 bg-gray-100 dark:bg-gray-900 transition-all">
+    <div className="min-h-screen py-4 px-2 bg-gray-100 dark:bg-gray-900 transition-all">
       {/* CARD WRAPPER */}
       <div className="max-w-xl mx-auto rounded-2xl shadow-xl bg-white dark:bg-gray-800 overflow-hidden border border-gray-200 dark:border-gray-700">
         {/* HEADER */}
@@ -214,6 +236,65 @@ function CreateUser() {
                 <p className="text-red-500 text-sm mt-1">{errors.last_name}</p>
               )}
             </div>
+          </div>
+
+          {/* GENDER */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              {t("create_user.gender")}
+            </label>
+
+            <div className="flex gap-6">
+              <label className="flex items-center gap-2 cursor-pointer text-gray-700 dark:text-gray-300">
+                <input
+                  type="radio"
+                  name="gender"
+                  value="male"
+                  checked={form.gender === "male"}
+                  onChange={handleChange}
+                  className="accent-gray-900 dark:accent-white"
+                />
+                <span>{t("create_user.male")}</span>
+              </label>
+
+              <label className="flex items-center gap-2 cursor-pointer text-gray-700 dark:text-gray-300">
+                <input
+                  type="radio"
+                  name="gender"
+                  value="female"
+                  checked={form.gender === "female"}
+                  onChange={handleChange}
+                  className="accent-gray-900 dark:accent-white"
+                />
+                <span>{t("create_user.female")}</span>
+              </label>
+            </div>
+
+            {errors.gender && (
+              <p className="text-xs text-red-500 dark:text-red-400 mt-1">
+                {errors.gender}</p>
+            )}
+          </div>
+
+          {/* DATE OF BIRTH */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              {t("create_user.date_of_birth")}
+            </label>
+
+            <EthiopianDatePicker
+              value={form.date_of_birth}
+              onChange={(formattedDate) => {
+                setForm((prev) => ({ ...prev, date_of_birth: formattedDate }));
+                setErrors((prev) => ({ ...prev, date_of_birth: "" }));
+              }}
+            />
+
+            {errors.date_of_birth && (
+              <p className="text-xs text-red-500 dark:text-red-400 mt-1">
+                {errors.date_of_birth}
+              </p>
+            )}
           </div>
 
           {/* EMAIL */}

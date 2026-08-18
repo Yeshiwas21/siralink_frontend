@@ -161,6 +161,8 @@ function AllUsers() {
       id: user.id,
       first_name: user.first_name || "",
       last_name: user.last_name || "",
+      gender: user.gender || "",
+      date_of_birth: user.date_of_birth || "",
       email: user.email || "",
       phone: user.phone || "",
       user_type: user.user_type || "",

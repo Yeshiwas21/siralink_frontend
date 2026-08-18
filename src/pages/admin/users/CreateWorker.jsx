@@ -263,7 +263,7 @@ function CreateWorker() {
     }`;
 
   return (
-    <div className="min-h-screen py-16 px-4 bg-gray-100 dark:bg-gray-900 transition-all">
+    <div className="min-h-screen py-4 px-4 bg-gray-100 dark:bg-gray-900 transition-all">
       {/* CARD WRAPPER */}
       <div className="max-w-xl mx-auto rounded-2xl shadow-xl bg-white dark:bg-gray-800 overflow-hidden border border-gray-200 dark:border-gray-700">
 

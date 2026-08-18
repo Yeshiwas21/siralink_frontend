@@ -5,6 +5,8 @@ import { useTranslation } from "react-i18next";
 
 import { signupClient } from "../../services/userServices";
 import { translateApiError } from "../../utils/translateApiError";
+import EthiopianDatePicker from "../../components/common/EthiopianDatePicker";
+import { ethiopianToGregorian } from "../../utils/ethiopianToGregorian";
 
 function ClientSignup() {
   const navigate = useNavigate();
@@ -18,6 +20,8 @@ function ClientSignup() {
     client_type: "individual",
     first_name: "",
     last_name: "",
+    gender: "",
+    date_of_birth: "",
     national_id: "",
     company_name: "",
     location: "",
@@ -108,6 +112,14 @@ function ClientSignup() {
       if (!form.national_id || form.national_id.trim().length != 12) {
         e.national_id = t("clientSignup.validation.finRequired");
       }
+
+      // GENDER & DOB
+      if (!form.gender) {
+        e.gender = t("create_user.validation.select_gender");
+      }
+      if (!form.date_of_birth) {
+        e.date_of_birth = t("create_user.validation.enter_dob");
+      }
     }
 
     if (isCompany) {
@@ -121,6 +133,54 @@ function ClientSignup() {
     }
 
     return e;
+  };
+
+  // Add or reuse the unified parseErrors helper in WorkerSignup.js
+  const parseErrors = (errData) => {
+    const newErrors = {};
+
+    if (!errData || typeof errData !== "object") {
+      return { form: t("backendErrors.generic") };
+    }
+
+    if (errData.detail) {
+      newErrors.form = translateApiError(t, "detail", errData.detail);
+      return newErrors;
+    }
+
+    // Helper to unnest nested wrapper objects (e.g. client or worker)
+    const flatten = (data) => {
+      let result = {};
+      Object.entries(data).forEach(([key, val]) => {
+        if ((key === "client" || key === "worker") && typeof val === "object" && !Array.isArray(val) && val !== null) {
+          Object.assign(result, flatten(val));
+        } else {
+          result[key] = val;
+        }
+      });
+      return result;
+    };
+
+    const flatData = flatten(errData);
+
+    Object.entries(flatData).forEach(([key, value]) => {
+      const fieldKey = key === "confirm_password" ? "password_2" : key;
+
+      if (key === "non_field_errors") {
+        newErrors.form = translateApiError(t, key, value);
+        return;
+      }
+
+      if (Array.isArray(value)) {
+        newErrors[fieldKey] = value
+          .map((item) => translateApiError(t, fieldKey, item))
+          .join(" ");
+      } else {
+        newErrors[fieldKey] = translateApiError(t, fieldKey, value);
+      }
+    });
+
+    return newErrors;
   };
 
   const handleSubmit = async (e) => {
@@ -140,6 +200,8 @@ function ClientSignup() {
         last_name: form.last_name.trim(),
         email: form.email.trim(),
         phone: form.phone.trim(),
+        gender: form.gender || null,
+        date_of_birth: ethiopianToGregorian(form.date_of_birth) || null,
         national_id: form.national_id?.trim() || null,
         company_name: form.company_name?.trim() || null,
         location: form.location?.trim() || null,
@@ -150,65 +212,23 @@ function ClientSignup() {
       toast.success(t("clientSignup.accountCreatedSuccess"));
       navigate("/login");
     } catch (err) {
-      const data = err?.response?.data || {};
-      let formatted = {};
+      const backendErrors = parseErrors(err?.response?.data);
 
-      const processErrorNode = (node, path = "") => {
-        if (!node) return;
+      setErrors(backendErrors);
 
-        // 1. String code/message
-        if (typeof node === "string") {
-          const cleanKey = path.replace(/^(client|worker)\./, "");
-          const translatedMsg = translateApiError(t, cleanKey, node);
-          formatted[cleanKey] = translatedMsg;
-          formatted[path] = translatedMsg;
-          return;
-        }
-
-        // 2. Array of errors [ "code" ]
-        if (Array.isArray(node)) {
-          if (node.length > 0) processErrorNode(node[0], path);
-          return;
-        }
-
-        // 3. Object
-        if (typeof node === "object") {
-          // If object represents a single error details object (e.g. { error_code: "..." })
-          if (node.error_code || node.code || node.message) {
-            const rawCode = node.error_code || node.code || node.message;
-            const cleanKey = path.replace(/^(client|worker)\./, "");
-            const translatedMsg = translateApiError(t, cleanKey, rawCode);
-            formatted[cleanKey] = translatedMsg;
-            formatted[path] = translatedMsg;
-            return;
-          }
-
-          // Otherwise, traverse nested structure (e.g. { client: { national_id: ... } })
-          Object.entries(node).forEach(([k, v]) => {
-            const currentPath = path ? `${path}.${k}` : k;
-            processErrorNode(v, currentPath);
-          });
-        }
-      };
-
-      processErrorNode(data);
-
-      console.log("Formatted Errors Object:", formatted);
-      setErrors(formatted);
+      toast.error(
+        backendErrors.form ||
+        Object.values(backendErrors)[0] ||
+        t("clientSignup.validation.defaultFailedClient")
+      );
     } finally {
       setLoading(false);
     }
   };
 
-  const inputClass = (field) =>
-    `w-full px-3 py-2.5 rounded-lg text-sm sm:text-base
-    bg-white dark:bg-gray-800
-    border border-gray-200 dark:border-gray-700
-    text-gray-900 dark:text-white
-    placeholder-gray-400 dark:placeholder-gray-500
-    focus:outline-none focus:ring-2 focus:ring-black/10 dark:focus:ring-white/10
-    focus:border-gray-400 dark:focus:border-gray-500
-    transition
+  const inputClass = (field) => `w-full px-3 py-2.5 rounded-lg text-sm sm:text-base bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700
+    text-gray-900 dark:text-white  placeholder-gray-400 dark:placeholder-gray-500  focus:outline-none focus:ring-2 focus:ring-black/10 dark:focus:ring-white/10
+    focus:border-gray-400 dark:focus:border-gray-500  transition
    ${errors[field]
       ? "border-red-400 focus:ring-red-200 dark:focus:ring-red-900"
       : ""
@@ -309,23 +329,95 @@ function ClientSignup() {
 
             {/* CONDITIONAL */}
             {isIndividual && (
-              <div>
-                <label className="text-sm text-gray-600 dark:text-gray-300">
-                  {t("clientSignup.nationalId")}
-                </label>
-                <input
-                  name="national_id"
-                  value={form.national_id}
-                  onChange={handleChange}
-                  className={inputClass("national_id")}
-                  autoComplete="off"
-                />
-                {errors.national_id && (
-                  <p className="text-xs text-red-500 dark:text-red-400 mt-1">
-                    {errors.national_id}
-                  </p>
-                )}
-              </div>
+              <>
+                {/* GENDER */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    {t("create_user.gender")}
+                  </label>
+
+                  <div className="flex gap-6">
+                    <label className="flex items-center gap-2 cursor-pointer text-gray-700 dark:text-gray-300">
+                      <input
+                        type="radio"
+                        name="gender"
+                        value="male"
+                        checked={form.gender === "male"}
+                        onChange={handleChange}
+                        className="accent-gray-900 dark:accent-white"
+                      />
+                      <span>{t("create_user.male")}</span>
+                    </label>
+
+                    <label className="flex items-center gap-2 cursor-pointer text-gray-700 dark:text-gray-300">
+                      <input
+                        type="radio"
+                        name="gender"
+                        value="female"
+                        checked={form.gender === "female"}
+                        onChange={handleChange}
+                        className="accent-gray-900 dark:accent-white"
+                      />
+                      <span>{t("create_user.female")}</span>
+                    </label>
+                  </div>
+
+                  {errors.gender && (
+                    <p className="text-xs text-red-500 dark:text-red-400 mt-1">
+                      {errors.gender}
+                    </p>
+                  )}
+                </div>
+
+                {/* DATE OF BIRTH */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    {t("create_user.date_of_birth")}
+                  </label>
+
+                  <EthiopianDatePicker
+                    value={form.date_of_birth}
+                    onChange={(formattedDate) => {
+                      setForm((prev) => ({
+                        ...prev,
+                        date_of_birth: formattedDate,
+                      }));
+
+                      setErrors((prev) => ({
+                        ...prev,
+                        date_of_birth: "",
+                      }));
+                    }}
+                  />
+
+                  {errors.date_of_birth && (
+                    <p className="text-xs text-red-500 dark:text-red-400 mt-1">
+                      {errors.date_of_birth}
+                    </p>
+                  )}
+                </div>
+
+                {/* NATIONAL ID */}
+                <div>
+                  <label className="text-sm text-gray-600 dark:text-gray-300">
+                    {t("clientSignup.nationalId")}
+                  </label>
+
+                  <input
+                    name="national_id"
+                    value={form.national_id}
+                    onChange={handleChange}
+                    className={inputClass("national_id")}
+                    autoComplete="off"
+                  />
+
+                  {errors.national_id && (
+                    <p className="text-xs text-red-500 dark:text-red-400 mt-1">
+                      {errors.national_id}
+                    </p>
+                  )}
+                </div>
+              </>
             )}
 
             {isCompany && (
@@ -468,8 +560,8 @@ function ClientSignup() {
             </Link>
           </p>
         </div>
-      </div>
-    </div>
+      </div >
+    </div >
   );
 }
 

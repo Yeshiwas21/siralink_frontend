@@ -93,6 +93,11 @@
     "alreadyHaveAccount": "Already have an account",
     "login": "Login",
     "accountCreatedSuccess": "Account created successfully",
+    "category": "Category",
+    "selectCategory": "Select a category",
+    "loadingCategories": "Loading categories...",
+    "searchCategoryPlaceholder": "Search category...",
+    "noCategoriesFound": "No categories found",
     "validation": {
         "min2Chars": "Minimum 2 characters required",
         "textLetterStart": "Must start with a letter",
@@ -104,7 +109,10 @@
         "passwordsDoNotMatch": "Passwords do not match",
         "emailRequired": "Email is required",
         "emailInvalid": "Enter a valid email address",
-        "nationalIdInvalid": "Enter exactly 12 digit FIN number"
+        "nationalIdInvalid": "Enter exactly 12 digit FIN number",
+        "categoryRequired": "Please select a category.",
+        "defaultFailedWorker": "Failed to create worker"
+
     }
   },
   "clientSignup": {
@@ -144,7 +152,8 @@
       "textLettersOnly": "Only letters are allowed",
       "finRequired": "Enter exactly 12 digit FIN number",
       "companyRequired": "Company name is required",
-      "companyMin": "Minimum 2 characters required"
+      "companyMin": "Minimum 2 characters required",
+      "defaultFailedClient": "Failed to create client"
     }
   },
   "create_user": {
@@ -157,6 +166,11 @@
     "email": "Email",
     "email_placeholder": "user@example.com",
     "phone": "Phone",
+    "gender": "Gender",
+    "male": "Male",
+    "female": "Female",
+    "date_of_birth": "Date of Birth",
+    "day": "Day",
     "phone_placeholder": "+2519XXXXXXXX or 09XXXXXXXX",
     "user_type": "User Type",
     "select_user_type": "Select user type",
@@ -181,8 +195,20 @@
       "default_failed": "Failed to create user",
       "min2Chars": "Must be at least 2 characters long.",
       "textLetterStart": "Must start with a letter.",
-      "lettersOnly": "Must contain letters only."
+      "lettersOnly": "Must contain letters only.",
+      "select_gender": "Select Gender",
+      "enter_dob": "Enter Date of Birth"
     }
+  },
+  "date_picker": {
+    "date_picker_placeholder": "YYYY-MM-DD",
+    "clear": "Clear",
+    "close": "Close",
+    "months": [
+      "Meskerem", "Tikimt", "Hidar", "Tahsas", "Tir", "Yekatit",
+      "Megabit", "Miyazia", "Ginbot", "Sene", "Hamle", "Nehase", "Pagume"
+    ],
+    "weekdays": ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
   },
   "backendErrors": {
     "INVALID_CREDENTIAL": "Invalid email/phone or password",
@@ -201,6 +227,8 @@
     "password_similar_first_name": "The password is too similar to your first name.",
     "password_similar_last_name": "The password is too similar to your last name.",
     "password_similar_email": "The password is too similar to your email.",
+    "date_of_birth_cannot_be_in_the_future": "Date of birth cannot be in the future",
+    "min_age_must_be_at_least_18": "You must be at least 18 years old.",
     "worker": {
       "nationalIdExists": "Worker with this national id already exists."
     },
@@ -382,7 +410,7 @@
   },
   "all_users": {
     "title": "Users Management",
-    "subtitle": "Manage all registered clients and users",
+    "subtitle": "Manage all registered users",
     "refresh": "Refresh",
     "add_user": "+ Add User",
     "search_placeholder": "Search...",
@@ -446,6 +474,10 @@
         "profile": "Profile"
       },
       "labels": {
+        "first_name": "First Name",
+        "last_name": "Last Name",
+        "gender": "Gender",
+        "date_of_birth":"Date of Birth",
         "email": "Email",
         "user_type": "User Type",
         "phone": "Phone",

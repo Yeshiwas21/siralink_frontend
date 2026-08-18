@@ -91,6 +91,11 @@
     "alreadyHaveAccount": "መለያ አለዎት",
     "login": "ይግቡ",
     "accountCreatedSuccess": "መለያው በተካካ ሁኔታ ተፈጥሯል",
+    "category": "የሥራ ዘርፍ",
+    "selectCategory": "የሥራ ዘርፍ ይምረጡ",
+    "loadingCategories": "ዘርፎችን በመጫን ላይ...",
+    "searchCategoryPlaceholder": "ዘርፍ ይፈልጉ...",
+    "noCategoriesFound": "ምንም ዘርፍ አልተገኘም",
     "validation": {
         "min2Chars": "ቢያንስ 2 ቁምፊዎች ያስፈልጋሉ",
         "textLetterStart": "በፊደል መጀመር አለበት",
@@ -102,7 +107,9 @@
         "passwordsDoNotMatch": "የይለፍ ቃላቱ አይመሳሰሉም",
         "emailRequired": "ኢሜይል ያስፈልጋል",
         "emailInvalid": "ትክክለኛ የኢሜይል አድራሻ ያስገቡ",
-        "nationalIdInvalid": "ትክክለኛ የ12 አሃዝ የብሔራዊ መታወቂያ (FIN) ቁጥር ያስገቡ"
+        "nationalIdInvalid": "ትክክለኛ የ12 አሃዝ የብሔራዊ መታወቂያ (FIN) ቁጥር ያስገቡ",
+        "categoryRequired": "እባክዎን የሥራ ዘርፍ ይምረጡ",
+        "defaultFailedWorker": "ሰራተኛ መፍጠር አልተቻለም"
     }
   },
   "clientSignup": {
@@ -142,7 +149,8 @@
       "textLettersOnly": "ፊደላት ብቻ ይፈቀዳሉ",
       "finRequired": "ልክ የ 12 አሃዝ FIN ቁጥር ያስገቡ",
       "companyRequired": "የድርጅት ስም ያስፈልጋል",
-      "companyMin": "ቢያንስ 2 ቁምፊዎች ያስፈልጋሉ"
+      "companyMin": "ቢያንስ 2 ቁምፊዎች ያስፈልጋሉ",
+      "defaultFailedClient": "ደንበኛ መፍጠር አልተቻለም"
     }
   },
   "create_user": {
@@ -155,6 +163,11 @@
     "email": "ኢሜይል",
     "email_placeholder": "user@example.com",
     "phone": "ስልክ ቁጥር",
+    "gender": "ጾታ",
+    "male": "ወንድ",
+    "female": "ሴት",
+    "date_of_birth": "የትዉልድ ዘመን",
+    "day": "ቀን",
     "phone_placeholder": "+2519XXXXXXXX ወይም 09XXXXXXXX",
     "user_type": "የተጠቃሚ ዓይነት",
     "select_user_type": "የተጠቃሚ ዓይነት ይምረጡ",
@@ -179,8 +192,20 @@
       "default_failed": "ተጠቃሚ መፍጠር አልተቻለም",
       "min2Chars": "ቢያንስ 2 ቁምፊዎች ያስፈልጋሉ",
       "textLetterStart": "በፊደል መጀመር አለበት",
-      "lettersOnly": "ፊደላት ብቻ ይፈቀዳሉ"
+      "lettersOnly": "ፊደላት ብቻ ይፈቀዳሉ",
+      "select_gender": "ጾታ ይምረጡ",
+      "enter_dob": "የትውልድ ቀን ያስገቡ"
     }
+  },
+  "date_picker": {
+    "date_picker_placeholder": "ዓዓዓዓ-ወወ-ቀቀ",
+    "clear": "አጽዳ",
+    "close": "ዝጋ",
+    "months": [
+      "መስከረም", "ጥቅምት", "ሕዳር", "ታኅሣሥ", "ጥር", "የካቲት",
+      "መጋቢት", "ሚያዝያ", "ግንቦት", "ሰኔ", "ሐምሌ", "ነሐሴ", "ጳጉሜ"
+    ],
+    "weekdays": ["ሰኞ", "ማክ", "ረቡ", "ሐሙ", "ዓር", "ቅዳ", "እሑ"]
   },
   "backendErrors": {
     "INVALID_CREDENTIAL": "የተሳሳተ ኢሜይል/ስልክ ቁጥር ወይም የይለፍ ቃል",
@@ -199,6 +224,8 @@
     "password_similar_first_name": "የይለፍ ቃሉ ከመጀመሪያ ስምዎ ጋር በጣም የተቀራረበ ነው።",
     "password_similar_last_name": "የይለፍ ቃሉ ከአባት ስምዎ ጋር በጣም የተቀራረበ ነው።",
     "password_similar_email": "የይለፍ ቃሉ ከኢሜይልዎ ጋር በጣም የተቀራረበ ነው።",
+    "date_of_birth_cannot_be_in_the_future": "የትውልድ ቀን ወደፊት መሆን አይችልም",
+    "min_age_must_be_at_least_18": "ዕድሜዎ ቢያንስ 18 ዓመት መሆን አለበት",
     "worker": {
       "nationalIdExists": "በዚህ ብሔራዊ መታወቂያ ቁጥር የተመዘገበ ሰራተኛ አስቀድሞ አለ።"
     },
@@ -444,6 +471,10 @@
         "profile": "ፕሮፋይል"
       },
       "labels": {
+        "first_name": "ስም",
+        "last_name": "የአባት ስም",
+        "gender": "ፆታ",
+        "date_of_birth": "የትውልድ ቀን",
         "email": "ኢሜይል",
         "user_type": "የተጠቃሚ ዓይነት",
         "phone": "ስልክ",
