@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import {
   Menu,
   X,
@@ -36,9 +36,7 @@ function Navbar() {
   const [desktopLangOpen, setDesktopLangOpen] = useState(false);
   const [mobileLangOpen, setMobileLangOpen] = useState(false);
 
-  const location = useLocation();
-
-  // Clear, explicitly named refs
+  // References for Outside Click Detection
   const searchCategoryRef = useRef(null);
   const desktopLangRef = useRef(null);
   const mobileLangRef = useRef(null);
@@ -61,8 +59,7 @@ function Navbar() {
     }`;
 
   const navLinkClass = ({ isActive }) =>
-    `relative flex items-center h-16 text-sm transition-colors duration-200
-    ${isActive
+    `relative flex items-center h-16 text-sm transition-colors duration-200 ${isActive
       ? "text-black dark:text-white font-medium after:absolute after:left-0 after:right-0 after:bottom-[10px] after:h-[2px] after:bg-black dark:after:bg-white"
       : "text-gray-600 dark:text-gray-300 hover:text-black dark:hover:text-white"
     }`;
@@ -107,12 +104,30 @@ function Navbar() {
   const profileImage = getProfileImage();
   const displayName = getDisplayName();
 
+  const closeAllDropdowns = () => {
+    setDropdown(false);
+    setMobileProfileOpen(false);
+    setDesktopLangOpen(false);
+    setMobileLangOpen(false);
+    setOpenCategory(false);
+  };
+
   const closeMobile = () => {
     setOpen(false);
-    setMobileProfileOpen(false);
+    closeAllDropdowns();
+  };
+
+  const toggleMobileMenu = () => {
+    setOpen((prev) => {
+      const nextState = !prev;
+      closeAllDropdowns();
+      return nextState;
+    });
   };
 
   const handleLogout = async () => {
+    closeAllDropdowns();
+    setOpen(false);
     await logout();
     navigate("/");
   };
@@ -120,10 +135,19 @@ function Navbar() {
   const handleLanguageChange = async (code) => {
     await i18n.changeLanguage(code);
     localStorage.setItem("siralink_language", code);
-    setDesktopLangOpen(false);
-    setMobileLangOpen(false);
+    closeAllDropdowns();
   };
 
+  const handleSearchSubmit = (e) => {
+    e.preventDefault();
+    if (!search.trim()) return;
+    closeAllDropdowns();
+    setOpen(false);
+    const targetRoute = category === "jobs" ? "/jobs" : "/workers";
+    navigate(`${targetRoute}?q=${encodeURIComponent(search.trim())}`);
+  };
+
+  // Close open menus outside click handler & Escape key press
   useEffect(() => {
     const handleClickOutside = (e) => {
       if (
@@ -152,18 +176,32 @@ function Navbar() {
       }
     };
 
+    const handleKeyDown = (e) => {
+      if (e.key === "Escape") {
+        closeAllDropdowns();
+        setOpen(false);
+      }
+    };
+
     document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
+    document.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("keydown", handleKeyDown);
+    };
   }, []);
 
+  // Prevent background scrolling when mobile menu drawer is open
   useEffect(() => {
-    const timeout = setTimeout(() => {
-      setDropdown(false);
-      setMobileProfileOpen(false);
-    }, 0);
-
-    return () => clearTimeout(timeout);
-  }, [location.pathname]);
+    if (open) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "unset";
+    }
+    return () => {
+      document.body.style.overflow = "unset";
+    };
+  }, [open]);
 
   return (
     <header className="bg-white dark:bg-gray-950 border-b border-gray-200 dark:border-gray-800 sticky top-0 z-50 transition-colors duration-300">
@@ -172,16 +210,17 @@ function Navbar() {
         {/* LEFT */}
         <div className="flex items-center gap-3 shrink-0">
           <button
-            className="md:hidden text-gray-800 dark:text-gray-200"
-            onClick={() => setOpen(!open)}
-            aria-label="Toggle Menu"
+            className="md:hidden text-gray-800 dark:text-gray-200 cursor-pointer p-1 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition"
+            onClick={toggleMobileMenu}
+            aria-label="Toggle Navigation Menu"
+            aria-expanded={open}
           >
-            {open ? <X /> : <Menu />}
+            {open ? <X size={22} /> : <Menu size={22} />}
           </button>
 
           {/* Logo */}
           <div className="flex items-center shrink-0">
-            <Link to="/" className="flex items-center h-6 md:h-7">
+            <Link to="/" onClick={closeMobile} className="flex items-center h-6 md:h-7">
               <ThemedLogo alt="SiraLink" className="h-full w-auto object-contain" />
             </Link>
           </div>
@@ -196,14 +235,16 @@ function Navbar() {
                 setMobileLangOpen((prev) => !prev);
                 setMobileProfileOpen(false);
               }}
+              aria-expanded={mobileLangOpen}
+              aria-haspopup="true"
+              aria-label="Select Language"
               className="flex items-center gap-1 px-2 py-2 rounded-lg text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 transition cursor-pointer"
             >
-              <Globe size={17} className="cursor-pointer" />
-              <span className="min-w-fit cursor-pointer">{currentLanguage}</span>
+              <Globe size={17} />
+              <span className="min-w-fit">{currentLanguage}</span>
               <ChevronDown
                 size={12}
-                className={`transition-transform cursor-pointer ${mobileLangOpen ? "rotate-180" : ""
-                  }`}
+                className={`transition-transform ${mobileLangOpen ? "rotate-180" : ""}`}
               />
             </button>
 
@@ -225,16 +266,20 @@ function Navbar() {
           {/* THEME */}
           <button
             onClick={toggleTheme}
-            className="flex items-center justify-center w-9 h-9 rounded-full text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 transition"
+            aria-label="Toggle Dark Mode"
+            className="flex items-center justify-center w-9 h-9 rounded-full text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 transition cursor-pointer"
           >
             {theme === "light" ? <Moon size={18} /> : <Sun size={18} />}
           </button>
         </div>
 
-        {/* SEARCH */}
+        {/* SEARCH FORM (DESKTOP) */}
         <div className="hidden md:flex flex-1 justify-center">
-          <div className="flex items-center w-80 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-full px-3 shadow-sm hover:shadow-md transition-all duration-200 focus-within:ring-2 focus-within:ring-blue-500 dark:focus-within:ring-blue-300">
-            <Search size={16} className="text-gray-500 dark:text-gray-400 mr-2" />
+          <form
+            onSubmit={handleSearchSubmit}
+            className="flex items-center w-80 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-full px-3 shadow-sm hover:shadow-md transition-all duration-200 focus-within:ring-2 focus-within:ring-blue-500 dark:focus-within:ring-blue-300"
+          >
+            <Search size={16} className="text-gray-500 dark:text-gray-400 mr-2 shrink-0" />
 
             <input
               value={search}
@@ -254,42 +299,45 @@ function Navbar() {
                   setDropdown(false);
                   setDesktopLangOpen(false);
                 }}
-                className="px-3 py-2 text-sm flex items-center gap-1 text-gray-600 dark:text-gray-300 hover:text-black dark:hover:text-gray-100 transition whitespace-nowrap"
+                aria-expanded={openCategory}
+                aria-haspopup="true"
+                className="px-3 py-2 text-sm flex items-center gap-1 text-gray-600 dark:text-gray-300 hover:text-black dark:hover:text-gray-100 transition whitespace-nowrap cursor-pointer"
               >
                 {category === "jobs" ? t("navbar.jobs") : t("navbar.workers")}
-                <span
-                  className={`text-[10px] transition-transform duration-200 ${openCategory ? "rotate-180" : ""
+                <ChevronDown
+                  size={14}
+                  className={`text-gray-500 dark:text-gray-300 transition-transform duration-200 ${openCategory ? "rotate-180" : ""
                     }`}
-                >
-                  <ChevronDown size={14} className="text-gray-500 dark:text-gray-300" />
-                </span>
+                />
               </button>
 
               {openCategory && (
                 <div className="absolute right-0 mt-2 w-40 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl shadow-lg z-50 overflow-hidden animate-fade-in">
                   <button
+                    type="button"
                     onClick={() => {
                       setCategory("jobs");
                       setOpenCategory(false);
                     }}
-                    className="w-full text-left px-3 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-800 dark:text-gray-200"
+                    className="w-full text-left px-3 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-800 dark:text-gray-200 cursor-pointer"
                   >
                     {t("navbar.jobs")}
                   </button>
 
                   <button
+                    type="button"
                     onClick={() => {
                       setCategory("workers");
                       setOpenCategory(false);
                     }}
-                    className="w-full text-left px-3 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-800 dark:text-gray-200"
+                    className="w-full text-left px-3 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-800 dark:text-gray-200 cursor-pointer"
                   >
                     {t("navbar.workers")}
                   </button>
                 </div>
               )}
             </div>
-          </div>
+          </form>
         </div>
 
         {/* RIGHT SIDE (DESKTOP) */}
@@ -335,11 +383,11 @@ function Navbar() {
                   {t("navbar.messages")}
                 </NavLink>
 
-                <NavLink to="/ca/notifications" className={navLinkClass}>
+                <NavLink to="/ca/notifications" className={navLinkClass} aria-label="Notifications">
                   <Bell size={20} />
                 </NavLink>
 
-                <NavLink to="/ca/help" className={navLinkClass}>
+                <NavLink to="/ca/help" className={navLinkClass} aria-label="Help">
                   <HelpCircle size={20} />
                 </NavLink>
               </>
@@ -358,14 +406,16 @@ function Navbar() {
                   setDesktopLangOpen((prev) => !prev);
                   setDropdown(false);
                 }}
+                aria-expanded={desktopLangOpen}
+                aria-haspopup="true"
+                aria-label="Select Language"
                 className="flex items-center gap-1 h-16 text-sm transition-colors duration-200 text-gray-800 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100 cursor-pointer"
               >
-                <Globe size={17} className="cursor-pointer" />
-                <span className="min-w-fit cursor-pointer">{currentLanguage}</span>
+                <Globe size={17} />
+                <span className="min-w-fit">{currentLanguage}</span>
                 <ChevronDown
                   size={12}
-                  className={`transition-transform cursor-pointer ${desktopLangOpen ? "rotate-180" : ""
-                    }`}
+                  className={`transition-transform ${desktopLangOpen ? "rotate-180" : ""}`}
                 />
               </button>
 
@@ -387,13 +437,14 @@ function Navbar() {
             {/* DESKTOP THEME SECTION */}
             <button
               onClick={toggleTheme}
+              aria-label="Toggle Theme"
               className="flex items-center justify-center w-9 h-9 text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100 transition cursor-pointer"
             >
               {theme === "light" ? <Moon size={18} /> : <Sun size={18} />}
             </button>
           </nav>
 
-          {/* PROFILE */}
+          {/* PROFILE (DESKTOP) */}
           <div className="hidden md:flex items-center">
             {!isAuth ? (
               <div className="font-bold flex items-center gap-4">
@@ -415,9 +466,12 @@ function Navbar() {
                     setDropdown((prev) => !prev);
                     setDesktopLangOpen(false);
                   }}
+                  aria-expanded={dropdown}
+                  aria-haspopup="true"
+                  aria-label="Profile Menu"
                   className="flex items-center hover:bg-gray-100 dark:hover:bg-gray-800 p-1.5 rounded-full transition cursor-pointer"
                 >
-                  <div className="w-9 h-9 rounded-full overflow-hidden bg-gray-200 dark:bg-gray-700 flex items-center justify-center border">
+                  <div className="w-9 h-9 rounded-full overflow-hidden bg-gray-200 dark:bg-gray-700 flex items-center justify-center border border-gray-300 dark:border-gray-600">
                     {profileImage ? (
                       <img
                         src={profileImage}
@@ -438,7 +492,7 @@ function Navbar() {
                       <p className="text-sm font-semibold text-gray-900 dark:text-gray-100">
                         {displayName}
                       </p>
-                      <p className="text-xs text-gray-500 dark:text-gray-400">
+                      <p className="text-xs text-gray-500 dark:text-gray-400 truncate">
                         {user?.email}
                       </p>
                     </div>
@@ -446,21 +500,23 @@ function Navbar() {
                     <div className="flex flex-col text-sm">
                       <Link
                         to="/account/profile"
-                        className="px-4 py-2 text-gray-800 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
+                        onClick={closeAllDropdowns}
+                        className="px-4 py-2 text-gray-800 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 transition"
                       >
                         {t("navbar.profile")}
                       </Link>
 
                       <Link
                         to="/account/settings"
-                        className="px-4 py-2 text-gray-800 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
+                        onClick={closeAllDropdowns}
+                        className="px-4 py-2 text-gray-800 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 transition"
                       >
                         {t("navbar.settings")}
                       </Link>
 
                       <button
                         onClick={handleLogout}
-                        className="w-full text-left px-4 py-2 text-gray-800 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer"
+                        className="w-full text-left px-4 py-2 text-red-600 dark:text-red-400 hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer transition"
                       >
                         {t("navbar.logout")}
                       </button>
@@ -473,183 +529,174 @@ function Navbar() {
         </div>
       </div>
 
-      {/* MOBILE MENU */}
+      {/* MOBILE MENU DRAWER */}
       {open && (
-        <div className="md:hidden border-t bg-white dark:bg-gray-950 dark:border-gray-800 px-4 py-3 space-y-3 text-sm transition-colors duration-300">
-          <div className="flex items-center border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 rounded-lg px-2">
-            <Search size={16} className="text-gray-500 dark:text-gray-400" />
-            <input
-              placeholder={t("navbar.searchPlaceholder")}
-              className="flex-1 px-2 py-2 outline-none bg-transparent text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500"
-            />
-          </div>
-
-          <div className="flex flex-col gap-1">
-            {isAuth && (
-              <>
-                <button
-                  onClick={() => {
-                    setMobileProfileOpen((prev) => !prev);
-                    setMobileLangOpen(false);
-                  }}
-                  className="w-full flex items-center justify-between border-t border-gray-200 dark:border-gray-800 pt-3"
-                >
-                  <div className="flex items-center gap-2">
-                    <div className="w-9 h-9 rounded-full overflow-hidden bg-gray-200 dark:bg-gray-700 flex items-center justify-center">
-                      {profileImage ? (
-                        <img
-                          src={profileImage}
-                          alt="profile"
-                          className="w-full h-full object-cover"
-                        />
-                      ) : (
-                        <span className="text-sm font-semibold text-gray-700 dark:text-gray-200">
-                          {displayName?.charAt(0)}
-                        </span>
-                      )}
-                    </div>
-
-                    <div className="text-left">
-                      <p className="text-sm font-semibold text-gray-900 dark:text-gray-100">
-                        {displayName}
-                      </p>
-                      <p className="text-xs text-gray-500 dark:text-gray-400">
-                        {user?.email}
-                      </p>
-                    </div>
+        <div className="md:hidden border-t bg-white dark:bg-gray-950 dark:border-gray-800 px-4 py-4 space-y-4 text-sm transition-colors duration-300 h-[calc(100vh-4rem)] overflow-y-auto">
+          {/* AUTHENTICATED USER HEADER */}
+          {isAuth && (
+            <div className="border-b border-gray-200 dark:border-gray-800 pb-3">
+              <button
+                onClick={() => {
+                  setMobileProfileOpen((prev) => !prev);
+                  setMobileLangOpen(false);
+                }}
+                className="w-full flex items-center justify-between py-1 cursor-pointer"
+                aria-expanded={mobileProfileOpen}
+              >
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-full overflow-hidden bg-gray-200 dark:bg-gray-700 flex items-center justify-center shrink-0 border border-gray-300 dark:border-gray-600">
+                    {profileImage ? (
+                      <img
+                        src={profileImage}
+                        alt="profile"
+                        className="w-full h-full object-cover"
+                      />
+                    ) : (
+                      <span className="text-sm font-semibold text-gray-700 dark:text-gray-200">
+                        {displayName?.charAt(0)}
+                      </span>
+                    )}
                   </div>
 
-                  <span
-                    className={`text-xs transition-transform ${mobileProfileOpen ? "rotate-180" : ""
-                      }`}
+                  <div className="text-left">
+                    <p className="text-sm font-semibold text-gray-900 dark:text-gray-100">
+                      {displayName}
+                    </p>
+                    <p className="text-xs text-gray-500 dark:text-gray-400 truncate">
+                      {user?.email}
+                    </p>
+                  </div>
+                </div>
+
+                <ChevronDown
+                  size={16}
+                  className={`text-gray-600 dark:text-gray-300 transition-transform duration-200 ${mobileProfileOpen ? "rotate-180" : ""
+                    }`}
+                />
+              </button>
+
+              {/* Collapsible Sub-menu */}
+              {mobileProfileOpen && (
+                <div className="flex flex-col mt-2 ml-3 border-l-2 border-gray-200 dark:border-gray-800 pl-3 space-y-2 pt-1">
+                  <Link
+                    to="/account/profile"
+                    onClick={closeMobile}
+                    className={mobileLinkClass}
                   >
-                    <ChevronDown
-                      size={14}
-                      className="text-gray-600 dark:text-gray-300 transition-transform duration-200"
-                    />
-                  </span>
-                </button>
+                    {t("navbar.profile")}
+                  </Link>
 
-                {mobileProfileOpen && (
-                  <div className="flex flex-col ml-11 border-l border-gray-200 dark:border-gray-800 pl-3 space-y-1">
-                    <Link
-                      to="/account/profile"
-                      onClick={closeMobile}
-                      className={mobileLinkClass}
-                    >
-                      {t("navbar.profile")}
-                    </Link>
+                  <Link
+                    to="/account/settings"
+                    onClick={closeMobile}
+                    className={mobileLinkClass}
+                  >
+                    {t("navbar.settings")}
+                  </Link>
 
-                    <Link
-                      to="/account/settings"
-                      onClick={closeMobile}
-                      className={mobileLinkClass}
-                    >
-                      {t("navbar.settings")}
-                    </Link>
+                  <button
+                    onClick={handleLogout}
+                    className={`${mobileLinkClass} w-full text-left text-red-600 dark:text-red-400 cursor-pointer`}
+                  >
+                    {t("navbar.logout")}
+                  </button>
+                </div>
+              )}
+            </div>
+          )}
 
-                    <button
-                      onClick={() => {
-                        closeMobile();
-                        handleLogout();
-                      }}
-                      className={`${mobileLinkClass} w-full text-left cursor-pointer`}
-                    >
-                      {t("navbar.logout")}
-                    </button>
-                  </div>
-                )}
-              </>
-            )}
+          {/* MOBILE SEARCH BAR */}
+          <form
+            onSubmit={handleSearchSubmit}
+            className="flex items-center border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 rounded-xl px-3 py-1.5"
+          >
+            <Search size={16} className="text-gray-500 dark:text-gray-400 shrink-0" />
+            <input
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder={t("navbar.searchPlaceholder")}
+              className="flex-1 px-2 py-1 outline-none bg-transparent text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 text-sm"
+            />
+            <select
+              value={category}
+              onChange={(e) => setCategory(e.target.value)}
+              className="text-xs bg-transparent text-gray-600 dark:text-gray-300 outline-none border-l border-gray-300 dark:border-gray-700 pl-2 cursor-pointer"
+            >
+              <option value="jobs" className="dark:bg-gray-900">
+                {t("navbar.jobs")}
+              </option>
+              <option value="workers" className="dark:bg-gray-900">
+                {t("navbar.workers")}
+              </option>
+            </select>
+          </form>
 
+          {/* NAVIGATION LINKS */}
+          <div className="flex flex-col space-y-1 pt-1">
             {!isAuth && (
               <>
                 <Link onClick={closeMobile} to="/jobs" className={mobileLinkClass}>
                   {t("navbar.findWork")}
                 </Link>
-
                 <Link onClick={closeMobile} to="/workers" className={mobileLinkClass}>
                   {t("navbar.hireWorkers")}
                 </Link>
-
-                <Link onClick={closeMobile} to="/login" className={mobileLinkClass}>
-                  {t("navbar.login")}
+                <Link onClick={closeMobile} to="/how-it-works" className={mobileLinkClass}>
+                  {t("navbar.howItWorks")}
                 </Link>
-
-                <Link onClick={closeMobile} to="/signup" className={mobileLinkClass}>
-                  {t("navbar.getStarted")}
-                </Link>
+                <div className="pt-2 flex flex-col gap-2">
+                  <Link onClick={closeMobile} to="/login" className={mobileLinkClass}>
+                    {t("navbar.login")}
+                  </Link>
+                  <Link
+                    onClick={closeMobile}
+                    to="/signup"
+                    className="w-full text-center bg-blue-600 text-white py-2 rounded-lg text-sm font-medium hover:bg-blue-700 transition"
+                  >
+                    {t("navbar.getStarted")}
+                  </Link>
+                </div>
               </>
             )}
 
             {isAuth && (
               <>
-                {user?.user_type === "worker" ? (
+                {user?.user_type === "worker" && (
                   <>
                     <Link onClick={closeMobile} to="/jobs" className={mobileLinkClass}>
                       {t("navbar.findWork")}
                     </Link>
-
-                    <Link
-                      onClick={closeMobile}
-                      to="/worker/jobs/applied"
-                      className={mobileLinkClass}
-                    >
+                    <Link onClick={closeMobile} to="/worker/jobs/applied" className={mobileLinkClass}>
                       {t("navbar.deliverWork")}
                     </Link>
                   </>
-                ) : user?.user_type === "client" ? (
+                )}
+
+                {user?.user_type === "client" && (
                   <>
-                    <Link
-                      onClick={closeMobile}
-                      to="/workers"
-                      className={mobileLinkClass}
-                    >
+                    <Link onClick={closeMobile} to="/workers" className={mobileLinkClass}>
                       {t("navbar.findWorkers")}
                     </Link>
-
-                    <Link
-                      onClick={closeMobile}
-                      to="/client/jobs/post"
-                      className={mobileLinkClass}
-                    >
+                    <Link onClick={closeMobile} to="/client/jobs/post" className={mobileLinkClass}>
                       {t("navbar.postJob")}
                     </Link>
                   </>
-                ) : null}
+                )}
 
-                <Link
-                  onClick={closeMobile}
-                  to="/ca/messages"
-                  className={mobileLinkClass}
-                >
+                <Link onClick={closeMobile} to="/ca/messages" className={mobileLinkClass}>
                   {t("navbar.messages")}
                 </Link>
 
-                <Link
-                  onClick={closeMobile}
-                  to="/ca/notifications"
-                  className={mobileLinkClass}
-                >
-                  <Bell size={14} />
+                <Link onClick={closeMobile} to="/ca/notifications" className={mobileLinkClass}>
+                  <Bell size={16} />
                   <span>{t("navbar.notifications")}</span>
                 </Link>
 
                 <Link onClick={closeMobile} to="/ca/help" className={mobileLinkClass}>
-                  <HelpCircle size={14} />
+                  <HelpCircle size={16} />
                   <span>{t("navbar.help")}</span>
                 </Link>
               </>
-            )}
-
-            {!isAuth && (
-              <Link
-                onClick={closeMobile}
-                to="/how-it-works"
-                className={mobileLinkClass}
-              >
-                {t("navbar.howItWorks")}
-              </Link>
             )}
           </div>
         </div>
