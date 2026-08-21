@@ -61,6 +61,10 @@ export const workerSignupApi = (data) => {
   return api.post("/users/signup/worker/", data);
 };
 
+/* WORKER UPDATE*/
+export const workerUpdateApi = (id, data) => {
+  return api.put(`/users/worker/${id}/update/`, data)
+}
 
 /* LIST WORKERS */
 export const workerListApi = () => {

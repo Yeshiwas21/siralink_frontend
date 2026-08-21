@@ -95,8 +95,9 @@ function UserViewModal({ isOpen, user, onClose, onEdit }) {
                                     {t("all_users.view_modal.labels.date_of_birth")}
                                 </p>
                                 <p className="text-gray-900 dark:text-white">
-                                    {gregorianToEthiopian(user.date_of_birth) || "-"}
-                                </p>
+                                    {user.date_of_birth
+                                        ? `${gregorianToEthiopian(user.date_of_birth)} ${t("date_picker.ec")}`
+                                        : "-"}                                </p>
                             </div>
 
                             {/* EMAIL */}

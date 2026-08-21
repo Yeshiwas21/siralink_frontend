@@ -11,7 +11,8 @@ import {
   workerCreateApi,
   clientDeleteApi,
   workerDeleteApi,
-  clientUpdateApi
+  clientUpdateApi,
+  workerUpdateApi
 } from "../api/userApi";
 
 /* USERS LIST */
@@ -91,13 +92,6 @@ export const listWorker = async () => {
   return response.data;
 };
 
-/* UPDATE CLIENT */
-export const updateClient = async (id, data) => {
-  const response = await clientUpdateApi(id, data)
-  return response.data;
-}
-
-
 /* LIST CLIENT */
 export const listClient = async () => {
   const response = await clientListApi();
@@ -110,11 +104,25 @@ export const createClient = async (data) => {
   return response.data;
 };
 
-/* CREATE Worker */
+/* UPDATE CLIENT */
+export const updateClient = async (id, data) => {
+  const response = await clientUpdateApi(id, data)
+  return response.data;
+}
+
+
+/* CREATE WORKER */
 export const createWorker = async (formData) => {
   const response = await workerCreateApi(formData);
   return response.data;
 };
+
+/* CREATE WORKER */
+export const updateWorker = async (id, data) => {
+  const response = await workerUpdateApi(id, data);
+
+  return response.data
+}
 
 /* DELETE CLIENT */
 export const deleteClient = async (id) => {

@@ -1,6 +1,6 @@
 import {
   Search, Download, Users, Shield, Briefcase, UserCheck, RefreshCw, Ban,
-  UserLock, Clock,
+  UserLock, Clock, ChevronsLeft, ChevronLeft, ChevronRight, ChevronsRight,
 } from "lucide-react";
 import React, { useEffect, useState, useMemo, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
@@ -390,11 +390,8 @@ function AllUsers() {
       {/* ACTION BAR */}
       {selectedRows.length > 0 && (
         <div
-          className="flex justify-between items-center
-                  bg-white dark:bg-gray-800
-                  p-3 rounded-xl mb-4 shadow
-                  border border-gray-200 dark:border-gray-700
-                  transition-colors"
+          className="flex justify-between items-center bg-white dark:bg-gray-800  p-3 rounded-xl mb-4 shadow
+                  border border-gray-200 dark:border-gray-700   transition-colors"
         >
           <span className="font-medium text-sm text-gray-700 dark:text-gray-300">
             {selectedRows.length} {t("all_users.selected")}
@@ -545,8 +542,8 @@ function AllUsers() {
 
       {/* PAGINATION */}
       <div className="flex flex-col sm:flex-row items-center justify-between gap-3 mt-4">
-        <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-200">
-          <span>{t("all_users.rows")}</span>
+        <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-300">
+          <span>{t("clients.rows")}</span>
           <select
             value={rowsPerPage}
             onChange={(e) => {
@@ -566,24 +563,28 @@ function AllUsers() {
 
         <div className="flex justify-center flex-1">
           <div className="flex items-center gap-1">
+            {/* Hide First & Prev if on the first page */}
             {currentPage > 1 && (
-              <button
-                onClick={() => setCurrentPage(1)}
-                className={`${baseBtn} ${themeBtn}`}
-              >
-                {t("all_users.pagination.first")}
-              </button>
+              <>
+                <button
+                  onClick={() => setCurrentPage(1)}
+                  aria-label={t("all_users.pagination.first")}
+                  className={`${baseBtn} ${themeBtn} p-1.5`}
+                >
+                  <ChevronsLeft size={16} />
+                </button>
+
+                <button
+                  onClick={() => setCurrentPage((p) => p - 1)}
+                  aria-label={t("all_users.pagination.prev")}
+                  className={`${baseBtn} ${themeBtn} p-1.5`}
+                >
+                  <ChevronLeft size={16} />
+                </button>
+              </>
             )}
 
-            {currentPage > 1 && (
-              <button
-                onClick={() => setCurrentPage((p) => p - 1)}
-                className={`${baseBtn} ${themeBtn}`}
-              >
-                {t("all_users.pagination.prev")}
-              </button>
-            )}
-
+            {/* Page Numbers */}
             {Array.from({ length: totalPages }, (_, i) => i + 1)
               .slice(
                 Math.max(0, currentPage - 3),
@@ -593,28 +594,32 @@ function AllUsers() {
                 <button
                   key={page}
                   onClick={() => setCurrentPage(page)}
-                  className={`${baseBtn} ${currentPage === page ? activeBtn : themeBtn}`}
+                  className={`${baseBtn} ${currentPage === page ? activeBtn : themeBtn
+                    }`}
                 >
                   {page}
                 </button>
               ))}
 
-            {currentPage < totalPages && (
-              <button
-                onClick={() => setCurrentPage((p) => p + 1)}
-                className={`${baseBtn} ${themeBtn}`}
-              >
-                {t("all_users.pagination.next")}
-              </button>
-            )}
+            {/* Hide Next & Last if on the last page or no total pages */}
+            {currentPage < totalPages && totalPages > 0 && (
+              <>
+                <button
+                  onClick={() => setCurrentPage((p) => p + 1)}
+                  aria-label={t("all_users.pagination.next")}
+                  className={`${baseBtn} ${themeBtn} p-1.5`}
+                >
+                  <ChevronRight size={16} />
+                </button>
 
-            {currentPage < totalPages && (
-              <button
-                onClick={() => setCurrentPage(totalPages)}
-                className={`${baseBtn} ${themeBtn}`}
-              >
-                {t("all_users.pagination.last")}
-              </button>
+                <button
+                  onClick={() => setCurrentPage(totalPages)}
+                  aria-label={t("all_users.pagination.last")}
+                  className={`${baseBtn} ${themeBtn} p-1.5`}
+                >
+                  <ChevronsRight size={16} />
+                </button>
+              </>
             )}
           </div>
         </div>

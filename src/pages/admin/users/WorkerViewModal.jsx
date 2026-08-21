@@ -1,13 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { X, Edit, Printer } from "lucide-react";
-import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import StatusBadge from "../../../components/common/StatusBadge";
 import { handlePrintWorker } from "../../../utils/workerPrint"
 
-function WorkerViewModal({ isOpen, worker, onClose }) {
+function WorkerViewModal({ isOpen, worker, onEdit, onClose }) {
     const { t } = useTranslation();
-    const navigate = useNavigate();
     const [activeTab, setActiveTab] = useState("personal");
 
     // Prevent background body scroll when modal is open
@@ -97,9 +95,47 @@ function WorkerViewModal({ isOpen, worker, onClose }) {
                                 </span>
                                 <span>{worker.last_name || "—"}</span>
                             </div>
+
+                            <div className="flex gap-2">
+                                <span className="font-semibold text-gray-500 dark:text-gray-400 w-32">
+                                    {t("workerSignup.category")}
+                                </span>
+                                <span>{worker.category?.name || "—"}</span>
+                            </div>
+
+                            <div className="flex gap-2">
+                                <span className="font-semibold text-gray-500 dark:text-gray-400 w-32">
+                                    {t("workers.modal.fields.nationalId")}
+                                </span>
+                                <span>{worker.national_id || "—"}</span>
+                            </div>
+
+                            <div className="flex gap-2">
+                                <span className="font-semibold text-gray-500 dark:text-gray-400 w-32">
+                                    {t("workers.modal.fields.experience")}
+                                </span>
+                                <span>
+                                    {worker.experience_years != null
+                                        ? t("workers.labels.experience_duration", { count: Number(worker.experience_years) || 0 })
+                                        : "—"}
+                                </span>
+                            </div>
+
+                            <div className="flex gap-2">
+                                <span className="font-semibold text-gray-500 dark:text-gray-400 w-32">
+                                    {t("workers.modal.fields.skills")}
+                                </span>
+                                <span>{worker.skills || "—"}</span>
+                            </div>
+
+                            <div className="flex gap-2">
+                                <span className="font-semibold text-gray-500 dark:text-gray-400 w-32">
+                                    {t("workers.modal.fields.bio")}
+                                </span>
+                                <span className="wrap-break">{worker.bio || "—"}</span>
+                            </div>
                         </>
                     )}
-
                     {activeTab === "contact" && (
                         <>
                             <div className="flex gap-2">
@@ -115,9 +151,31 @@ function WorkerViewModal({ isOpen, worker, onClose }) {
                                 </span>
                                 <span>{worker.phone || "—"}</span>
                             </div>
+
+                            <div className="flex gap-2">
+                                <span className="font-semibold text-gray-500 dark:text-gray-400 w-32">
+                                    {t("workers.modal.fields.location")}
+                                </span>
+                                <span>{worker.location || "—"}</span>
+                            </div>
+
+                            {worker.portfolio_link && (
+                                <div className="flex gap-2">
+                                    <span className="font-semibold text-gray-500 dark:text-gray-400 w-32">
+                                        {t("workers.modal.fields.portfolio")}
+                                    </span>
+                                    <a
+                                        href={worker.portfolio_link}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="text-blue-600 dark:text-blue-400 hover:underline truncate"
+                                    >
+                                        {worker.portfolio_link}
+                                    </a>
+                                </div>
+                            )}
                         </>
                     )}
-
                     {activeTab === "others" && (
                         <>
                             <div className="flex gap-2">
@@ -127,28 +185,37 @@ function WorkerViewModal({ isOpen, worker, onClose }) {
                                 <span>#{worker.id}</span>
                             </div>
 
-                            <div className="flex gap-2">
-                                <span className="font-semibold text-gray-500 dark:text-gray-400 w-32">
-                                    {t("workers.modal.fields.location")}
-                                </span>
-                                <span>{worker.location || "—"}</span>
-                            </div>
-
-                            <div className="flex gap-2">
-                                <span className="font-semibold text-gray-500 dark:text-gray-400 w-32">
-                                    {t("workers.modal.fields.nationalId")}
-                                </span>
-                                <span>{worker.national_id || "—"}</span>
-                            </div>
-
                             <div className="flex gap-2 items-center">
                                 <span className="font-semibold text-gray-500 dark:text-gray-400 w-32">
                                     {t("workers.modal.fields.status")}
                                 </span>
+
                                 <StatusBadge
                                     status={worker.verification_status}
                                     label={worker.verification_status_display}
                                 />
+                            </div>
+
+                            <div className="flex gap-2">
+                                <span className="font-semibold text-gray-500 dark:text-gray-400 w-32">
+                                    {t("workers.modal.fields.joinedOn")}
+                                </span>
+                                <span>
+                                    {worker.joined_on
+                                        ? new Date(worker.joined_on).toLocaleDateString()
+                                        : "—"}
+                                </span>
+                            </div>
+
+                            <div className="flex gap-2">
+                                <span className="font-semibold text-gray-500 dark:text-gray-400 w-32">
+                                    {t("workers.modal.fields.lastUpdate")}
+                                </span>
+                                <span>
+                                    {worker.last_update
+                                        ? new Date(worker.last_update).toLocaleDateString()
+                                        : "—"}
+                                </span>
                             </div>
                         </>
                     )}
@@ -158,7 +225,7 @@ function WorkerViewModal({ isOpen, worker, onClose }) {
                 <div className="flex gap-2 mt-6">
                     <button
                         onClick={() => {
-                            navigate(`/admin/edit/worker/${worker.id}`);
+                            onEdit(worker);
                             onClose();
                         }}
                         className="px-4 py-2 bg-blue-600 dark:bg-blue-500 hover:bg-blue-700 dark:hover:bg-blue-600 text-white rounded-lg text-sm font-medium transition-colors flex items-center gap-2 cursor-pointer"

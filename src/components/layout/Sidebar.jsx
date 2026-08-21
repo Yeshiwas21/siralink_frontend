@@ -4,19 +4,8 @@ import { useTranslation } from "react-i18next";
 import { useAuth } from "../../contexts/AuthContext";
 
 import {
-  LayoutDashboard,
-  Briefcase,
-  DollarSign,
-  ShieldCheck,
-  ClipboardList,
-  Users,
-  UserCheck,
-  UserRound,
-  FileText,
-  Star,
-  BarChart3,
-  ChevronRight,
-  ChevronLeft,
+  LayoutDashboard, Briefcase, DollarSign, ShieldCheck, ClipboardList, Users, UserCheck,
+  UserRound, FileText, Star, BarChart3, PanelLeftClose, PanelLeftOpen
 } from "lucide-react";
 
 function Sidebar() {
@@ -75,7 +64,7 @@ function Sidebar() {
             className="hidden md:flex items-center justify-center p-1.5 rounded-lg text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
             title={isCollapsed ? t("expand", "Expand") : t("collapse", "Collapse")}
           >
-            {isCollapsed ? <ChevronRight size={18} /> : <ChevronLeft size={18} />}
+            {isCollapsed ? <PanelLeftOpen size={18} /> : <PanelLeftClose size={18} />}
           </button>
         </div>
       </div>

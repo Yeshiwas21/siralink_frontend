@@ -238,41 +238,46 @@ function CreateUser() {
             </div>
           </div>
 
+
+
           {/* GENDER */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-              {t("create_user.gender")}
-            </label>
-
-            <div className="flex gap-6">
-              <label className="flex items-center gap-2 cursor-pointer text-gray-700 dark:text-gray-300">
-                <input
-                  type="radio"
-                  name="gender"
-                  value="male"
-                  checked={form.gender === "male"}
-                  onChange={handleChange}
-                  className="accent-gray-900 dark:accent-white"
-                />
-                <span>{t("create_user.male")}</span>
+            <div className="flex items-center gap-6">
+              <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                {t("create_user.gender")}
               </label>
 
-              <label className="flex items-center gap-2 cursor-pointer text-gray-700 dark:text-gray-300">
-                <input
-                  type="radio"
-                  name="gender"
-                  value="female"
-                  checked={form.gender === "female"}
-                  onChange={handleChange}
-                  className="accent-gray-900 dark:accent-white"
-                />
-                <span>{t("create_user.female")}</span>
-              </label>
+              <div className="flex gap-6">
+                <label className="flex items-center gap-2 cursor-pointer text-gray-700 dark:text-gray-300">
+                  <input
+                    type="radio"
+                    name="gender"
+                    value="male"
+                    checked={form.gender === "male"}
+                    onChange={handleChange}
+                    className="accent-gray-900 dark:accent-white"
+                  />
+                  <span>{t("create_user.male")}</span>
+                </label>
+
+                <label className="flex items-center gap-2 cursor-pointer text-gray-700 dark:text-gray-300">
+                  <input
+                    type="radio"
+                    name="gender"
+                    value="female"
+                    checked={form.gender === "female"}
+                    onChange={handleChange}
+                    className="accent-gray-900 dark:accent-white"
+                  />
+                  <span>{t("create_user.female")}</span>
+                </label>
+              </div>
             </div>
 
             {errors.gender && (
               <p className="text-xs text-red-500 dark:text-red-400 mt-1">
-                {errors.gender}</p>
+                {errors.gender}
+              </p>
             )}
           </div>
 
@@ -296,42 +301,44 @@ function CreateUser() {
               </p>
             )}
           </div>
+          {/* EMAIL AND PHONE GRID */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {/* EMAIL */}
+            <div>
+              <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                {t("create_user.email")}
+              </label>
+              <input
+                name="email"
+                type="email"
+                placeholder={t("create_user.email_placeholder")}
+                value={form.email}
+                onChange={handleChange}
+                autoComplete="off"
+                className="mt-1 w-full px-4 py-3 rounded-xl border bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white border-gray-200 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-500 transition"
+              />
+              {errors.email && (
+                <p className="text-red-500 text-sm mt-1">{errors.email}</p>
+              )}
+            </div>
 
-          {/* EMAIL */}
-          <div>
-            <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
-              {t("create_user.email")}
-            </label>
-            <input
-              name="email"
-              type="email"
-              placeholder={t("create_user.email_placeholder")}
-              value={form.email}
-              onChange={handleChange}
-              autoComplete="off"
-              className="mt-1 w-full px-4 py-3 rounded-xl border bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white border-gray-200 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-500 transition"
-            />
-            {errors.email && (
-              <p className="text-red-500 text-sm mt-1">{errors.email}</p>
-            )}
-          </div>
-
-          {/* PHONE */}
-          <div>
-            <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
-              {t("create_user.phone")}
-            </label>
-            <input
-              name="phone"
-              placeholder={t("create_user.phone_placeholder")}
-              value={form.phone}
-              onChange={handleChange}
-              autoComplete="off"
-              className="mt-1 w-full px-4 py-3 rounded-xl border bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white border-gray-200 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-500 transition"
-            />
-            {errors.phone && (
-              <p className="text-red-500 text-sm mt-1">{errors.phone}</p>
-            )}
+            {/* PHONE */}
+            <div>
+              <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                {t("create_user.phone")}
+              </label>
+              <input
+                name="phone"
+                placeholder={t("create_user.phone_placeholder")}
+                value={form.phone}
+                onChange={handleChange}
+                autoComplete="off"
+                className="mt-1 w-full px-4 py-3 rounded-xl border bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white border-gray-200 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-500 transition"
+              />
+              {errors.phone && (
+                <p className="text-red-500 text-sm mt-1">{errors.phone}</p>
+              )}
+            </div>
           </div>
 
           {/* USER TYPE */}

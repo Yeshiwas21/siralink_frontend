@@ -244,6 +244,28 @@ function ClientViewModal({ isOpen, client, onClose, onEdit }) {
                                     </span>
                                 </div>
                             )}
+                            <div className="flex gap-2">
+                                <span className="font-semibold text-gray-500 dark:text-gray-400 w-32">
+                                    {t("clients.fields.joined_on")}
+                                </span>
+                                <span className="text-gray-900 dark:text-gray-200">
+                                    {client.joined_on ?
+                                        new Date(client.joined_on).toLocaleDateString()
+                                        : "—"
+                                    }
+                                </span>
+                            </div>
+                            <div className="flex gap-2">
+                                <span className="font-semibold text-gray-500 dark:text-gray-400 w-32">
+                                    {t("clients.fields.last_update")}
+                                </span>
+                                <span className="text-gray-900 dark:text-gray-200">
+                                    {client.last_update ?
+                                        new Date(client.last_update).toLocaleDateString()
+                                        : "—"
+                                    }
+                                </span>
+                            </div>
                         </>
                     )}
                 </div>
