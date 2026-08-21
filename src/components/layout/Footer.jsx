@@ -8,7 +8,7 @@ import {
   FaLinkedinIn,
   FaXTwitter,
   FaApple,
-  FaTelegram
+  FaTelegram,
 } from "react-icons/fa6";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import { AiFillAndroid } from "react-icons/ai";
@@ -23,7 +23,7 @@ function Footer() {
     "text-gray-600 dark:text-gray-300 hover:text-white hover:bg-gray-900 dark:hover:bg-white dark:hover:text-black p-2 rounded-full transition-all duration-300 hover:scale-110";
 
   const appIconsClass =
-    "flex items-center gap-1 text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition";
+    "flex items-center gap-1.5 text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition p-1.5 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800";
 
   const [openSections, setOpenSections] = useState({
     quick: false,
@@ -46,15 +46,12 @@ function Footer() {
         <div className="grid md:grid-cols-5 gap-8">
           {/* BRAND */}
           <div className="space-y-3 max-w-sm">
-            {/* Logo */}
             <Link to="/" className="flex items-center">
               <ThemedLogo
                 alt="SiraLink"
                 className="h-6 md:h-7 w-auto object-contain"
               />
             </Link>
-
-            {/* Tagline */}
             <p className="text-sm leading-relaxed text-gray-600 dark:text-gray-300">
               {t("footer.tagline")}
             </p>
@@ -69,7 +66,6 @@ function Footer() {
               <h3 className="font-semibold text-gray-900 dark:text-white">
                 {t("footer.sections.quick_links")}
               </h3>
-
               <span className="md:hidden">
                 {openSections.quick ? (
                   <ChevronUp size={18} />
@@ -78,7 +74,6 @@ function Footer() {
                 )}
               </span>
             </button>
-
             <ul
               className={`space-y-2 text-sm transition-all ${openSections.quick ? "block" : "hidden"
                 } md:block`}
@@ -110,7 +105,6 @@ function Footer() {
               <h3 className="font-semibold text-gray-900 dark:text-white">
                 {t("footer.sections.for_workers")}
               </h3>
-
               <span className="md:hidden">
                 {openSections.workers ? (
                   <ChevronUp size={18} />
@@ -128,13 +122,11 @@ function Footer() {
                   {t("footer.links.browse_jobs")}
                 </Link>
               </li>
-
               <li>
                 <Link className={footerLinkClass} to="/signup/worker">
                   {t("footer.links.become_worker")}
                 </Link>
               </li>
-
               <li>
                 <Link className={footerLinkClass} to="/nearest-works">
                   {t("footer.links.nearest_works")}
@@ -152,7 +144,6 @@ function Footer() {
               <h3 className="font-semibold text-gray-900 dark:text-white">
                 {t("footer.sections.for_clients")}
               </h3>
-
               <span className="md:hidden">
                 {openSections.clients ? (
                   <ChevronUp size={18} />
@@ -170,13 +161,11 @@ function Footer() {
                   {t("footer.links.post_job")}
                 </Link>
               </li>
-
               <li>
                 <Link className={footerLinkClass} to="/signup/client">
                   {t("footer.links.become_client")}
                 </Link>
               </li>
-
               <li>
                 <Link className={footerLinkClass} to="/nearest-workers">
                   {t("footer.links.nearest_workers")}
@@ -194,7 +183,6 @@ function Footer() {
               <h3 className="font-semibold text-gray-900 dark:text-white">
                 {t("footer.sections.company")}
               </h3>
-
               <span className="md:hidden">
                 {openSections.company ? (
                   <ChevronUp size={18} />
@@ -236,54 +224,89 @@ function Footer() {
           </div>
         </div>
 
-        {/* FOLLOW US + MOBILE APP */}
-        <div className="mt-10 pt-6 md:px-8">
-          <div className="flex items-center justify-between flex-wrap gap-6">
-            {/* LEFT SIDE */}
-            <div className="flex items-center gap-5 flex-wrap">
-              <span className="text-gray-900 dark:text-white">
+        {/* FOLLOW US + MOBILE APP SECTION */}
+        <div className="mt-8 pt-6 border-t border-gray-200 dark:border-gray-800">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-5">
+            {/* FOLLOW US */}
+            <div className="flex items-center gap-2 sm:gap-3 flex-wrap text-sm">
+              <span className="font-medium text-gray-900 dark:text-white mr-1">
                 {t("footer.follow_us")}
               </span>
 
-              <a href="https://facebook.com/siralink" target="_blank" rel="noopener noreferrer" className={footerIconClass}>
-                <FaFacebookF size={18} />
-              </a>
+              <div className="flex items-center gap-1 sm:gap-2 flex-wrap">
+                <a
+                  href="https://facebook.com/siralink"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={footerIconClass}
+                  aria-label="Facebook"
+                >
+                  <FaFacebookF size={16} />
+                </a>
 
-              <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className={footerIconClass}>
-                <FaInstagram size={18} />
-              </a>
+                <a
+                  href="https://instagram.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={footerIconClass}
+                  aria-label="Instagram"
+                >
+                  <FaInstagram size={16} />
+                </a>
 
-              <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" className={footerIconClass}>
-                <FaLinkedinIn size={18} />
-              </a>
+                <a
+                  href="https://linkedin.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={footerIconClass}
+                  aria-label="LinkedIn"
+                >
+                  <FaLinkedinIn size={16} />
+                </a>
 
-              <a href="https://x.com" target="_blank" rel="noopener noreferrer" className={footerIconClass}>
-                <FaXTwitter size={18} />
-              </a>
-              <a href="https://t.me/siralink_ethiopia" target="_blank" rel="noopener noreferrer" className={footerIconClass}>
-                <FaTelegram size={18} />
-              </a>
+                <a
+                  href="https://x.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={footerIconClass}
+                  aria-label="X"
+                >
+                  <FaXTwitter size={16} />
+                </a>
+
+                <a
+                  href="https://t.me/siralink_ethiopia"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={footerIconClass}
+                  aria-label="Telegram"
+                >
+                  <FaTelegram size={16} />
+                </a>
+              </div>
             </div>
 
-            {/* RIGHT SIDE */}
-            <div className="flex items-center gap-4 flex-wrap">
-              <span className="text-gray-900 dark:text-white">
+            {/* MOBILE APP */}
+            <div className="flex items-center gap-3 text-sm border-t border-gray-100 dark:border-gray-800/60 pt-4 w-full sm:w-auto sm:border-0 sm:pt-0">
+              <span className="font-medium text-gray-900 dark:text-white">
                 {t("footer.mobile_app")}
               </span>
 
-              <a href="#" className={appIconsClass}>
-                <FaApple size={18} />
-              </a>
+              <div className="flex items-center gap-1">
+                <a href="#" className={appIconsClass} aria-label="iOS App">
+                  <FaApple size={18} />
+                </a>
 
-              <a href="#" className={appIconsClass}>
-                <AiFillAndroid size={18} />
-              </a>
+                <a href="#" className={appIconsClass} aria-label="Android App">
+                  <AiFillAndroid size={18} />
+                </a>
+              </div>
             </div>
           </div>
         </div>
 
         {/* COPYRIGHT */}
-        <div className="border-t border-gray-200 dark:border-gray-800 mt-8 pt-6 text-center text-sm text-gray-600 dark:text-gray-200">
+        <div className="border-t border-gray-200 dark:border-gray-800 mt-6 pt-6 text-center text-xs sm:text-sm text-gray-600 dark:text-gray-400">
           © {new Date().getFullYear()} {t("footer.copyright")}
         </div>
       </div>
