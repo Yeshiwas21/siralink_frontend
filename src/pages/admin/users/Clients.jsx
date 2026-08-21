@@ -8,6 +8,10 @@ import {
   HelpCircle,
   XCircle,
   Download,
+  ChevronsLeft,
+  ChevronLeft,
+  ChevronRight,
+  ChevronsRight,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
@@ -132,6 +136,7 @@ function Clients() {
   const handleEditClient = (client) => {
     setEditFormData({
       id: client.id,
+      email: client.email,
       client_type: client.client_type || "individual",
       national_id: client.national_id || "",
       company_name: client.company_name || "",
@@ -510,24 +515,28 @@ function Clients() {
 
         <div className="flex justify-center flex-1">
           <div className="flex items-center gap-1">
+            {/* Hide First & Prev if on the first page */}
             {currentPage > 1 && (
-              <button
-                onClick={() => setCurrentPage(1)}
-                className={`${baseBtn} ${themeBtn}`}
-              >
-                {t("clients.first")}
-              </button>
+              <>
+                <button
+                  onClick={() => setCurrentPage(1)}
+                  aria-label={t("clients.first")}
+                  className={`${baseBtn} ${themeBtn} p-1.5`}
+                >
+                  <ChevronsLeft size={16} />
+                </button>
+
+                <button
+                  onClick={() => setCurrentPage((p) => p - 1)}
+                  aria-label={t("clients.prev")}
+                  className={`${baseBtn} ${themeBtn} p-1.5`}
+                >
+                  <ChevronLeft size={16} />
+                </button>
+              </>
             )}
 
-            {currentPage > 1 && (
-              <button
-                onClick={() => setCurrentPage((p) => p - 1)}
-                className={`${baseBtn} ${themeBtn}`}
-              >
-                {t("clients.prev")}
-              </button>
-            )}
-
+            {/* Page Numbers */}
             {Array.from({ length: totalPages }, (_, i) => i + 1)
               .slice(
                 Math.max(0, currentPage - 3),
@@ -544,22 +553,25 @@ function Clients() {
                 </button>
               ))}
 
-            {currentPage < totalPages && (
-              <button
-                onClick={() => setCurrentPage((p) => p + 1)}
-                className={`${baseBtn} ${themeBtn}`}
-              >
-                {t("clients.next")}
-              </button>
-            )}
+            {/* Hide Next & Last if on the last page or no total pages */}
+            {currentPage < totalPages && totalPages > 0 && (
+              <>
+                <button
+                  onClick={() => setCurrentPage((p) => p + 1)}
+                  aria-label={t("clients.next")}
+                  className={`${baseBtn} ${themeBtn} p-1.5`}
+                >
+                  <ChevronRight size={16} />
+                </button>
 
-            {currentPage < totalPages && (
-              <button
-                onClick={() => setCurrentPage(totalPages)}
-                className={`${baseBtn} ${themeBtn}`}
-              >
-                {t("clients.last")}
-              </button>
+                <button
+                  onClick={() => setCurrentPage(totalPages)}
+                  aria-label={t("clients.last")}
+                  className={`${baseBtn} ${themeBtn} p-1.5`}
+                >
+                  <ChevronsRight size={16} />
+                </button>
+              </>
             )}
           </div>
         </div>

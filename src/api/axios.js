@@ -2,7 +2,7 @@ import axios from "axios";
 
 // Axios instance with cookie authentication enabled
 const api = axios.create({
-  baseURL: "http://192.168.100.63:8080/api",
+  baseURL: "http://192.168.3.25:8080/api",
   withCredentials: true,
 });
 

@@ -28,6 +28,8 @@ export default function EditClientModal({
 
     if (!isEditOpen || !formData) return null;
 
+    const userEmail = formData?.email || t("workers.labels.not_provided", "N/A");
+
     const validateTextField = (value) => {
         const val = value?.trim();
         if (!val || val.length < 2) {
@@ -149,6 +151,19 @@ export default function EditClientModal({
                     <p className="text-sm text-gray-500 dark:text-gray-400">
                         {t("clients.edit_modal.subtitle", "Update client profile settings and status.")}
                     </p>
+                </div>
+                <div className="flex items-center justify-between gap-3 p-3.5 bg-blue-50/60 dark:bg-blue-900/20 rounded-xl border border-blue-100 dark:border-blue-800/40">
+                    <div className="flex items-center gap-2 min-w-0">
+                        <svg className="w-4 h-4 text-blue-600 dark:text-blue-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        <span className="text-xs font-bold uppercase tracking-wider text-blue-700 dark:text-blue-300 shrink-0">
+                            {t("clients.fields.email")}:
+                        </span>
+                        <span className="text-sm font-semibold text-gray-900 dark:text-white truncate">
+                            {userEmail}
+                        </span>
+                    </div>
                 </div>
 
                 {/* Form Body */}

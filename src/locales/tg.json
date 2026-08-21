@@ -203,6 +203,8 @@
     "date_picker_placeholder": "ዓዓዓዓ-ወወ-መመ",
     "clear": "አጽሪ",
     "close": "ዓጽው",
+    "today": "ሎሚ",
+    "ec": "ዓ.ም",
     "months": [
       "መስከረም", "ጥቅምቲ", "ሕዳር", "ታሕሣሥ", "ጥሪ", "የካቲት",
       "መጋቢት", "ሚያዝያ", "ግንቦት", "ሰነ", "ሓምለ", "ነሓሰ", "ጳጉመን"
@@ -580,6 +582,11 @@
       "create": "ዓሚል ፍጠር",
       "backToClients": "ናብ ዝርዝር ዓማዊል ተመለስ"
     },
+    "tabs": {
+      "contactInfo": "ሓበሬታ ርክብ",
+      "details": "ዝርዝራት",
+      "media": "ሜድያ"
+    },
     "validation": {
       "userRequired": "ብኽብረትኩም ተጠቃሚ ሕረዩ",
       "min2Chars": "ብውሕዱ 2 ፊደላት የድልዩ",
@@ -637,6 +644,11 @@
     },
     "messages": {
       "success": "ሓዱሽ ሰራሕተኛ ተፈጢሩ ኣሎ"
+    },
+    "tabs": {
+      "accountSelect": "ሕሳብ ምምራጽ",
+      "profileInfo": "ሓበሬታ ፕሮፋይል",
+      "mediaAndLinks": "ሜድያን ሊንክታትን"
     },
     "validation": {
       "userRequired": "በጃኹም ተጠቃሚ ምረፁ",
@@ -750,7 +762,9 @@
       "location": "ቦታ/ኣድራሻ",
       "status": "ኩነታት ምረጋገጽ",
       "national_id": "ሃገራዊ መነጸሪ",
-      "client_type": "ዓይነት ዓማዊል"
+      "client_type": "ዓይነት ዓማዊል",
+      "joined_on": "እተሓወሰሉ መዓልቲ",
+      "last_update": "ኣብ መወዳእታ ዝተመሓየሸሉ"
     }
   },
   "verification_status": {
@@ -800,6 +814,17 @@
       "next": "ዝቕጽል ›",
       "last": "መወዳእታ »"
     },
+     "labels": {
+        "editing": "ምእራም",
+        "experience_duration_one": "{{count}} ዓመት",
+        "experience_duration_other": "{{count}} ዓመታት"
+    },
+    "placeholders": {
+      "national_id": "ቁጽሪ ሃገራዊ መነጸሪ ኣእትው",
+      "location": "ኣድራሻ/ቦታ ኣእትው",
+      "skills": "አብነት፡ ቧንቧ፡ ኤሌክትሪክ፡ ሕብሪ ምልካይ",
+      "bio": "ሓጺር መግለጺ ወይ ናይ ስራሕ ልምዲ"
+    },
     "modal": {
       "title": "ዝርዝር ሓበሬታ ሰራሕተኛ",
       "tabs": {
@@ -815,12 +840,34 @@
         "id": "መለዪ ቁጽሪ",
         "location": "ቦታ",
         "nationalId": "ብሄራዊ መነጽሪ",
-        "status": "ኩነታት"
+        "status": "ኩነታት",
+        "experience": "ተሞክሮ",
+        "skills": "ክእለታት",
+        "bio": "ብዛዕባይ",
+        "portfolio": "ፖርትፎሊዮ (ናሙና ስራሕ)",
+        "profile_image": "ስእሊ መገለጺ (ፕሮፋይል)",
+        "joinedOn": "እተሓወሰሉ መዓልቲ",
+        "lastUpdate": "ኣብ መወዳእታ ዝተመሓየሸሉ"
       },
       "buttons": {
         "edit": "ኣስተኻኽል",
-        "print": "ሕተም"
+        "print": "ሕተም",
+        "cancel": "ሰርዝ",
+        "save": "ለውጥታት ኣስምሕ"
       }
+    },
+    "sections": {
+      "worker_info": "መነጸሪን ዝርዝርን ሓበሬታ ሰራሕተኛ"
+    },
+    "edit_modal": {
+      "title": "ፕሮፋይል ሰራሕተኛ ኣስተኻኽል",
+      "subtitle": "ሞያዊ ሓበሬታ ናይዚ ሰራሕተኛ ኣሐድስ።"
+    },
+    "file_upload": {
+      "choose_file": "ፋይል ሕረይ",
+      "no_file_chosen": "ዝተሓረየ ፋይል የለን",
+      "browse": "ድለይ...",
+      "uploading": "ይጽዓን ኣሎ..."
     },
     "confirmations": {
       "deleteSingle": "ነዚ ሰራሕተኛ ክትሰርዞ ትደሊዶ?",
@@ -828,7 +875,9 @@
     },
     "toasts": {
       "deleted": "ሰራሕተኛ ተሰሪዙ ኣሎ",
-      "deletedSelected": "ዝተመረጹ ሰራሕተኛታት ተሰሪዞም ኣለው"
+      "deletedSelected": "ዝተመረጹ ሰራሕተኛታት ተሰሪዞም ኣለው",
+      "workerUpdated": "ሓበሬታ ሰራሕተኛ ብዓወት ተመሓይሹ እዩ!"
+
     },
     "errors": {
       "failedToLoad": "ሰራሕተኛታት ምጽዓን ኣይተኻእለን"

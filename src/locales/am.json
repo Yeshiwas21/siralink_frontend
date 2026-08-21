@@ -201,6 +201,8 @@
     "date_picker_placeholder": "ዓዓዓዓ-ወወ-ቀቀ",
     "clear": "አጽዳ",
     "close": "ዝጋ",
+    "today": "ዛሬ",
+    "ec": "ዓ.ም",
     "months": [
       "መስከረም", "ጥቅምት", "ሕዳር", "ታኅሣሥ", "ጥር", "የካቲት",
       "መጋቢት", "ሚያዝያ", "ግንቦት", "ሰኔ", "ሐምሌ", "ነሐሴ", "ጳጉሜ"
@@ -578,6 +580,11 @@
       "create": "ደንበኛ ፍጠር",
       "backToClients": "ወደ ደንበኞች ዝርዝር ተመለስ"
     },
+    "tabs": {
+      "contactInfo": "የመገናኛ መረጃ",
+      "details": "ዝርዝሮች",
+      "media": "ሚዲያ"
+    },
     "validation": {
       "userRequired": "እባክዎን ተጠቃሚ ይምረጡ",
       "min2Chars": "ቢያንስ 2 ፊደላት ያስፈልጋሉ",
@@ -636,6 +643,11 @@
     "messages": {
       "success": "አዲስ ሰራተኛ ተፈጥሯል"
     },
+    "tabs": {
+      "accountSelect": "መለያ መምረጫ",
+      "profileInfo": "የመገለጫ መረጃ",
+      "mediaAndLinks": "ሚዲያ እና ሊንኮች"
+    },
     "validation": {
       "userRequired": "እባክዎን ተጠቃሚ ይምረጡ",
       "finExact12Digits": "ትክክለኛ 12 ዲጂት FIN ቁጥር ያስገቡ",
@@ -672,7 +684,7 @@
     "last": "መጨረሻ »",
     "edit": "አስተካክል",
     "print": "አትም",
-    "loading": "ደንበኞችን በማስገባት ላይ…",
+    "loading": "ደንበኞችን በመጫን ላይ…",
     "error_fetch": "ደንበኞችን መጫን አልተቻለም",
     "no_clients_found": "ምንም ደንበኞች አልተገኙም",
     "client_type": "የደንበኛ ዓይነት",
@@ -742,7 +754,9 @@
       "location": "አድራሻ",
       "status": "የማረጋገጫ ሁኔታ",
       "national_id": "ብሔራዊ መታወቂያ",
-      "client_type": "የደንበኛ ዓይነት"
+      "client_type": "የደንበኛ ዓይነት",
+      "joined_on": "የተቀላቀሉበት ቀን",
+      "last_update": "መጨረሻ የተሻሻለው"
     }
   },
   "actions_menu": {
@@ -798,6 +812,17 @@
       "next": "ቀጣይ ›",
       "last": "የመጨረሻው »"
     },
+     "labels": {
+        "editing": "በማስተካከል ላይ",
+        "experience_duration_one": "{{count}} ዓመት",
+        "experience_duration_other": "{{count}} ዓመታት"
+    },
+    "placeholders": {
+      "national_id": "የብሔራዊ መታወቂያ ቁጥር ያስገቡ",
+      "location": "አድራሻ ያስገቡ",
+      "skills": "ምሳሌ፡ የቧንቧ ሥራ፣ የኤሌክትሪክ ሥራ፣ ቅባት",
+      "bio": "አጭር የሕይወት ታሪክ ወይም የሥራ ልምድ ማጠቃለያ"
+    },
     "modal": {
       "title": "የሰራተኛ ዝርዝር መረጃ",
       "tabs": {
@@ -813,12 +838,34 @@
         "id": "መታወቂያ ቁጥር",
         "location": "አድራሻ/ቦታ",
         "nationalId": "ብሔራዊ መታወቂያ",
-        "status": "ሁኔታ"
+        "status": "ሁኔታ",
+        "experience": "ልምድ",
+        "skills": "ክህሎቶች",
+        "bio": "ስለ እኔ",
+        "portfolio": "ፖርትፎሊዮ (የሥራ ናሙና)",
+        "profile_image": "የመገለጫ ምስል",
+        "joinedOn": "የተቀላቀሉበት ቀን",
+        "lastUpdate": "መጨረሻ የተሻሻለው"
       },
       "buttons": {
         "edit": "አስተካክል",
-        "print": "አትም"
+        "print": "አትም",
+        "cancel": "ሰርዝ",
+        "save": "ለውጦችን አስቀምጥ"
       }
+    },
+    "edit_modal": {
+      "title": "የሰራተኛ መገለጫ ያቅርቡ/ያስተካክሉ",
+      "subtitle": "የዚህን ሰራተኛ ሙያዊ መረጃዎች ያዘምኑ።"
+    },
+    "sections": {
+      "worker_info": "የሰራተኛ መረጃዎች እና ዝርዝሮች"
+    },
+    "file_upload": {
+      "choose_file": "ፋይል ይምረጡ",
+      "no_file_chosen": "ምንም ፋይል አልተመረጠም",
+      "browse": "ቃኝ...",
+      "uploading": "በመጫን ላይ..."
     },
     "confirmations": {
       "deleteSingle": "ይህን ሰራተኛ ማጥፋት ይፈልጋሉ?",
@@ -826,7 +873,9 @@
     },
     "toasts": {
       "deleted": "ሰራተኛው ተሰርዟል",
-      "deletedSelected": "የተመረጡት ሰራተኞች ተሰርዘዋል"
+      "deletedSelected": "የተመረጡት ሰራተኞች ተሰርዘዋል",
+      "workerUpdated": "የሰራተኛው መረጃ በተሳካ ሁኔታ ተሻሽሏል!"
+
     },
     "errors": {
       "failedToLoad": "ሰራተኞችን መጫን አልተቻለም"

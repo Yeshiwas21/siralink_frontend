@@ -415,7 +415,7 @@ function Navbar() {
                     setDropdown((prev) => !prev);
                     setDesktopLangOpen(false);
                   }}
-                  className="flex items-center hover:bg-gray-100 dark:hover:bg-gray-800 p-1.5 rounded-full transition"
+                  className="flex items-center hover:bg-gray-100 dark:hover:bg-gray-800 p-1.5 rounded-full transition cursor-pointer"
                 >
                   <div className="w-9 h-9 rounded-full overflow-hidden bg-gray-200 dark:bg-gray-700 flex items-center justify-center border">
                     {profileImage ? (
@@ -460,7 +460,7 @@ function Navbar() {
 
                       <button
                         onClick={handleLogout}
-                        className="w-full text-left px-4 py-2 text-gray-800 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
+                        className="w-full text-left px-4 py-2 text-gray-800 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer"
                       >
                         {t("navbar.logout")}
                       </button>
@@ -553,7 +553,7 @@ function Navbar() {
                         closeMobile();
                         handleLogout();
                       }}
-                      className={`${mobileLinkClass} w-full text-left`}
+                      className={`${mobileLinkClass} w-full text-left cursor-pointer`}
                     >
                       {t("navbar.logout")}
                     </button>

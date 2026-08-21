@@ -15,10 +15,14 @@ function CreateClient() {
   const [users, setUsers] = useState([]);
   const [selectedUserId, setSelectedUserId] = useState("");
 
+  const [activeTab, setActiveTab] = useState("contact"); // "contact" | "detail" | "media"
+
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
 
   const [form, setForm] = useState({
+    first_name: "",
+    last_name: "",
     email: "",
     phone: "",
     client_type: "individual",
@@ -65,6 +69,8 @@ function CreateClient() {
 
     setForm((prev) => ({
       ...prev,
+      first_name: user?.first_name || "",
+      last_name: user?.last_name || "",
       email: user?.email || "",
       phone: user?.phone || "",
     }));
@@ -90,7 +96,22 @@ function CreateClient() {
     }));
   };
 
-  /* TEXT VALIDATOR (Updated with Unicode properties matching WorkerSignup) */
+  /* CLIENT TYPE TAB CHANGE */
+  const handleClientTypeChange = (type) => {
+    setForm((prev) => ({
+      ...prev,
+      client_type: type,
+    }));
+
+    setErrors((prev) => ({
+      ...prev,
+      client_type: "",
+      national_id: "",
+      company_name: "",
+    }));
+  };
+
+  /* TEXT VALIDATOR */
   const validateTextField = (value) => {
     const val = value?.trim();
 
@@ -98,12 +119,10 @@ function CreateClient() {
       return t("createClient.validation.min2Chars");
     }
 
-    // Accepts letters from ANY language (including Amharic / Ge'ez)
     if (!/^\p{L}/u.test(val)) {
       return t("createClient.validation.mustStartWithLetter");
     }
 
-    // Allows letters from any language + spaces
     if (!/^[\p{L}\s]+$/u.test(val)) {
       return t("createClient.validation.lettersAndSpacesOnly");
     }
@@ -115,12 +134,10 @@ function CreateClient() {
   const validate = () => {
     let newErrors = {};
 
-    // USER
     if (!selectedUserId) {
       newErrors.user = t("createClient.validation.userRequired");
     }
 
-    // NATIONAL ID VALIDATION
     if (isIndividual) {
       if (!form.national_id?.trim()) {
         newErrors.national_id = t("createClient.validation.nationalIdRequired");
@@ -129,7 +146,6 @@ function CreateClient() {
       }
     }
 
-    // COMPANY NAME VALIDATION
     if (isCompany) {
       const company = form.company_name?.trim();
 
@@ -140,13 +156,11 @@ function CreateClient() {
       }
     }
 
-    // LOCATION
     const locationError = validateTextField(form.location);
     if (locationError) {
       newErrors.location = locationError;
     }
 
-    // AVATAR
     if (form.avatar) {
       const file = form.avatar;
 
@@ -171,6 +185,18 @@ function CreateClient() {
     setErrors(validationErrors);
 
     if (Object.keys(validationErrors).length > 0) {
+      if (validationErrors.user) {
+        setActiveTab("contact");
+      } else if (
+        validationErrors.client_type ||
+        validationErrors.national_id ||
+        validationErrors.company_name ||
+        validationErrors.location
+      ) {
+        setActiveTab("detail");
+      } else if (validationErrors.avatar) {
+        setActiveTab("media");
+      }
       return;
     }
 
@@ -212,7 +238,6 @@ function CreateClient() {
         return val;
       };
 
-      // Helper to flatten nested DRF objects
       const flattenErrors = (obj) => {
         let flat = {};
         if (typeof obj !== "object" || obj === null) return flat;
@@ -247,7 +272,6 @@ function CreateClient() {
         formatted[key] = translatedMessage;
       });
 
-      console.log("Formatted Errors Object:", formatted);
       setErrors(formatted);
     } finally {
       setLoading(false);
@@ -255,260 +279,333 @@ function CreateClient() {
   };
 
   const inputClass = (field) =>
-    `mt-1 w-full px-4 py-3 rounded-xl border bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white border-gray-200 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-500 transition ${errors[field] ? "border-red-500 focus:ring-red-200" : ""
+    `mt-1 w-full px-3.5 py-3 rounded-xl border bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white border-gray-200 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-500 transition text-sm ${errors[field] ? "border-red-500 focus:ring-red-200" : ""
     }`;
 
+  const hasContactErrors = !!errors.user;
+  const hasDetailErrors =
+    !!errors.client_type ||
+    !!errors.national_id ||
+    !!errors.company_name ||
+    !!errors.location;
+  const hasMediaErrors = !!errors.avatar;
+
   return (
-    <div className="min-h-screen py-4 px-4 bg-gray-100 dark:bg-gray-900 transition-all">
-      {/* CARD WRAPPER */}
+    <div className="min-h-screen py-2 sm:py-6 px-2 sm:px-4 bg-gray-100 dark:bg-gray-900 transition-all">
       <div className="max-w-xl mx-auto rounded-2xl shadow-xl bg-white dark:bg-gray-800 overflow-hidden border border-gray-200 dark:border-gray-700">
 
         {/* HEADER */}
-        <div className="px-6 py-5 border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">
-          <h2 className="text-xl font-bold text-gray-900 dark:text-white text-center">
+        <div className="px-4 sm:px-6 py-4 sm:py-5 border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">
+          <h2 className="text-lg sm:text-xl font-bold text-gray-900 dark:text-white text-center">
             {t("createClient.title")}
           </h2>
 
-          <p className="text-center text-gray-500 dark:text-gray-400 text-sm mt-1">
+          <p className="text-center text-gray-500 dark:text-gray-400 text-xs sm:text-sm mt-0.5">
             {t("createClient.subtitle")}
           </p>
         </div>
 
-        {/* FORM */}
-        <form onSubmit={handleSubmit} className="p-6 space-y-4">
+        {/* SCROLLABLE RESPONSIVE TABS */}
+        <div className="flex border-b border-gray-200 dark:border-gray-700 bg-gray-50/50 dark:bg-gray-800/50 overflow-x-auto no-scrollbar">
+          <button
+            type="button"
+            onClick={() => setActiveTab("contact")}
+            className={`flex-1 min-w-25 py-3 px-3 text-xs sm:text-sm font-semibold border-b-2 text-center transition-all whitespace-nowrap cursor-pointer ${activeTab === "contact"
+              ? "border-gray-900 dark:border-white text-gray-900 dark:text-white bg-white dark:bg-gray-800"
+              : "border-transparent text-gray-500 hover:text-gray-700 dark:text-gray-300 dark:hover:text-gray-100"
+              }`}
+          >
+            {t("createClient.tabs.contactInfo")}
+            {hasContactErrors && (
+              <span className="ml-1 inline-block w-2 h-2 rounded-full bg-red-500" />
+            )}
+          </button>
+
+          <button
+            type="button"
+            onClick={() => setActiveTab("detail")}
+            className={`flex-1 min-w-25 py-3 px-3 text-xs sm:text-sm font-semibold border-b-2 text-center transition-all whitespace-nowrap cursor-pointer ${activeTab === "detail"
+              ? "border-gray-900 dark:border-white text-gray-900 dark:text-white bg-white dark:bg-gray-800"
+              : "border-transparent text-gray-500 hover:text-gray-700 dark:text-gray-300 dark:hover:text-gray-100"
+              }`}
+          >
+            {t("createClient.tabs.details")}
+            {hasDetailErrors && (
+              <span className="ml-1 inline-block w-2 h-2 rounded-full bg-red-500" />
+            )}
+          </button>
+
+          <button
+            type="button"
+            onClick={() => setActiveTab("media")}
+            className={`flex-1 min-w-25 py-3 px-3 text-xs sm:text-sm font-semibold border-b-2 text-center transition-all whitespace-nowrap cursor-pointer ${activeTab === "media"
+              ? "border-gray-900 dark:border-white text-gray-900 dark:text-white bg-white dark:bg-gray-800"
+              : "border-transparent text-gray-500 hover:text-gray-700 dark:text-gray-300 dark:hover:text-gray-100"
+              }`}
+          >
+            {t("createClient.tabs.media")}
+            {hasMediaErrors && (
+              <span className="ml-1 inline-block w-2 h-2 rounded-full bg-red-500" />
+            )}
+          </button>
+        </div>
+
+        {/* FORM BODY */}
+        <form onSubmit={handleSubmit} className="p-4 sm:p-6 space-y-4">
           {errors.form && (
-            <div className="p-3 rounded-xl bg-red-50 dark:bg-red-900/30 text-red-600 dark:text-red-300 text-sm text-center border border-red-200 dark:border-red-700">
+            <div className="p-3 rounded-xl bg-red-50 dark:bg-red-900/30 text-red-600 dark:text-red-300 text-xs sm:text-sm text-center border border-red-200 dark:border-red-700">
               {errors.form}
             </div>
           )}
 
-          {/* USER */}
-          <div>
-            <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
-              {t("createClient.fields.selectUserLabel")}
-            </label>
+          {/* TAB 1: CONTACT INFO */}
+          {activeTab === "contact" && (
+            <div className="space-y-4">
+              <div>
+                <label className="text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300">
+                  {t("createClient.fields.selectUserLabel")}
+                </label>
 
-            <select
-              value={selectedUserId}
-              onChange={handleUserChange}
-              className={inputClass("user")}
-            >
-              <option value="">{t("createClient.fields.selectUserPlaceholder")}</option>
+                <select
+                  value={selectedUserId}
+                  onChange={handleUserChange}
+                  className={`${inputClass("user")} cursor-pointer`}
+                >
+                  <option value="">
+                    {t("createClient.fields.selectUserPlaceholder")}
+                  </option>
 
-              {users.map((user) => (
-                <option key={user.id} value={user.id}>
-                  {user.email} ({t("createClient.fields.idLabel")}: {user.id})
-                </option>
-              ))}
-            </select>
+                  {users.map((user) => (
+                    <option key={user.id} value={user.id}>
+                      {user.email} ({t("createClient.fields.idLabel")}: {user.id})
+                    </option>
+                  ))}
+                </select>
 
-            {errors.user && (
-              <p className="text-red-500 text-sm mt-1">
-                {errors.user}
-              </p>
-            )}
-          </div>
+                {errors.user && (
+                  <p className="text-red-500 text-xs sm:text-sm mt-1">{errors.user}</p>
+                )}
+              </div>
 
-          {/* EMAIL + PHONE */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {selectedUserId && (
+                <div className="pt-3 border-t border-gray-200 dark:border-gray-700 space-y-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+                    <div>
+                      <label className="text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300">
+                        {t("create_user.first_name")}
+                      </label>
+                      <input
+                        placeholder={t("create_user.first_name")}
+                        value={form.first_name}
+                        disabled
+                        className="mt-1 w-full px-3.5 py-3 rounded-xl border bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white border-gray-200 dark:border-gray-600 focus:outline-none transition cursor-not-allowed text-sm"
+                      />
+                    </div>
 
-            {/* EMAIL */}
-            <div>
-              <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                {t("createClient.fields.email")}
-              </label>
+                    <div>
+                      <label className="text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300">
+                        {t("create_user.last_name")}
+                      </label>
+                      <input
+                        value={form.last_name}
+                        placeholder={t("create_user.last_name")}
+                        disabled
+                        className="mt-1 w-full px-3.5 py-3 rounded-xl border bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white border-gray-200 dark:border-gray-600 focus:outline-none transition cursor-not-allowed text-sm"
+                      />
+                    </div>
+                  </div>
 
-              <input
-                type="email"
-                placeholder={t("createClient.placeholders.email")}
-                value={form.email}
-                disabled
-                className="mt-1 w-full px-4 py-3 rounded-xl border bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white border-gray-200 dark:border-gray-600 focus:outline-none transition cursor-not-allowed"
-              />
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+                    <div>
+                      <label className="text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300">
+                        {t("createClient.fields.email")}
+                      </label>
+                      <input
+                        type="email"
+                        placeholder={t("createClient.placeholders.email")}
+                        value={form.email}
+                        disabled
+                        className="mt-1 w-full px-3.5 py-3 rounded-xl border bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white border-gray-200 dark:border-gray-600 focus:outline-none transition cursor-not-allowed text-sm"
+                      />
+                    </div>
 
-              {errors.email && (
-                <p className="text-red-500 text-sm mt-1">
-                  {errors.email}
-                </p>
-              )}
-            </div>
-
-            {/* PHONE */}
-            <div>
-              <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                {t("createClient.fields.phone")}
-              </label>
-
-              <input
-                value={form.phone}
-                disabled
-                placeholder={t("createClient.placeholders.phone")}
-                className="mt-1 w-full px-4 py-3 rounded-xl border bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white border-gray-200 dark:border-gray-600 focus:outline-none transition cursor-not-allowed"
-              />
-
-              {errors.phone && (
-                <p className="text-red-500 text-sm mt-1">
-                  {errors.phone}
-                </p>
-              )}
-            </div>
-          </div>
-
-          {/* CLIENT TYPE */}
-          <div>
-            <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
-              {t("createClient.fields.clientType")}
-            </label>
-
-            <select
-              name="client_type"
-              value={form.client_type}
-              onChange={handleChange}
-              className={inputClass("client_type")}
-            >
-              <option value="individual">{t("createClient.options.individual")}</option>
-              <option value="company">{t("createClient.options.company")}</option>
-            </select>
-
-            {errors.client_type && (
-              <p className="text-red-500 text-sm mt-1">
-                {errors.client_type}
-              </p>
-            )}
-          </div>
-
-          {/* COMPANY */}
-          {isCompany && (
-            <div>
-              <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                {t("createClient.fields.companyName")}
-              </label>
-
-              <input
-                name="company_name"
-                placeholder={t("createClient.placeholders.companyName")}
-                value={form.company_name}
-                onChange={handleChange}
-                autoComplete="off"
-                className={inputClass("company_name")}
-              />
-
-              {errors.company_name && (
-                <p className="text-red-500 text-sm mt-1">
-                  {errors.company_name}
-                </p>
+                    <div>
+                      <label className="text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300">
+                        {t("createClient.fields.phone")}
+                      </label>
+                      <input
+                        value={form.phone}
+                        disabled
+                        placeholder={t("createClient.placeholders.phone")}
+                        className="mt-1 w-full px-3.5 py-3 rounded-xl border bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white border-gray-200 dark:border-gray-600 focus:outline-none transition cursor-not-allowed text-sm"
+                      />
+                    </div>
+                  </div>
+                </div>
               )}
             </div>
           )}
 
-          {/* NATIONAL ID */}
-          {isIndividual && (
-            <div>
-              <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                {t("createClient.fields.nationalId")}
-              </label>
+          {/* TAB 2: CLIENT DETAILS */}
+          {activeTab === "detail" && (
+            <div className="space-y-4">
+              <div>
+                <label className="text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 block">
+                  {t("createClient.fields.clientType")}
+                </label>
 
-              <input
-                name="national_id"
-                placeholder={t("createClient.placeholders.nationalId")}
-                value={form.national_id}
-                onChange={handleChange}
-                autoComplete="off"
-                className={inputClass("national_id")}
-              />
+                <div className="grid grid-cols-2 gap-2 p-1 bg-gray-100 dark:bg-gray-700 rounded-xl border border-gray-200 dark:border-gray-600">
+                  <button
+                    type="button"
+                    onClick={() => handleClientTypeChange("individual")}
+                    className={`py-2.5 rounded-lg text-xs sm:text-sm font-semibold transition-all cursor-pointer ${isIndividual
+                      ? "bg-white dark:bg-gray-800 text-gray-900 dark:text-white shadow-sm"
+                      : "text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"
+                      }`}
+                  >
+                    {t("createClient.options.individual")}
+                  </button>
 
-              {errors.national_id && (
-                <p className="text-red-500 text-sm mt-1">
-                  {errors.national_id}
-                </p>
+                  <button
+                    type="button"
+                    onClick={() => handleClientTypeChange("company")}
+                    className={`py-2.5 rounded-lg text-xs sm:text-sm font-semibold transition-all cursor-pointer ${isCompany
+                      ? "bg-white dark:bg-gray-800 text-gray-900 dark:text-white shadow-sm"
+                      : "text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"
+                      }`}
+                  >
+                    {t("createClient.options.company")}
+                  </button>
+                </div>
+
+                {errors.client_type && (
+                  <p className="text-red-500 text-xs sm:text-sm mt-1">
+                    {errors.client_type}
+                  </p>
+                )}
+              </div>
+
+              {isCompany && (
+                <div>
+                  <label className="text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300">
+                    {t("createClient.fields.companyName")}
+                  </label>
+                  <input
+                    name="company_name"
+                    placeholder={t("createClient.placeholders.companyName")}
+                    value={form.company_name}
+                    onChange={handleChange}
+                    autoComplete="off"
+                    className={inputClass("company_name")}
+                  />
+                  {errors.company_name && (
+                    <p className="text-red-500 text-xs sm:text-sm mt-1">
+                      {errors.company_name}
+                    </p>
+                  )}
+                </div>
               )}
+
+              {isIndividual && (
+                <div>
+                  <label className="text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300">
+                    {t("createClient.fields.nationalId")}
+                  </label>
+                  <input
+                    name="national_id"
+                    placeholder={t("createClient.placeholders.nationalId")}
+                    value={form.national_id}
+                    onChange={handleChange}
+                    autoComplete="off"
+                    className={inputClass("national_id")}
+                  />
+                  {errors.national_id && (
+                    <p className="text-red-500 text-xs sm:text-sm mt-1">
+                      {errors.national_id}
+                    </p>
+                  )}
+                </div>
+              )}
+
+              <div>
+                <label className="text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300">
+                  {t("createClient.fields.location")}
+                </label>
+                <input
+                  name="location"
+                  placeholder={t("createClient.placeholders.location")}
+                  autoComplete="off"
+                  value={form.location}
+                  onChange={handleChange}
+                  className={inputClass("location")}
+                />
+                {errors.location && (
+                  <p className="text-red-500 text-xs sm:text-sm mt-1">
+                    {errors.location}
+                  </p>
+                )}
+              </div>
             </div>
           )}
 
-          {/* LOCATION */}
-          <div>
-            <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
-              {t("createClient.fields.location")}
-            </label>
+          {/* TAB 3: MEDIA */}
+          {activeTab === "media" && (
+            <div className="space-y-4">
+              <div>
+                <label className="text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300">
+                  {t("createClient.fields.profileImage")}
+                </label>
+                <input
+                  type="file"
+                  name="avatar"
+                  accept="image/*"
+                  onChange={(e) => {
+                    setForm({
+                      ...form,
+                      avatar: e.target.files[0],
+                    });
+                    setErrors({
+                      ...errors,
+                      avatar: "",
+                    });
+                  }}
+                  className="mt-1 w-full px-3 py-2.5 rounded-xl border bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white border-gray-200 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-500 transition text-xs sm:text-sm file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:bg-gray-200 dark:file:bg-gray-600 file:text-gray-700 dark:file:text-gray-200"
+                />
+                <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                  {t("createClient.hints.maxFileSize")}
+                </p>
+                {errors.avatar && (
+                  <p className="text-red-500 text-xs sm:text-sm mt-1">{errors.avatar}</p>
+                )}
+              </div>
+            </div>
+          )}
 
-            <input
-              name="location"
-              placeholder={t("createClient.placeholders.location")}
-              autoComplete="off"
-              value={form.location}
-              onChange={handleChange}
-              className={inputClass("location")}
-            />
-
-            {errors.location && (
-              <p className="text-red-500 text-sm mt-1">
-                {errors.location}
-              </p>
-            )}
-          </div>
-
-          {/* AVATAR */}
-          <div>
-            <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
-              {t("createClient.fields.profileImage")}
-            </label>
-
-            <input
-              type="file"
-              name="avatar"
-              accept="image/*"
-              onChange={(e) => {
-                setForm({
-                  ...form,
-                  avatar: e.target.files[0],
-                });
-
-                setErrors({
-                  ...errors,
-                  avatar: "",
-                });
-              }}
-              className="mt-1 w-full px-4 py-3 rounded-xl border bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white border-gray-200 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-500 transition file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-gray-200 dark:file:bg-gray-600 file:text-gray-700 dark:file:text-gray-200"
-            />
-
-            <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-              {t("createClient.hints.maxFileSize")}
-            </p>
-
-            {errors.avatar && (
-              <p className="text-red-500 text-sm mt-1">
-                {errors.avatar}
-              </p>
-            )}
-          </div>
-
-          {/* GENERAL ERROR */}
           {errors.general && (
-            <div className="p-3 rounded-xl bg-red-50 dark:bg-red-900/30 text-red-600 dark:text-red-300 text-sm text-center border border-red-200 dark:border-red-700">
+            <div className="p-3 rounded-xl bg-red-50 dark:bg-red-900/30 text-red-600 dark:text-red-300 text-xs sm:text-sm text-center border border-red-200 dark:border-red-700">
               {errors.general}
             </div>
           )}
 
-          {/* SUBMIT */}
-          <button
-            type="submit"
-            disabled={loading}
-            className={`w-full py-3 rounded-xl font-semibold transition-all shadow-sm cursor-pointer ${loading
-              ? "bg-gray-400 cursor-not-allowed"
-              : "bg-gray-900 dark:bg-white dark:text-gray-900 text-white hover:opacity-90"
-              }`}
-          >
-            {loading
-              ? t("createClient.buttons.creating")
-              : t("createClient.buttons.create")}
-          </button>
+          {/* ACTION BUTTONS */}
+          <div className="pt-2 flex flex-col sm:flex-row gap-3">
+            <button
+              type="submit"
+              disabled={loading}
+              className={`flex-1 py-3 rounded-xl font-semibold transition-all shadow-sm cursor-pointer ${loading
+                ? "bg-gray-400 cursor-not-allowed"
+                : "bg-gray-900 dark:bg-white dark:text-gray-900 text-white hover:opacity-90"
+                }`}
+            >
+              {loading
+                ? t("createClient.buttons.creating")
+                : t("createClient.buttons.create")}
+            </button>
 
-          {/* FOOTER NAVIGATION */}
-          <div className="pt-2">
             <button
               type="button"
               onClick={() => navigate("/admin/clients")}
-              className="w-full flex items-center justify-center gap-2 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 transition cursor-pointer"
+              className="flex-1 flex items-center justify-center gap-2 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 transition cursor-pointer text-sm font-medium"
             >
               ← {t("createClient.buttons.backToClients")}
             </button>

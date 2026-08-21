@@ -305,41 +305,44 @@ function WorkerSignup() {
               </div>
             </div>
 
-            {/* GENDER */}
+            {/* GENDER  */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                {t("create_user.gender")}
-              </label>
-
-              <div className="flex gap-6">
-                <label className="flex items-center gap-2 cursor-pointer text-gray-700 dark:text-gray-300">
-                  <input
-                    type="radio"
-                    name="gender"
-                    value="male"
-                    checked={form.gender === "male"}
-                    onChange={handleChange}
-                    className="accent-gray-900 dark:accent-white"
-                  />
-                  <span>{t("create_user.male")}</span>
+              <div className="flex items-center gap-6">
+                <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                  {t("create_user.gender")}
                 </label>
 
-                <label className="flex items-center gap-2 cursor-pointer text-gray-700 dark:text-gray-300">
-                  <input
-                    type="radio"
-                    name="gender"
-                    value="female"
-                    checked={form.gender === "female"}
-                    onChange={handleChange}
-                    className="accent-gray-900 dark:accent-white"
-                  />
-                  <span>{t("create_user.female")}</span>
-                </label>
+                <div className="flex gap-6">
+                  <label className="flex items-center gap-2 cursor-pointer text-gray-700 dark:text-gray-300">
+                    <input
+                      type="radio"
+                      name="gender"
+                      value="male"
+                      checked={form.gender === "male"}
+                      onChange={handleChange}
+                      className="accent-gray-900 dark:accent-white"
+                    />
+                    <span className="text-sm sm:text-base">{t("create_user.male")}</span>
+                  </label>
+
+                  <label className="flex items-center gap-2 cursor-pointer text-gray-700 dark:text-gray-300">
+                    <input
+                      type="radio"
+                      name="gender"
+                      value="female"
+                      checked={form.gender === "female"}
+                      onChange={handleChange}
+                      className="accent-gray-900 dark:accent-white"
+                    />
+                    <span className="text-sm sm:text-base">{t("create_user.female")}</span>
+                  </label>
+                </div>
               </div>
 
               {errors.gender && (
                 <p className="text-xs text-red-500 dark:text-red-400 mt-1">
-                  {errors.gender}</p>
+                  {errors.gender}
+                </p>
               )}
             </div>
 

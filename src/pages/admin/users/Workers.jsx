@@ -1,13 +1,7 @@
 import React, { useEffect, useMemo, useState, useCallback } from "react";
 import {
-  Users,
-  Search,
-  Clock,
-  RefreshCw,
-  CircleCheck,
-  HelpCircle,
-  XCircle,
-  Download,
+  Users, Search, Clock, RefreshCw, CircleCheck, HelpCircle, XCircle, Download,
+  ChevronsLeft, ChevronLeft, ChevronRight, ChevronsRight,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
@@ -19,6 +13,7 @@ import StatusBadge from "../../../components/common/StatusBadge";
 import ActionMenu from "../../../components/common/ActionMenu";
 import { handlePrintWorker } from "../../../utils/workerPrint";
 import WorkerViewModal from "./WorkerViewModal";
+import EditWorkerModal from "./EditWorkerModal";
 
 function Workers() {
   const { t } = useTranslation();
@@ -36,6 +31,12 @@ function Workers() {
 
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
+
+  // Edit Modal State
+  const [isEditOpen, setIsEditOpen] = useState(false);
+  const [editFormData, setEditFormData] = useState(null);
+  const [editErrors, setEditErrors] = useState({});
+
 
   /* fetch */
   const fetchWorkers = useCallback(async () => {
@@ -105,6 +106,40 @@ function Workers() {
     setIsViewModalOpen(false);
   };
 
+  // Event Handler to open the modal
+  const handleEditWorker = (worker) => {
+    setEditFormData({
+      id: worker.id,
+      email: worker.email,
+      category: worker.category?.id || "",
+      national_id: worker.national_id || "",
+      skills: worker.skills || "",
+      bio: worker.bio || "",
+      profile_image: null,
+      experience_years: worker.experience_years ?? 0,
+      portfolio_link: worker.portfolio_link || "",
+      location: worker.location || "",
+      verification_status: worker.verification_status
+    });
+
+    setEditErrors({});
+    setIsEditOpen(true);
+  };
+  const handleCloseEditModal = () => {
+    setIsEditOpen(false);
+    setEditFormData(null);
+    setEditErrors({});
+  };
+
+  const handleEditSuccess = (updatedData) => {
+    setWorkers((prev) =>
+      prev.map((w) => (w.id === updatedData.id ? { ...w, ...updatedData } : w)),
+    );
+    setIsEditOpen(false);
+    setIsViewModalOpen(false);
+    toast.success(t("workers.toasts.workerUpdated"));
+  };
+
   /* delete */
   const handleDeleteWorker = async (id) => {
     if (!window.confirm(t("workers.confirmations.deleteSingle"))) return;
@@ -172,8 +207,7 @@ function Workers() {
   const baseBtn = "px-3 py-1 rounded-full border cursor-pointer transition";
 
   const themeBtn =
-    "border-white dark:border-black " +
-    "text-black dark:text-white " +
+    "border-white dark:border-black text-black dark:text-white " +
     "hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black";
 
   const activeBtn =
@@ -419,8 +453,7 @@ function Workers() {
                       <ActionMenu
                         item={w}
                         onView={openViewModal}
-                        onEdit={(worker) =>
-                          navigate(`/admin/edit/worker/${worker.id}`)
+                        onEdit={(w) => handleEditWorker(w)
                         }
                         onDelete={handleDeleteWorker}
                         onPrint={handlePrintWorker}
@@ -446,14 +479,15 @@ function Workers() {
       {/* PAGINATION */}
       <div className="flex flex-col sm:flex-row items-center justify-between gap-3 mt-4">
         <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-300">
-          <span>{t("workers.pagination.rows")}</span>
+          <span>{t("clients.rows")}</span>
           <select
             value={rowsPerPage}
             onChange={(e) => {
               setRowsPerPage(Number(e.target.value));
               setCurrentPage(1);
             }}
-            className="border border-gray-300 dark:border-gray-600 rounded px-2 py-1 bg-white dark:bg-gray-800 text-gray-800 dark:text-white"
+            className="border border-gray-300 dark:border-gray-600 rounded px-2 py-1 
+                 bg-white dark:bg-gray-800 text-gray-800 dark:text-white"
           >
             {[5, 10, 20, 50].map((size) => (
               <option key={size} value={size}>
@@ -465,28 +499,32 @@ function Workers() {
 
         <div className="flex justify-center flex-1">
           <div className="flex items-center gap-1">
+            {/* Hide First & Prev if on the first page */}
             {currentPage > 1 && (
-              <button
-                onClick={() => setCurrentPage(1)}
-                className={`${baseBtn} ${themeBtn}`}
-              >
-                {t("workers.pagination.first")}
-              </button>
+              <>
+                <button
+                  onClick={() => setCurrentPage(1)}
+                  aria-label={t("clients.first")}
+                  className={`${baseBtn} ${themeBtn} p-1.5`}
+                >
+                  <ChevronsLeft size={16} />
+                </button>
+
+                <button
+                  onClick={() => setCurrentPage((p) => p - 1)}
+                  aria-label={t("clients.prev")}
+                  className={`${baseBtn} ${themeBtn} p-1.5`}
+                >
+                  <ChevronLeft size={16} />
+                </button>
+              </>
             )}
 
-            {currentPage > 1 && (
-              <button
-                onClick={() => setCurrentPage((p) => p - 1)}
-                className={`${baseBtn} ${themeBtn}`}
-              >
-                {t("workers.pagination.prev")}
-              </button>
-            )}
-
+            {/* Page Numbers */}
             {Array.from({ length: totalPages }, (_, i) => i + 1)
               .slice(
                 Math.max(0, currentPage - 3),
-                Math.min(totalPages, currentPage + 2)
+                Math.min(totalPages, currentPage + 2),
               )
               .map((page) => (
                 <button
@@ -499,22 +537,25 @@ function Workers() {
                 </button>
               ))}
 
-            {currentPage < totalPages && (
-              <button
-                onClick={() => setCurrentPage((p) => p + 1)}
-                className={`${baseBtn} ${themeBtn}`}
-              >
-                {t("workers.pagination.next")}
-              </button>
-            )}
+            {/* Hide Next & Last if on the last page or no total pages */}
+            {currentPage < totalPages && totalPages > 0 && (
+              <>
+                <button
+                  onClick={() => setCurrentPage((p) => p + 1)}
+                  aria-label={t("clients.next")}
+                  className={`${baseBtn} ${themeBtn} p-1.5`}
+                >
+                  <ChevronRight size={16} />
+                </button>
 
-            {currentPage < totalPages && (
-              <button
-                onClick={() => setCurrentPage(totalPages)}
-                className={`${baseBtn} ${themeBtn}`}
-              >
-                {t("workers.pagination.last")}
-              </button>
+                <button
+                  onClick={() => setCurrentPage(totalPages)}
+                  aria-label={t("clients.last")}
+                  className={`${baseBtn} ${themeBtn} p-1.5`}
+                >
+                  <ChevronsRight size={16} />
+                </button>
+              </>
             )}
           </div>
         </div>
@@ -524,7 +565,18 @@ function Workers() {
       <WorkerViewModal
         isOpen={isViewModalOpen}
         worker={selectedWorker}
+        onEdit={handleEditWorker}
         onClose={closeModal}
+      />
+
+      <EditWorkerModal
+        isEditOpen={isEditOpen}
+        formData={editFormData}
+        setFormData={setEditFormData}
+        editErrors={editErrors}
+        setEditErrors={setEditErrors}
+        onEditClose={handleCloseEditModal}
+        onEditSuccess={handleEditSuccess}
       />
     </div>
   );

@@ -203,6 +203,8 @@
     "date_picker_placeholder": "W-M-G",
     "clear": "Haqi",
     "close": "Cufi",
+    "today": "Har'a",
+    "ec": "B.K.",
     "months": [
       "Fuulbaana", "Onkololeessa", "Sadaasa", "Muddee", "Amajjii", "Gurraandhala",
       "Bitootessa", "Eebla", "Caamsaa", "Waxabajjii", "Adoolessa", "Hagayya", "Qaammee"
@@ -580,6 +582,11 @@
       "create": "Maamila Uumi",
       "backToClients": "Gara Maamiltootaatti Deebi'i"
     },
+    "tabs": {
+      "contactInfo": "Odeeffannoo Qunnamtii",
+      "details": "Tarreeffama",
+      "media": "Miidiyaa"
+    },
     "validation": {
       "userRequired": "Maaloo fayyadamaa filadhu",
       "min2Chars": "Yoo xiqqaate qubee 2 barbaachisa",
@@ -637,6 +644,11 @@
     },
     "messages": {
       "success": "Hojjetaan haaraa uumameera"
+    },
+    "tabs": {
+      "accountSelect": "Akkaawuntii Filachuu",
+      "profileInfo": "Odeeffannoo Porofaayilii",
+      "mediaAndLinks": "Miidiyaafi Geessituulee"
     },
     "validation": {
       "userRequired": "Moochoo fayyadamaa filadhu",
@@ -744,8 +756,10 @@
       "location": "Bakka/Teessoo",
       "status": "Haala Mirkaneessaa",
       "national_id": "Waraqaa Eenyummaa",
-      "client_type": "Gosa Maamilaa"
-    }
+      "client_type": "Gosa Maamilaa",
+      "joined_on": "Gubbaa Makame",
+      "last_update": "Gubbaa Fooyya'e"
+  }
   },
   "actions_menu": {
       "view": "Ilaali",
@@ -800,6 +814,17 @@
       "next": "Kan Aana ›",
       "last": "Dhuma »"
     },
+     "labels": {
+      "editing": "Gulaalaa jira",
+      "experience_duration_one": "waggaa {{count}}",
+      "experience_duration_other": "waggoota {{count}}"
+    },
+    "placeholders": {
+      "national_id": "Lakk. waraqaa eenyummaa galchi",
+      "location": "Bakka/Teessoo galchi",
+      "skills": "fakkeenyaaf: Ploombiingii, Injinaringii Elektrikaa, Halluu",
+      "bio": "Ibsa gabaabaa ykn cuunfaa muuxannoo hojii"
+    },
     "modal": {
       "title": "Odeeffannoo Hojjetaa",
       "tabs": {
@@ -815,12 +840,34 @@
         "id": "Eenyummeessaa (ID)",
         "location": "Teessoo / Bakka",
         "nationalId": "Waraqaa Eenyummeessaa Biyyooleessaa",
-        "status": "Haala"
+        "status": "Haala",
+        "experience": "Muuxannoo",
+        "skills": "Dandettiiwwan",
+        "bio": "Iboo / Waa'ee Koo",
+        "portfolio": "Poortifooliyo (Fakkeenya Hoojii)",
+        "profile_image": "Fakkii Proofaayilii",
+        "joinedOn": "Gubbaa Makame",
+        "lastUpdate": "Gubbaa Fooyya'e"
       },
       "buttons": {
         "edit": "Gulaali",
-        "print": "Maxxansi"
+        "print": "Maxxansi",
+        "cancel": "Dhiisi",
+        "save": "Jijjiirama Galmeessi"
       }
+    },
+    "sections": {
+      "worker_info": "Ragaalee fi Tarree Hojjetaa"
+    },
+    "edit_modal": {
+      "title": "Proofaayilii Hojjetaa Gulaali",
+      "subtitle": "Odeeffannoo ogummaa hojjetaa kanaa haaromsi."
+    },
+    "file_upload": {
+      "choose_file": "Fayyilii Filadhu",
+      "no_file_chosen": "Fayyiliin filatame hin jiru",
+      "browse": "Barbaadi...",
+      "uploading": "Fe'amaa jira..."
     },
     "confirmations": {
       "deleteSingle": "Hojjetaa kana haquu ni barbaadduu?",
@@ -828,7 +875,9 @@
     },
     "toasts": {
       "deleted": "Hojjetaan haqameera",
-      "deletedSelected": "Hojjettoonni filataman haqamaniiru"
+      "deletedSelected": "Hojjettoonni filataman haqamaniiru",
+      "workerUpdated": "Oodeeffannoon hojjetaa milkaa'inaan haaromeera!"
+
     },
     "errors": {
       "failedToLoad": "Hojjettoota fe'uun hin danda'amne"
