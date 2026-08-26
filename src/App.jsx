@@ -30,6 +30,9 @@ import ForgotPassword from "./pages/account/ForgotPassword";
 import HowItWorks from "./pages/common/HowItWorks";
 import ScrollToTop from "./utils/ScrollToTop";
 import GuestRoute from "./routes/GuestRoute";
+import AboutUs from "./pages/common/AboutUs";
+import OurImpact from "./pages/common/OurImpact";
+import ContactUs from "./pages/common/ContactUs";
 
 export default function App() {
   const { user, loading } = useAuth();
@@ -98,6 +101,10 @@ export default function App() {
               <Route path="/signup/client" element={<ClientSignup />} />
               <Route path="/signup/worker" element={<WorkerSignup />} />
               <Route path="/how-it-works" element={<HowItWorks />} />
+              <Route path="/about-us" element={<AboutUs />} />
+              <Route path="/our-impact" element={<OurImpact />} />
+              <Route path="/contact-us" element={<ContactUs />} />
+
             </Route>
 
             {/* ADMIN */}

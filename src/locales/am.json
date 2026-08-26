@@ -297,7 +297,7 @@
     "sections": {
       "quick_links": "ፈጣን ማገናኛዎች",
       "for_workers": "ለሰራተኞች",
-      "for_clients": "ለደበኞች",
+      "for_clients": "ለደንበኞች",
       "company": "ድርጅት"
     },
     "links": {
@@ -335,7 +335,7 @@
         "cleaning": "ጽዳት",
         "tutoring": "ትምህርት/ማስጠናት",
         "appliance_repair": "የቤት ዕቃዎች ጥገና",
-        "painting": "ቅባት/ቀለም ቅብ",
+        "painting": "ቀለም ቅብ",
         "carpentry": "የአናጺነት ስራ"
       }
     },

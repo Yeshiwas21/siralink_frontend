@@ -3,9 +3,11 @@ import { NavLink } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useAuth } from "../../contexts/AuthContext";
 
+// Consolidated Lucide imports (including the 3 non-dollar financial metrics)
 import {
-  LayoutDashboard, Briefcase, DollarSign, ShieldCheck, ClipboardList, Users, UserCheck,
-  UserRound, FileText, Star, BarChart3, PanelLeftClose, PanelLeftOpen
+  LayoutDashboard, Briefcase, ShieldCheck, ClipboardList, Users, UserCheck,
+  UserRound, FileText, Star, BarChart3, PanelLeftClose, PanelLeftOpen,
+  ReceiptText, Handshake, TrendingUp
 } from "lucide-react";
 
 function Sidebar() {
@@ -52,9 +54,9 @@ function Sidebar() {
             <div className="px-3 py-2">
               <div className="flex items-center gap-2 mt-1">
                 <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-
                 <p className="text-sm font-semibold text-gray-900 dark:text-white tracking-tight truncate leading-5 capitalize">
-                  {t(`user_type.${user.user_type}`)} {t("account")}                </p>
+                  {t(`user_type.${user.user_type}`)} {t("account")}
+                </p>
               </div>
             </div>
           )}
@@ -117,7 +119,7 @@ function Sidebar() {
               collapsed={isCollapsed}
             />
             <SidebarItem
-              icon={<DollarSign size={18} />}
+              icon={<ReceiptText size={18} />}
               label={t("nav.payments")}
               to="/admin/payments"
               collapsed={isCollapsed}
@@ -153,7 +155,7 @@ function Sidebar() {
               collapsed={isCollapsed}
             />
             <SidebarItem
-              icon={<DollarSign size={18} />}
+              icon={<Handshake size={18} />}
               label={t("nav.payments")}
               to="/client/payments"
               collapsed={isCollapsed}
@@ -195,7 +197,7 @@ function Sidebar() {
               collapsed={isCollapsed}
             />
             <SidebarItem
-              icon={<DollarSign size={18} />}
+              icon={<TrendingUp size={18} />}
               label={t("nav.earnings")}
               to="/worker/earnings"
               collapsed={isCollapsed}
