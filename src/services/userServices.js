@@ -12,7 +12,8 @@ import {
   clientDeleteApi,
   workerDeleteApi,
   clientUpdateApi,
-  workerUpdateApi
+  workerUpdateApi,
+  passwordResetEmailRequestApi
 } from "../api/userApi";
 
 /* USERS LIST */
@@ -133,5 +134,12 @@ export const deleteClient = async (id) => {
 /* DELETE WORKER */
 export const deleteWorker = async (id) => {
   const response = await workerDeleteApi(id)
+  return response.data
+}
+
+/* RESET PASSWORD EMAIL */
+export const resetPasswordEmailRequest = async (email) => {
+  const response = await passwordResetEmailRequestApi(email)
+
   return response.data
 }

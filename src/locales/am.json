@@ -297,7 +297,7 @@
     "sections": {
       "quick_links": "ፈጣን ማገናኛዎች",
       "for_workers": "ለሰራተኞች",
-      "for_clients": "ለደበኞች",
+      "for_clients": "ለደንበኞች",
       "company": "ድርጅት"
     },
     "links": {
@@ -335,7 +335,7 @@
         "cleaning": "ጽዳት",
         "tutoring": "ትምህርት/ማስጠናት",
         "appliance_repair": "የቤት ዕቃዎች ጥገና",
-        "painting": "ቅባት/ቀለም ቅብ",
+        "painting": "ቀለም ቅብ",
         "carpentry": "የአናጺነት ስራ"
       }
     },
@@ -880,5 +880,38 @@
     "errors": {
       "failedToLoad": "ሰራተኞችን መጫን አልተቻለም"
     }
+  },
+  "forgot_password": {
+    "title": "የይለፍ ቃል ረሱ?",
+    "subtitle": "አይጨነቁ፣ የይለፍ ቃልዎን ለመቀየር የሚያስችል መመሪያ እንልካለን።",
+    "email_label": "ኢሜይል አድራሻ",
+    "email_placeholder": "name@company.com",
+    "btn_send": "የይለፍ ቃል መቀየሪያ ሊንክ ላክ",
+    "btn_sending": "ሊንክ በመላክ ላይ...",
+    "back_to_login": "ወደ መግቢያ ተመለስ",
+    "success_title": "ኢሜይልዎን ያረጋግጡ",
+    "success_message": "የይለፍ ቃል መቀየሪያ ሊንክ ወደዚህ ልከናል፡",
+    "resend_prompt": "ኢሜይሉ አልደረሰዎትም? እንደገና ለመላክ እዚህ ይጫኑ",
+    "invalid_email_error": "እባክዎን ትክክለኛ ኢሜይል አድራሻ ያስገቡ።",
+    "default_error": "የመቀየሪያ ሊንክ መላክ አልተቻለም። እባክዎን ቆየት ብለው እንደገና ይሞክሩ።"
+  },
+  "reset_password": {
+    "title": "አዲስ የይለፍ ቃል ያስገቡ",
+    "subtitle": "አዲሱ የይለፍ ቃልዎ ቢያንስ 6 ቁምፊዎች ሊኖሩት ይገባል።",
+    "verifying": "የዳግም ማስጀመሪያ ሊንክዎን በማረጋገጥ ላይ...",
+    "invalidTitle": "ትክክለኛ ያልሆነ ወይም ጊዜው ያለፈበት ሊንክ",
+    "requestNewLink": "አዲስ የዳግም ማስጀመሪያ ሊንክ ይጠይቁ",
+    "successTitle": "የይለፍ ቃል ዳግም ማስገባት ተጠናቅቋል",
+    "successSubtitle": "የይለፍ ቃልዎ በተሳካ ሁኔታ ተቀይሯል። ወደ መግቢያ ገጽ በመላክ ላይ...",
+    "newPasswordLabel": "አዲስ የይለፍ ቃል",
+    "confirmPasswordLabel": "የይለፍ ቃል ማረጋገጫ",
+    "submit": "የይለፍ ቃል ይቀይሩ",
+    "submitting": "የይለፍ ቃል በመቀየር ላይ...",
+    "backToLogin": "ወደ መግቢያ ገጽ ተመለስ",
+    "errInvalidLink": "ይህ የማስጀመሪያ ሊንክ ትክክለኛ አይደለም ወይም ጊዜው አልፏል። እባክዎን አዲስ ይጠይቁ።",
+    "errNetwork": "ሊንኩን ማረጋገጥ አልተቻለም። እባክዎን የኔትወርክ ግንኙነትዎን ያረጋግጡ።",
+    "errMinLength": "የይለፍ ቃል ቢያንስ 6 ቁምፊዎች መሆን አለበት።",
+    "errMismatch": "የገቡት የይለፍ ቃሎች አይመሳሰሉም።",
+    "errDefault": "የይለፍ ቃል መቀየር አልተቻለም። እባክዎ እንደገና ይሞክሩ።"
   }
 }

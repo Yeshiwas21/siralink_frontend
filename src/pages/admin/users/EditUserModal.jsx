@@ -175,34 +175,37 @@ export default function EditUserModal({ isOpen, editForm, setEditForm, errors, s
                     {/* Row 2: Gender & Date of Birth */}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-start">
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                {t("all_users.view_modal.labels.gender")}
-                            </label>
-
-                            <div className="flex gap-6 py-2">
-                                <label className="flex items-center gap-2 cursor-pointer text-gray-700 dark:text-gray-300">
-                                    <input
-                                        type="radio"
-                                        name="gender"
-                                        value="male"
-                                        checked={editForm.gender === "male"}
-                                        onChange={handleEditChange}
-                                        className="accent-gray-900 dark:accent-white"
-                                    />
-                                    <span>{t("create_user.male")}</span>
+                            {/* Updated wrapper to inline label and radio buttons */}
+                            <div className="flex items-center gap-4 py-2">
+                                <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                                    {t("all_users.view_modal.labels.gender")}
                                 </label>
 
-                                <label className="flex items-center gap-2 cursor-pointer text-gray-700 dark:text-gray-300">
-                                    <input
-                                        type="radio"
-                                        name="gender"
-                                        value="female"
-                                        checked={editForm.gender === "female"}
-                                        onChange={handleEditChange}
-                                        className="accent-gray-900 dark:accent-white"
-                                    />
-                                    <span>{t("create_user.female")}</span>
-                                </label>
+                                <div className="flex gap-6 items-center">
+                                    <label className="flex items-center gap-2 cursor-pointer text-gray-700 dark:text-gray-300">
+                                        <input
+                                            type="radio"
+                                            name="gender"
+                                            value="male"
+                                            checked={editForm.gender === "male"}
+                                            onChange={handleEditChange}
+                                            className="accent-gray-900 dark:accent-white"
+                                        />
+                                        <span>{t("create_user.male")}</span>
+                                    </label>
+
+                                    <label className="flex items-center gap-2 cursor-pointer text-gray-700 dark:text-gray-300">
+                                        <input
+                                            type="radio"
+                                            name="gender"
+                                            value="female"
+                                            checked={editForm.gender === "female"}
+                                            onChange={handleEditChange}
+                                            className="accent-gray-900 dark:accent-white"
+                                        />
+                                        <span>{t("create_user.female")}</span>
+                                    </label>
+                                </div>
                             </div>
 
                             {errors.gender && (

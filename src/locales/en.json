@@ -884,5 +884,39 @@
     "errors": {
       "failedToLoad": "Failed to load Workers"
     }
+  },
+  "forgot_password": {
+    "title": "Forgot password?",
+    "subtitle": "No worries, we'll send you instructions to reset your password.",
+    "email_label": "Email address",
+    "email_placeholder": "name@company.com",
+    "btn_send": "Send password reset link",
+    "btn_sending": "Sending link...",
+    "back_to_login": "Back to log in",
+    "success_title": "Check your email",
+    "success_message": "We sent a password reset link to",
+    "resend_prompt": "Didn't receive the email? Click to resend",
+    "invalid_email_error": "Please enter a valid email address.",
+    "default_error": "Failed to send reset link. Please try again later."
+  },
+  "reset_password": {
+    "title": "Set new password",
+    "subtitle": "Your new password must be at least 6 characters long.",
+    "verifying": "Verifying your reset link...",
+    "invalidTitle": "Invalid or Expired Link",
+    "requestNewLink": "Request a new reset link",
+    "successTitle": "Password reset complete",
+    "successSubtitle": "Your password has been reset successfully. Redirecting you to login...",
+    "newPasswordLabel": "New Password",
+    "confirmPasswordLabel": "Confirm Password",
+    "submit": "Reset password",
+    "submitting": "Resetting password...",
+    "backToLogin": "Back to log in",
+    "errors": "Errors",
+    "errInvalidLink": "This reset link is invalid or has expired. Please request a new one.",
+    "errNetwork": "Unable to verify link. Please check your network connection.",
+    "errMinLength": "Password must be at least 6 characters long.",
+    "errMismatch": "Passwords do not match.",
+    "errDefault": "Failed to reset password. Please try again."
   }
 }
