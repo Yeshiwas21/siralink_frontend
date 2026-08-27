@@ -63,7 +63,7 @@ function Sidebar() {
 
           <button
             onClick={() => setCollapsed(!collapsed)}
-            className="hidden md:flex items-center justify-center p-1.5 rounded-lg text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+            className="hidden md:flex items-center justify-center p-1.5 rounded-lg text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors cursor-pointer"
             title={isCollapsed ? t("expand", "Expand") : t("collapse", "Collapse")}
           >
             {isCollapsed ? <PanelLeftOpen size={18} /> : <PanelLeftClose size={18} />}
