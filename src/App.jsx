@@ -33,6 +33,7 @@ import GuestRoute from "./routes/GuestRoute";
 import AboutUs from "./pages/common/AboutUs";
 import OurImpact from "./pages/common/OurImpact";
 import ContactUs from "./pages/common/ContactUs";
+import ResetPasswordForm from "./pages/account/ResetPasswordForm";
 
 export default function App() {
   const { user, loading } = useAuth();
@@ -104,6 +105,7 @@ export default function App() {
               <Route path="/about-us" element={<AboutUs />} />
               <Route path="/our-impact" element={<OurImpact />} />
               <Route path="/contact-us" element={<ContactUs />} />
+              <Route path="/reset-password/:uidb64/:token" element={<ResetPasswordForm />} />
 
             </Route>
 

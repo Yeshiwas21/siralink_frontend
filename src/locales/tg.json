@@ -882,5 +882,38 @@
     "errors": {
       "failedToLoad": "ሰራሕተኛታት ምጽዓን ኣይተኻእለን"
     }
+  },
+  "forgot_password": {
+    "title": "ሕልፊ ቓል ረሲዕኩም?",
+    "subtitle": "አይጨነቑ፣ ሕልፊ ቓልኩም ንምቕያር ዝሕግዝ መምርሒ ክንልእከልኩም ኢና።",
+    "email_label": "አድራሻ ኢሜይል",
+    "email_placeholder": "name@company.com",
+    "btn_send": "መቐየሪ ሕልፊ ቓል ሊንክ ልአኽ",
+    "btn_sending": "ሊንክ ይልአኽ ኣሎ...",
+    "back_to_login": "ናብ መእተዊ ተመለስ",
+    "success_title": "ኢሜይልኩም ርኣዩ",
+    "success_message": "መቐየሪ ሕልፊ ቓል ሊንክ ናብዚ ኣድራሻ ልኢኽና ኣለና፡",
+    "resend_prompt": "ኢሜይል ኣይበጽሐኩምን? እንደገና ንምልኣኽ ኣብዚ ጠውቑ",
+    "invalid_email_error": "በጃኹም ትክክለኛ ኢሜይል አድራሻ ኣእትዉ።",
+    "default_error": "መቐየሪ ሊንክ ምልኣኽ ኣይተኻእለን። በጃኹም ጸኒሕኩም ደጊምኩም ፈትኑ።"
+  },
+  "reset_password": {
+    "title": "ሓዱሽ ሕልፊ ቓል ኣእትዉ",
+    "subtitle": "ሓዱሽ ሕልፊ ቓልኩም እንተወሓደ 6 ፊደላት ክኾኑ ኣለዎም።",
+    "verifying": "ናይ ምቕያር ኩም የረጋግፅ ኣሎ...",
+    "invalidTitle": "ዘይቅኑዕ वा ግዜኡ ዝሓለፎ",
+    "requestNewLink": "ሓዱሽ ናይ ምቕያር ሕተቱ",
+    "successTitle": "ሕልፊ ቓል ብዓወት ተቐይሩ",
+    "successSubtitle": "ሕልፊ ቓልኩም ብዓወት ተቐይሩ ኣሎ። ናብ መእተዊ ገጽ ይመርሐኩም ኣሎ...",
+    "newPasswordLabel": "ሓዱሽ ሕልፊ ቓል",
+    "confirmPasswordLabel": "ሕልፊ ቓል ኣረጋግፅ",
+    "submit": "ሕልፊ ቓል ቐይር",
+    "submitting": "ሕልፊ ቓል ይቕይር ኣሎ...",
+    "backToLogin": "ናብ መእተዊ ተመለስ",
+    "errInvalidLink": "እዚ ናይ ምቕያር ዘይቅኑዕ ወይ ግዜኡ ዝሓለፎ እዩ። እባኽኹም ሓዱሽ ሕተቱ።",
+    "errNetwork": "ከተረጋግፅ ኣልተኻእለን። እባኽኹም ናይ ኢንተርኔትርክ ርክብኩም መርምሩ።",
+    "errMinLength": "ሕልፊ ቓል እንተወሓደ 6 ፊደላት ክኾኑ ኣለዎም።",
+    "errMismatch": "ዝእተዉዎ ሕልፊ ቓላት ኣይተመሳሰሉን።",
+    "errDefault": "ሕልፊ ቓል ምቕያር ኣይተኻእለን። እባኽኹም ደጊምኩም  myተኑ።"
   }
 }

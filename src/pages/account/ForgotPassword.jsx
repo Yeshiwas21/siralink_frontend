@@ -1,7 +1,12 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { Mail, ArrowLeft, CheckCircle2, AlertCircle, Loader2, KeyRound } from "lucide-react";
 
+import { resetPasswordEmailRequest } from "../../services/userServices";
+
 export default function ForgotPassword() {
+  const { t } = useTranslation();
   const [email, setEmail] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
@@ -12,20 +17,21 @@ export default function ForgotPassword() {
     setErrorMessage("");
 
     if (!email || !/\S+@\S+\.\S+/.test(email)) {
-      setErrorMessage("Please enter a valid email address.");
+      setErrorMessage(t("forgot_password.invalid_email_error"));
       return;
     }
 
     setIsLoading(true);
 
     try {
-      // Simulate API call to Django / FastAPI backend endpoint
-      await new Promise((resolve) => setTimeout(resolve, 1500));
-
-      // On success:
+      await resetPasswordEmailRequest(email);
       setIsSubmitted(true);
     } catch (error) {
-      setErrorMessage("Failed to send reset link. Please try again later.", error);
+      const errorMsg =
+        error?.response?.data?.email?.[0] ||
+        error?.response?.data?.error ||
+        t("forgot_password.default_error");
+      setErrorMessage(errorMsg);
     } finally {
       setIsLoading(false);
     }
@@ -40,10 +46,10 @@ export default function ForgotPassword() {
         </div>
 
         <h2 className="text-2xl sm:text-3xl font-extrabold text-gray-900 dark:text-white tracking-tight">
-          Forgot password?
+          {t("forgot_password.title")}
         </h2>
         <p className="mt-2 text-sm text-gray-600 dark:text-gray-400 max-w-xs mx-auto">
-          No worries, we'll send you instructions to reset your password.
+          {t("forgot_password.subtitle")}
         </p>
       </div>
 
@@ -57,27 +63,23 @@ export default function ForgotPassword() {
               </div>
               <div className="space-y-1">
                 <h3 className="text-lg font-bold text-gray-900 dark:text-white">
-                  Check your email
+                  {t("forgot_password.success_title")}
                 </h3>
                 <p className="text-sm text-gray-600 dark:text-gray-400">
-                  We sent a password reset link to{" "}
-                  <span className="font-semibold text-gray-800 dark:text-gray-200">{email}</span>
+                  {t("forgot_password.success_message")}{" "}
+                  <span className="font-semibold text-gray-800 dark:text-gray-200">
+                    {email}
+                  </span>
                 </p>
               </div>
 
               <div className="pt-2 space-y-3">
-                <a
-                  href={`mailto:${email}`}
-                  className="w-full inline-flex justify-center items-center py-3 px-4 rounded-xl text-sm font-semibold text-white bg-gray-900 hover:bg-gray-800 dark:bg-white dark:text-gray-900 dark:hover:bg-gray-100 shadow-xs transition-colors duration-200"
-                >
-                  Open email app
-                </a>
                 <button
                   type="button"
                   onClick={() => setIsSubmitted(false)}
                   className="w-full text-xs font-semibold text-gray-500 hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-200 transition-colors cursor-pointer"
                 >
-                  Didn't receive the email? Click to resend
+                  {t("forgot_password.resend_prompt")}
                 </button>
               </div>
             </div>
@@ -96,7 +98,7 @@ export default function ForgotPassword() {
                   htmlFor="email"
                   className="block text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider mb-2"
                 >
-                  Email address
+                  {t("forgot_password.email_label")}
                 </label>
                 <div className="relative rounded-xl shadow-xs">
                   <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-gray-400 dark:text-gray-500">
@@ -110,7 +112,7 @@ export default function ForgotPassword() {
                     required
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    placeholder="name@company.com"
+                    placeholder={t("forgot_password.email_placeholder")}
                     className="block w-full pl-10 pr-4 py-3 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-xl text-sm text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-900 dark:focus:ring-white focus:border-transparent transition-all duration-200"
                   />
                 </div>
@@ -124,10 +126,10 @@ export default function ForgotPassword() {
                 {isLoading ? (
                   <>
                     <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                    Sending link...
+                    {t("forgot_password.btn_sending")}
                   </>
                 ) : (
-                  "Reset password"
+                  t("forgot_password.btn_send")
                 )}
               </button>
             </form>
@@ -135,13 +137,13 @@ export default function ForgotPassword() {
 
           {/* BACK TO LOGIN FOOTER */}
           <div className="mt-6 pt-6 border-t border-gray-100 dark:border-gray-800 text-center">
-            <a
-              href="/login"
+            <Link
+              to="/login"
               className="inline-flex items-center text-xs font-semibold text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white transition-colors gap-1.5"
             >
               <ArrowLeft className="w-3.5 h-3.5" />
-              <span>Back to log in</span>
-            </a>
+              <span>{t("forgot_password.back_to_login")}</span>
+            </Link>
           </div>
         </div>
       </div>

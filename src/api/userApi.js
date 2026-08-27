@@ -108,3 +108,14 @@ export const clientDeleteApi = (id) => {
 export const workerDeleteApi = (id) => {
   return api.delete(`/users/worker/${id}/delete/`);
 };
+
+/* RESET PASSWORD EMAIL */
+export const passwordResetEmailRequestApi = (email) => {
+  return api.post('/users/request-reset-email/', { email })
+}
+
+/* SET NEW PASSWORD */
+export const setPasswordResetApi = (data) => {
+  // data: { password, token, uidb64 }
+  return api.patch('/users/set-new-password/', data);
+};

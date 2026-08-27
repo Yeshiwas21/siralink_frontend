@@ -882,5 +882,38 @@
     "errors": {
       "failedToLoad": "Hojjettoota fe'uun hin danda'amne"
     }
+  },
+  "forgot_password": {
+    "title": "Jecha icitii dagattanii?",
+    "subtitle": "Hassaggainaa, qajeelfama jecha icitii keessan haaromsu isiniif ni ergaa.",
+    "email_label": "Teessoo Imeelii",
+    "email_placeholder": "name@company.com",
+    "btn_send": "Likiin jecha icitii haaromsu ergi",
+    "btn_sending": "Likiin ergamaa jira...",
+    "back_to_login": "Gara seensaatti deebi'i",
+    "success_title": "Imeelii keessan ilaalaa",
+    "success_message": "Linkiin jecha icitii haaromsu gara teessoo kaniitti ergameera:",
+    "resend_prompt": "Imeeliin isin hin geessee? Irra deebitanii erguuf as tuqaa",
+    "invalid_email_error": "Maaloo teessoo imeelii sirrii ta'e galchaa.",
+    "default_error": "Linii haaromsaa erguun hin danda'amne. Maaloo booda irra deebi'ii yaalaa."
+  },
+  "reset_password": {
+    "title": "Jecha icchitii haarawa saagaa",
+    "subtitle": "Jechi icchitii haarawni keessan yoo xiqqaate arfiilee 6 ta'uu qaba.",
+    "verifying": "Lnk haaromsaa keessan mirkaneessaa jira...",
+    "invalidTitle": "Lnk Haguugamaa ykn Yeroon isa dhumate",
+    "requestNewLink": "Lnk haaromsaa haarawa gaafadhaa",
+    "successTitle": "Jechi icchitii milkiidhaan geeddarameera",
+    "successSubtitle": "Jechi icchitii keessan milkiidhaan jijjiirameera. Kallattiidhaan gara seensaatti nu geessaa jira...",
+    "newPasswordLabel": "Jecha Iccitii Haarawa",
+    "confirmPasswordLabel": "Jecha Iccitii Mirkaneessi",
+    "submit": "Jecha icchitii jijjiiri",
+    "submitting": "Jecha icchitii jijjiiraa jira...",
+    "backToLogin": "Gara seensaatti deebi'i",
+    "errInvalidLink": "Lnk haaromsaa kun sirrii miti ykn yeroon isaa darbeera. Maaloo haarawa gaafadhaa.",
+    "errNetwork": "Lnk mirkaneessuu hin danda'amne. Maaloo hidhata netwoorkii keessan checked godhaa.",
+    "errMinLength": "Jechi icchitii yoo xiqqaate arfiilee 6 ta'uu qaba.",
+    "errMismatch": "Jechooni icchitii wal hin simne.",
+    "errDefault": "Jecha icchitii jijjiiruun hin danda'amne. Maaloo irra deebi'aatii try godhaa."
   }
 }
