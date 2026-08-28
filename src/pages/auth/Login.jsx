@@ -154,9 +154,9 @@ function Login() {
               className="absolute right-3 top-3 text-gray-500 dark:text-gray-400 cursor-pointer"
             >
               {showPassword ? (
-                <Eye className="w-5 h-5" />
-              ) : (
                 <EyeOff className="w-5 h-5" />
+              ) : (
+                <Eye className="w-5 h-5" />
               )}
             </button>
           </div>
