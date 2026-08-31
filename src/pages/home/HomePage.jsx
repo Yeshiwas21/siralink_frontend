@@ -113,7 +113,7 @@ function HomePage() {
       </section>
 
       {/* SERVICES SECTION */}
-      <section className="py-16 overflow-hidden bg-gray-50 dark:bg-gray-900/40">
+      <section className="py-16 overflow-hidden bg-gray-50 dark:bg-gray-900/40 relative">
         <div className="max-w-6xl mx-auto px-6 text-center">
           <span className="inline-flex items-center px-4 py-1.5 rounded-full bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-300 text-sm font-semibold">
             {t("home.services.badge")}
@@ -123,41 +123,52 @@ function HomePage() {
             {t("home.services.heading")}
           </h2>
 
-          <div className="relative overflow-hidden">
+          <div className="relative overflow-hidden group py-4">
+            {/* Edge Fade Masks for smooth entry/exit blending */}
+            <div className="absolute left-0 top-0 bottom-0 w-24 z-10 pointer-events-none bg-linear-to-r from-gray-50 dark:from-gray-900/40 to-transparent" />
+            <div className="absolute right-0 top-0 bottom-0 w-24 z-10 pointer-events-none bg-linear-to-l from-gray-50 dark:from-gray-900/40 to-transparent" />
+
             <Motion.div
               className="flex gap-6 w-max"
               animate={{ x: ["0%", "-50%"] }}
-              transition={{ duration: 20, ease: "linear", repeat: Infinity }}
+              transition={{
+                duration: 70, // Increased from 20s to 70s for a slow, ultra-smooth float
+                ease: "linear",
+                repeat: Infinity,
+              }}
             >
-              {[...services, ...services].map((service, index) => {
+              {/* Quadrupled services array ensures zero visual gap or sudden skips */}
+              {[...services, ...services, ...services, ...services].map((service, index) => {
                 const Icon = service.icon;
                 const translatedName = t(`home.services.names.${service.key}`);
 
                 return (
-                  <div
+                  <Motion.div
                     key={index}
-                    className="min-w-62.5 bg-white dark:bg-gray-950 border border-gray-200 dark:border-gray-800 p-6 rounded-xl shadow-sm hover:shadow-md dark:hover:border-gray-700 transition-all duration-300"
+                    whileHover={{ y: -6, scale: 1.02 }}
+                    transition={{ type: "spring", stiffness: 300, damping: 20 }}
+                    className="w-72 bg-white/80 dark:bg-gray-950/80 backdrop-blur-md border border-gray-200/80 dark:border-gray-800/80 p-6 rounded-2xl shadow-sm hover:shadow-xl dark:hover:border-gray-700 transition-all duration-300 shrink-0 text-left"
                   >
                     {/* TOP ROW: ICON + TITLE */}
                     <div className="flex items-center gap-3">
                       <div
-                        className={`w-12 h-12 flex items-center justify-center rounded-lg ${service.color}`}
+                        className={`w-12 h-12 flex items-center justify-center rounded-xl shrink-0 transition-transform duration-300 group-hover:scale-110 ${service.color}`}
                       >
                         <Icon size={22} />
                       </div>
 
-                      <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+                      <h3 className="text-lg font-semibold text-gray-900 dark:text-white truncate">
                         {translatedName}
                       </h3>
                     </div>
 
                     {/* DESCRIPTION BELOW */}
-                    <p className="text-sm text-gray-500 dark:text-gray-400 mt-3 leading-relaxed">
+                    <p className="text-sm text-gray-500 dark:text-gray-400 mt-3 leading-relaxed line-clamp-2">
                       {t("home.services.find_verified", {
                         service: translatedName.toLowerCase(),
                       })}
                     </p>
-                  </div>
+                  </Motion.div>
                 );
               })}
             </Motion.div>

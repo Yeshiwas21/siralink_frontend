@@ -274,7 +274,7 @@ function ClientSignup() {
             {/* CLIENT TYPE */}
             <div>
               <label className="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wide">
-                {t("clientSignup.accountType")}
+                {t("clientSignup.clientType")}
               </label>
 
               <select
