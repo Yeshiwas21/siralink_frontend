@@ -229,7 +229,7 @@ function SidebarItem({ icon, label, to, collapsed, danger = false }) {
       title={collapsed ? label : undefined}
       className={({ isActive }) =>
         `flex items-center ${collapsed ? "justify-center" : "gap-3"}
-        px-3 py-2.5 rounded-lg font-medium transition-colors duration-150
+        px-3 py-2.5 rounded-lg font-bold transition-colors duration-150 
         ${danger
           ? "text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10"
           : isActive

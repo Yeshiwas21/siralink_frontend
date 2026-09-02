@@ -384,9 +384,7 @@ function Workers() {
                 <th className="px-4 py-3 text-left font-semibold text-gray-600 dark:text-gray-300 whitespace-nowrap">
                   {t("workers.table.phone")}
                 </th>
-                <th className="px-4 py-3 text-left font-semibold text-gray-600 dark:text-gray-300 whitespace-nowrap">
-                  {t("workers.table.location")}
-                </th>
+
                 <th className="px-4 py-3 text-left font-semibold text-gray-600 dark:text-gray-300 whitespace-nowrap">
                   {t("workers.table.status")}
                 </th>
@@ -431,7 +429,7 @@ function Workers() {
                       #{w.id}
                     </td>
 
-                    <td className="px-4 py-3 font-semibold text-gray-800 dark:text-gray-200 whitespace-nowrap">
+                    <td className="px-4 py-3 text-gray-800 dark:text-gray-200 whitespace-nowrap">
                       {[w.first_name, w.last_name].filter(Boolean).join(" ") || "—"}
                     </td>
 
@@ -441,10 +439,6 @@ function Workers() {
                     <td className="px-4 py-3 text-gray-600 dark:text-gray-300 whitespace-nowrap">
                       {w.phone || "—"}
                     </td>
-                    <td className="px-4 py-3 text-gray-600 dark:text-gray-300 whitespace-nowrap">
-                      {w.location || "—"}
-                    </td>
-
                     <td className="px-4 py-3">
                       <StatusBadge
                         status={w.verification_status}

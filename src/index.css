@@ -4,3 +4,7 @@
 /* body {
   overflow-x: hidden;
 } */
+
+@theme {
+  --font-sans: "Inter", "Geist Sans", ui-sans-serif, system-ui, sans-serif;
+}

@@ -375,14 +375,13 @@ function Clients() {
                     onChange={toggleAllCurrentPage}
                   />
                 </th>
-                <th className="px-4 py-3 text-left font-semibold text-gray-600 dark:text-gray-400 whitespace-nowrap">{t("clients.id")}</th>
-                <th className="px-4 py-3 text-left font-semibold text-gray-600 dark:text-gray-400 whitespace-nowrap">{t("clients.name")}</th>
-                <th className="px-4 py-3 text-left font-semibold text-gray-600 dark:text-gray-400 whitespace-nowrap">{t("clients.email")}</th>
-                <th className="px-4 py-3 text-left font-semibold text-gray-600 dark:text-gray-400 whitespace-nowrap">{t("clients.phone")}</th>
-                <th className="px-4 py-3 text-left font-semibold text-gray-600 dark:text-gray-400 whitespace-nowrap">{t("clients.location")}</th>
-                <th className="px-4 py-3 text-left font-semibold text-gray-600 dark:text-gray-400 whitespace-nowrap">{t("clients.client_type")}</th>
-                <th className="px-4 py-3 text-left font-semibold text-gray-600 dark:text-gray-400 whitespace-nowrap">{t("clients.status")}</th>
-                <th className="px-4 py-3 text-center font-semibold text-gray-600 dark:text-gray-400 w-16">{t("clients.actions")}</th>
+                <th className="px-4 py-3 text-left font-semibold text-gray-600 dark:text-gray-300 whitespace-nowrap">{t("clients.id")}</th>
+                <th className="px-4 py-3 text-left font-semibold text-gray-600 dark:text-gray-300 whitespace-nowrap">{t("clients.name")}</th>
+                <th className="px-4 py-3 text-left font-semibold text-gray-600 dark:text-gray-300 whitespace-nowrap">{t("clients.email")}</th>
+                <th className="px-4 py-3 text-left font-semibold text-gray-600 dark:text-gray-300 whitespace-nowrap">{t("clients.phone")}</th>
+                <th className="px-4 py-3 text-left font-semibold text-gray-600 dark:text-gray-300 whitespace-nowrap">{t("clients.client_type")}</th>
+                <th className="px-4 py-3 text-left font-semibold text-gray-600 dark:text-gray-300 whitespace-nowrap">{t("clients.status")}</th>
+                <th className="px-4 py-3 text-center font-semibold text-gray-600 dark:text-gray-300 w-16">{t("clients.actions")}</th>
               </tr>
             </thead>
 
@@ -411,12 +410,11 @@ function Clients() {
                     </td>
 
                     <td className="px-4 py-3 text-gray-500 dark:text-gray-300 font-mono text-xs">#{c.id}</td>
-                    <td className="px-4 py-3 font-semibold text-gray-800 dark:text-gray-200 whitespace-nowrap">
+                    <td className="px-4 py-3 text-gray-800 dark:text-gray-200 whitespace-nowrap">
                       {[c.first_name, c.last_name].filter(Boolean).join(" ") || "—"}
                     </td>
                     <td className="px-4 py-3 text-gray-600 dark:text-gray-300 max-w-45 truncate">{c.email}</td>
                     <td className="px-4 py-3 text-gray-600 dark:text-gray-300 whitespace-nowrap">{c.phone || "—"}</td>
-                    <td className="px-4 py-3 text-gray-600 dark:text-gray-300 whitespace-nowrap">{c.location || "—"}</td>
                     <td className="px-4 py-3 text-gray-600 dark:text-gray-300 whitespace-nowrap">
                       {c.client_type === "individual" ? t("clients.type_individual") : t("clients.type_company")}
                     </td>

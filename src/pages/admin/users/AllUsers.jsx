@@ -433,8 +433,8 @@ function AllUsers() {
           ref={tableContainerRef}
           className="overflow-x-auto"
         >
-          <table className="w-full min-w-225">
-            <thead className="bg-gray-50 dark:bg-gray-900 text-xs uppercase tracking-wider text-gray-600 dark:text-gray-300">
+          <table className="w-full text-sm min-w-225">
+            <thead className="bg-gray-50 dark:bg-gray-900 text-gray-600 dark:text-gray-300">
               <tr>
                 <th className="px-4 py-4 text-left">
                   <input
