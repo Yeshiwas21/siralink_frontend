@@ -65,15 +65,17 @@ const ActionMenu = ({
              */
             const boundary = boundaryRef?.current;
 
-            const containerRect = boundary
+            const boundaryRect = boundary
                 ? boundary.getBoundingClientRect()
                 : {
                     top: 0,
                     bottom: window.innerHeight,
-                    left: 0,
-                    right: window.innerWidth,
                 };
 
+            const containerRect = {
+                top: Math.max(boundaryRect.top, 0),
+                bottom: Math.min(boundaryRect.bottom, window.innerHeight),
+            };
             /*
              * Available space inside the boundary.
              */
@@ -89,11 +91,6 @@ const ActionMenu = ({
 
             /*
              * Decide where the menu should open.
-             *
-             * Priority:
-             * 1. Below if it completely fits.
-             * 2. Above if it completely fits.
-             * 3. If neither fits, use whichever side has more space.
              */
             let top;
 
@@ -144,19 +141,23 @@ const ActionMenu = ({
         const frame = requestAnimationFrame(updatePosition);
 
         /*
-         * Reposition when scrolling/resizing.
+         * Close the menu whenever any scrollable container is scrolled.
+         * The capture phase (true) allows this to catch nested scroll containers.
          */
-        window.addEventListener("scroll", updatePosition, true);
+        const handleScroll = () => {
+            setOpen(false);
+        };
+
+        window.addEventListener("scroll", handleScroll, true);
         window.addEventListener("resize", updatePosition);
 
         return () => {
             cancelAnimationFrame(frame);
 
-            window.removeEventListener("scroll", updatePosition, true);
+            window.removeEventListener("scroll", handleScroll, true);
             window.removeEventListener("resize", updatePosition);
         };
     }, [open, boundaryRef]);
-
     /*
      * Close when clicking outside.
      */
