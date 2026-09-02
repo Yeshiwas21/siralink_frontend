@@ -14,6 +14,7 @@ import ActionMenu from "../../../components/common/ActionMenu";
 import { handlePrintWorker } from "../../../utils/workerPrint";
 import WorkerViewModal from "./WorkerViewModal";
 import EditWorkerModal from "./EditWorkerModal";
+import { useRef } from "react";
 
 function Workers() {
   const { t } = useTranslation();
@@ -37,6 +38,8 @@ function Workers() {
   const [editFormData, setEditFormData] = useState(null);
   const [editErrors, setEditErrors] = useState({});
 
+  // Reference to the table container used as the positioning boundary for the ActionMenu.
+  const tableContainerRef = useRef(null);
 
   /* fetch */
   const fetchWorkers = useCallback(async () => {
@@ -351,7 +354,10 @@ function Workers() {
 
       {/* TABLE */}
       <div className="bg-white dark:bg-gray-900 rounded-xl shadow overflow-hidden border border-gray-200 dark:border-gray-800">
-        <div className="overflow-x-auto">
+        <div
+          ref={tableContainerRef}
+          className="overflow-x-auto"
+        >
           <table className="w-full text-sm min-w-160">
             <thead className="bg-gray-50 dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
               <tr>
@@ -453,10 +459,10 @@ function Workers() {
                       <ActionMenu
                         item={w}
                         onView={openViewModal}
-                        onEdit={(w) => handleEditWorker(w)
-                        }
+                        onEdit={(w) => handleEditWorker(w)}
                         onDelete={handleDeleteWorker}
                         onPrint={handlePrintWorker}
+                        boundaryRef={tableContainerRef}
                       />
                     </td>
                   </tr>

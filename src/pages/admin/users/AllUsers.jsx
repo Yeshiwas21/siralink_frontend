@@ -15,6 +15,7 @@ import AllUSersRoleFilter from "./AllUSersRoleFilter";
 import StatCard from "../../../components/common/StatCard";
 import ActionMenu from "../../../components/common/ActionMenu";
 import { handleUserPrint } from "../../../utils/userPrint";
+import { useRef } from "react";
 
 function AllUsers() {
   const { t } = useTranslation();
@@ -41,6 +42,9 @@ function AllUsers() {
   const [errors, setErrors] = useState({});
 
   const navigate = useNavigate();
+
+  // Reference to the table container used as the positioning boundary for the ActionMenu.
+  const tableContainerRef = useRef(null);
 
   // Filter
   useEffect(() => {
@@ -425,7 +429,10 @@ function AllUsers() {
 
       {/* TABLE */}
       <section className="rounded-2xl shadow-sm border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 overflow-hidden transition-colors">
-        <div className="overflow-x-auto">
+        <div
+          ref={tableContainerRef}
+          className="overflow-x-auto"
+        >
           <table className="w-full min-w-225">
             <thead className="bg-gray-50 dark:bg-gray-900 text-xs uppercase tracking-wider text-gray-600 dark:text-gray-300">
               <tr>
@@ -522,6 +529,8 @@ function AllUsers() {
                       onEdit={(user) => handleEditUser(user)}
                       onDelete={handleDeleteUser}
                       onPrint={(user) => handleUserPrint(user, t)}
+                      boundaryRef={tableContainerRef}
+
                     />
                   </td>
                 </tr>
