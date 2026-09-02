@@ -322,6 +322,8 @@ export default function EditWorkerModal({
                                     onChange={handleChange}
                                     className={inputClass("national_id")}
                                     placeholder={t("workers.placeholders.national_id")}
+                                    autoComplete="off"
+
                                 />
                                 {editErrors.national_id && <p className="text-red-500 text-xs mt-1.5 ml-1">{editErrors.national_id}</p>}
                             </div>
@@ -333,9 +335,12 @@ export default function EditWorkerModal({
                                 <input
                                     name="location"
                                     value={formData.location || ""}
+
                                     onChange={handleChange}
                                     className={inputClass("location")}
                                     placeholder={t("workers.placeholders.location")}
+                                    autoComplete="off"
+
                                 />
                                 {editErrors.location && <p className="text-red-500 text-xs mt-1.5 ml-1">{editErrors.location}</p>}
                             </div>
@@ -368,6 +373,8 @@ export default function EditWorkerModal({
                                 rows={2}
                                 className={`${inputClass("skills")} resize-none`}
                                 placeholder={t("workers.placeholders.skills")}
+                                autoComplete="off"
+
                             />
                             {editErrors.skills && <p className="text-red-500 text-xs mt-1.5 ml-1">{editErrors.skills}</p>}
                         </div>
@@ -383,6 +390,8 @@ export default function EditWorkerModal({
                                 rows={3}
                                 className={`${inputClass("bio")} resize-none`}
                                 placeholder={t("workers.placeholders.bio")}
+                                autoComplete="off"
+
                             />
                             {editErrors.bio && <p className="text-red-500 text-xs mt-1.5 ml-1">{editErrors.bio}</p>}
                         </div>
@@ -398,6 +407,8 @@ export default function EditWorkerModal({
                                 onChange={handleChange}
                                 className={inputClass("portfolio_link")}
                                 placeholder="https://example.com"
+                                autoComplete="off"
+
                             />
                             {editErrors.portfolio_link && <p className="text-red-500 text-xs mt-1.5 ml-1">{editErrors.portfolio_link}</p>}
                         </div>
