@@ -7,6 +7,7 @@ import { signupClient } from "../../services/userServices";
 import { translateApiError } from "../../utils/translateApiError";
 import EthiopianDatePicker from "../../components/common/EthiopianDatePicker";
 import { ethiopianToGregorian } from "../../utils/ethiopianToGregorian";
+import { ArrowRight } from "lucide-react";
 
 function ClientSignup() {
   const navigate = useNavigate();
@@ -254,9 +255,14 @@ function ClientSignup() {
               {t("clientSignup.lookingForWork")}?
               <Link
                 to="/signup/worker/"
-                className="font-medium text-black dark:text-white hover:opacity-70 transition ml-2"
+                className="ml-2 inline-flex items-center gap-1 font-medium text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 transition-colors duration-200"
               >
-                {t("clientSignup.applyAsWorker")} →
+                {t("clientSignup.applyAsWorker")}
+                <ArrowRight
+                  size={16}
+                  strokeWidth={2}
+                  className="text-blue-600 dark:text-blue-400 animate-[arrowWave_2s_ease-in-out_infinite]"
+                />
               </Link>
             </p>
           </div>
@@ -553,7 +559,7 @@ function ClientSignup() {
           </form>
 
           <p className="text-sm text-center mt-6 text-gray-600 dark:text-gray-400">
-            {t("clientSignup.alreadyHaveAccount")}?{" "}
+            {t("clientSignup.alreadyHaveAccount")}{" "}
             <Link
               to="/login"
               className="text-blue-600 dark:text-blue-400 font-semibold hover:underline underline-offset-4 cursor-pointer transition"

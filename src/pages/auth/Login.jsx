@@ -210,7 +210,7 @@ function Login() {
 
         {/* FOOTER */}
         <div className="mt-6 text-center text-sm text-gray-600 dark:text-gray-400">
-          {t("login.noAccount")}
+          {t("login.noAccount")} {" "}
           <Link
             to="/signup"
             className="text-blue-600 dark:text-blue-400 font-medium hover:underline cursor-pointer"

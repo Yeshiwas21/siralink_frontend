@@ -9,6 +9,7 @@ import {
   BookOpen,
   Hammer,
   Paintbrush,
+  ArrowRight,
 } from "lucide-react";
 import { useAuth } from "../../contexts/AuthContext";
 
@@ -456,9 +457,15 @@ function HomePage() {
             <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-5">
               <Link
                 to="/signup"
-                className="inline-flex items-center justify-center bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 text-white px-8 py-4 rounded-2xl font-bold shadow-2xl hover:scale-105 transition-all duration-300"
+                className="group inline-flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 text-white px-8 py-4 rounded-2xl font-bold shadow-2xl hover:scale-105 transition-all duration-300"
               >
                 {t("home.cta.create_account")}
+
+                <ArrowRight
+                  size={18}
+                  strokeWidth={2.5}
+                  className="transition-transform duration-300 group-hover:translate-x-1"
+                />
               </Link>
 
               <Link
