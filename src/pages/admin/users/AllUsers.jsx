@@ -509,14 +509,38 @@ function AllUsers() {
                     </span>
                   </td>
 
-                  <td className="px-3 py-3 text-gray-600 dark:text-gray-300">
-                    {user.user_type === "admin"
-                      ? t("all_users.view_modal.labels.system_admin")
-                      : user?.client
-                        ? `${t("all_users.view_modal.labels.client")} #${user.client.id}`
-                        : user?.worker
-                          ? `${t("all_users.view_modal.labels.worker")} #${user.worker.id}`
-                          : t("all_users.view_modal.labels.not_linked")}
+                  <td className="px-3 py-3">
+                    {user.user_type === "admin" ? (
+                      <span className="inline-flex items-center rounded-full bg-purple-50 px-2.5 py-1 text-xs font-medium text-purple-700 dark:bg-purple-500/10 dark:text-purple-300">
+                        {t("all_users.view_modal.labels.system_admin")}
+                      </span>
+                    ) : user?.client ? (
+                      <div className="flex items-center gap-2">
+                        <span className="inline-flex items-center gap-1.5 rounded-full bg-blue-50 px-2.5 py-1 text-xs font-medium text-blue-700 dark:bg-blue-500/10 dark:text-blue-300">
+                          <span className="h-1.5 w-1.5 rounded-full bg-blue-500" />
+                          {t("all_users.view_modal.labels.client")}
+                        </span>
+
+                        <span className="font-mono text-[11px] font-medium text-gray-400 dark:text-gray-500">
+                          #{user.client.id}
+                        </span>
+                      </div>
+                    ) : user?.worker ? (
+                      <div className="flex items-center gap-2">
+                        <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 px-2.5 py-1 text-xs font-medium text-emerald-700 dark:bg-emerald-500/10 dark:text-emerald-300">
+                          <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
+                          {t("all_users.view_modal.labels.worker")}
+                        </span>
+
+                        <span className="font-mono text-[11px] font-medium text-gray-400 dark:text-gray-500">
+                          #{user.worker.id}
+                        </span>
+                      </div>
+                    ) : (
+                      <span className="inline-flex items-center rounded-full bg-gray-100 px-2.5 py-1 text-xs font-medium text-gray-500 dark:bg-gray-800 dark:text-gray-400">
+                        {t("all_users.view_modal.labels.not_linked")}
+                      </span>
+                    )}
                   </td>
 
                   <td
