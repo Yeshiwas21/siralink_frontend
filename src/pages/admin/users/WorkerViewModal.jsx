@@ -38,10 +38,10 @@ function WorkerViewModal({ isOpen, worker, onEdit, onClose }) {
                     </h2>
                     <button
                         onClick={onClose}
-                        className="p-1.5 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-500 dark:text-gray-400 transition-colors cursor-pointer"
+                        className="p-1.5 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-500 dark:text-gray-100 transition-colors cursor-pointer"
                         aria-label="Close modal"
                     >
-                        <X size={18} />
+                        <X size={18} strokeWidth={2.8} />
                     </button>
                 </div>
 

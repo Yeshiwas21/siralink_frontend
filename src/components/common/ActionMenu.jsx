@@ -1,26 +1,8 @@
-import React, {
-    useEffect,
-    useLayoutEffect,
-    useRef,
-    useState,
-} from "react";
-import {
-    MoreHorizontal,
-    Eye,
-    Pencil,
-    Trash2,
-    Printer,
-} from "lucide-react";
+import { useEffect, useLayoutEffect, useRef, useState, } from "react";
+import { MoreHorizontal, Eye, Pencil, Trash2, Printer, } from "lucide-react";
 import { createPortal } from "react-dom";
 
-const ActionMenu = ({
-    item,
-    onView,
-    onEdit,
-    onDelete,
-    onPrint,
-    boundaryRef,
-}) => {
+const ActionMenu = ({ item, onView, onEdit, onDelete, onPrint, boundaryRef, }) => {
     const [open, setOpen] = useState(false);
 
     const buttonRef = useRef(null);
