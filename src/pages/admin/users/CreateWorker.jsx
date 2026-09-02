@@ -488,6 +488,8 @@ function CreateWorker() {
                   value={form.skills}
                   onChange={handleChange}
                   className={inputClass("skills")}
+                  autoComplete="off"
+
                 />
                 {errors.skills && (
                   <p className="text-red-500 text-sm mt-1">{errors.skills}</p>
@@ -502,6 +504,7 @@ function CreateWorker() {
                 <input
                   type="number"
                   name="experience_years"
+                  min="0"
                   placeholder={t("createWorker.placeholders.experienceYears")}
                   value={form.experience_years}
                   onChange={handleChange}
@@ -524,6 +527,8 @@ function CreateWorker() {
                   value={form.bio}
                   onChange={handleChange}
                   className={inputClass("bio")}
+                  autoComplete="off"
+
                 />
                 {errors.bio && <p className="text-red-500 text-sm mt-1">{errors.bio}</p>}
               </div>
@@ -544,6 +549,8 @@ function CreateWorker() {
                   value={form.portfolio_link}
                   onChange={handleChange}
                   className={inputClass("portfolio_link")}
+                  autoComplete="off"
+
                 />
                 {errors.portfolio_link && (
                   <p className="text-red-500 text-sm mt-1">{errors.portfolio_link}</p>
