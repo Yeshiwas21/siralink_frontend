@@ -70,7 +70,7 @@
     "workerTitle": "እንደ ሰራተኛ ይቀላቀሉ",
     "workerSubtitle": "ስራዎችን ያግኙ እና አገልግሎቶችን ያቅርቡ",
     "continue": "ቀጥል",
-    "alreadyHaveAccount": "ቀደም ብለው መለያ አለዎት?",
+    "alreadyHaveAccount": "ቀደም ብለው መለያ አለዎት",
     "login": "ይግቡ"
   },
   "workerSignup": {
@@ -117,7 +117,7 @@
     "subtitle": "ሰራተኞችን ለመቅጠር መለያዎን ይፍጠሩ",
     "lookingForWork": "ስራ እየፈለጉ ነው",
     "applyAsWorker": "እንደ ሰራተኛ ያመልክቱ",
-    "accountType": "የመለያ አይነት",
+    "clientType": "የደምበኛ አይነት",
     "individual": "ግለሰብ",
     "company": "ድርጅት",
     "firstName": "ስም",
@@ -913,5 +913,19 @@
     "errMinLength": "የይለፍ ቃል ቢያንስ 6 ቁምፊዎች መሆን አለበት።",
     "errMismatch": "የገቡት የይለፍ ቃሎች አይመሳሰሉም።",
     "errDefault": "የይለፍ ቃል መቀየር አልተቻለም። እባክዎ እንደገና ይሞክሩ።"
+  },
+  "email_verification": {
+    "title": "ኢሜይልዎን ያረጋግጡ",
+    "subtitle": "የSiraLink መለያዎን ለማንቃት የኢሜይል አድራሻዎን ያረጋግጡ",
+    "verifyingTitle": "ኢሜይልዎ በማረጋገጥ ላይ",
+    "verifyingSubtitle": "እባክዎ የኢሜይል አድራሻዎን ስናረጋግጥ ይጠብቁ።",
+    "successTitle": "ኢሜይል በተሳካ ሁኔታ ተረጋግጧል",
+    "successSubtitle": "የኢሜይል አድራሻዎ ተረጋግጧል እና የSiraLink መለያዎ አሁን ንቁ ነው።",
+    "redirecting": "ወደ መግቢያ ገጽ በመመለስ ላይ...",
+    "invalidTitle": "ማረጋገጥ አልተሳካም",
+    "errInvalidLink": "የማረጋገጫ አገናኙ ጎድሏል ወይም ልክ ያልሆነ ነው።",
+    "errDefault": "የማረጋገጫ አገናኙ ልክ ያልሆነ ነው ወይም ጊዜው አልፏል።",
+    "goToLogin": "ወደ መግቢያ ይሂዱ",
+    "backToLogin": "ወደ መግቢያ ተመለስ"
   }
 }

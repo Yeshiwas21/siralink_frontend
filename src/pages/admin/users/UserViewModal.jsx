@@ -33,9 +33,9 @@ function UserViewModal({ isOpen, user, onClose, onEdit }) {
 
                     <button
                         onClick={onClose}
-                        className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-500 transition cursor-pointer"
+                        className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-500 dark:text-gray-100 transition cursor-pointer"
                     >
-                        <X size={18} />
+                        <X size={18} strokeWidth={2.8} />
                     </button>
                 </div>
 
@@ -211,21 +211,23 @@ function UserViewModal({ isOpen, user, onClose, onEdit }) {
                     {/* PROFILE TAB */}
                     {activeTab === "profile" && (
                         <div className="space-y-4">
+                            {/* CLIENT PROFILE */}
                             {user?.client && (
                                 <div className="p-4 rounded-xl bg-blue-50 dark:bg-blue-900/20 border border-blue-100 dark:border-blue-900">
-                                    <div className="flex justify-between">
-                                        <span className="text-xs font-bold text-blue-600">
+                                    <div className="flex items-center justify-between">
+                                        <span className="text-xs font-bold text-blue-600 dark:text-blue-400">
                                             {`${t("all_users.view_modal.labels.client")} (${user.client.client_type === "company"
                                                 ? t("all_users.view_modal.labels.company")
                                                 : t("all_users.view_modal.labels.individual")
                                                 })`}
                                         </span>
-                                        <span className="text-xs text-blue-600">
+
+                                        <span className="font-mono text-[11px] text-gray-400 dark:text-gray-500">
                                             {t("all_users.table.id")} #{user.client.id}
                                         </span>
                                     </div>
 
-                                    <p className="mt-2 font-semibold text-blue-900 dark:text-blue-200">
+                                    <p className="mt-2 text-sm font-semibold text-blue-900 dark:text-blue-200">
                                         {user.client.client_type === "company"
                                             ? `${t("all_users.view_modal.labels.company")}: ${user.client.company_name || "N/A"
                                             }`
@@ -235,46 +237,47 @@ function UserViewModal({ isOpen, user, onClose, onEdit }) {
                                 </div>
                             )}
 
+                            {/* WORKER PROFILE */}
                             {user?.worker && (
-                                <div className="p-4 rounded-xl bg-green-50 dark:bg-green-900/20 border border-green-100 dark:border-green-900">
-                                    <div className="flex justify-between">
-                                        <span className="text-xs font-bold text-green-600">
+                                <div className="p-4 rounded-xl bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-100 dark:border-emerald-900">
+                                    <div className="flex items-center justify-between">
+                                        <span className="text-xs font-bold text-emerald-600 dark:text-emerald-400">
                                             {t("all_users.view_modal.labels.worker")}
                                         </span>
-                                        <span className="text-xs text-green-600">
+
+                                        <span className="font-mono text-[11px] font-medium text-emerald-400 dark:text-emerald-500">
                                             {t("all_users.table.id")} #{user.worker.id}
                                         </span>
                                     </div>
 
-                                    <p className="mt-2 font-semibold text-green-900 dark:text-green-200">
+                                    <p className="mt-2 text-sm font-semibold text-emerald-900 dark:text-emerald-200">
                                         {user.worker.first_name} {user.worker.last_name}
                                     </p>
                                 </div>
                             )}
 
+                            {/* ADMIN PROFILE */}
                             {user.user_type === "admin" && (
                                 <div className="p-4 rounded-xl bg-purple-50 dark:bg-purple-900/20 border border-purple-100 dark:border-purple-900">
-                                    <span className="text-xs font-bold text-purple-600">
-                                        {t("all_users.view_modal.labels.admin")}
-                                    </span>
-                                    <p className="mt-2 text-purple-900 dark:text-purple-200 font-semibold">
+
+                                    <p className="mt-2 text-sm font-semibold text-purple-900 dark:text-purple-200">
                                         {t("all_users.view_modal.labels.system_admin")}
                                     </p>
                                 </div>
                             )}
 
+                            {/* NO LINKED PROFILE */}
                             {!user.client &&
                                 !user.worker &&
                                 user.user_type !== "admin" && (
-                                    <div className="p-4 text-center rounded-xl bg-gray-50 dark:bg-gray-900">
-                                        <p className="text-gray-500">
+                                    <div className="p-6 text-center rounded-xl bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700">
+                                        <p className="text-sm text-gray-500 dark:text-gray-400">
                                             {t("all_users.view_modal.labels.no_linked_profile")}
                                         </p>
                                     </div>
                                 )}
                         </div>
                     )}
-
                     {/* ACTIONS */}
                     <div className="flex flex-col sm:flex-row gap-2 pt-3">
                         <button

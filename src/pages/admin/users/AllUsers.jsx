@@ -15,6 +15,7 @@ import AllUSersRoleFilter from "./AllUSersRoleFilter";
 import StatCard from "../../../components/common/StatCard";
 import ActionMenu from "../../../components/common/ActionMenu";
 import { handleUserPrint } from "../../../utils/userPrint";
+import { useRef } from "react";
 
 function AllUsers() {
   const { t } = useTranslation();
@@ -41,6 +42,9 @@ function AllUsers() {
   const [errors, setErrors] = useState({});
 
   const navigate = useNavigate();
+
+  // Reference to the table container used as the positioning boundary for the ActionMenu.
+  const tableContainerRef = useRef(null);
 
   // Filter
   useEffect(() => {
@@ -172,12 +176,14 @@ function AllUsers() {
     setIsEditModalOpen(true);
   };
 
-  const handleDeleteUser = async (id) => {
-    if (!window.confirm(t("all_users.messages.confirm_delete_user"))) return;
+  const handleDeleteUser = async (user) => {
+    if (!window.confirm(t("all_users.messages.confirm_delete_user"))) {
+      return;
+    }
 
     try {
-      await deleteUser(id);
-      setUsers((prev) => prev.filter((u) => u.id !== id));
+      await deleteUser(user.id);
+      setUsers((prev) => prev.filter((u) => u.id !== user.id));
       closeModal();
       toast.success(t("all_users.messages.user_deleted"));
       navigate("/admin/users");
@@ -425,9 +431,12 @@ function AllUsers() {
 
       {/* TABLE */}
       <section className="rounded-2xl shadow-sm border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 overflow-hidden transition-colors">
-        <div className="overflow-x-auto">
-          <table className="w-full min-w-225">
-            <thead className="bg-gray-50 dark:bg-gray-900 text-xs uppercase tracking-wider text-gray-600 dark:text-gray-300">
+        <div
+          ref={tableContainerRef}
+          className="overflow-x-auto"
+        >
+          <table className="w-full text-sm min-w-225">
+            <thead className="bg-gray-50 dark:bg-gray-900 text-gray-600 dark:text-gray-300">
               <tr>
                 <th className="px-4 py-4 text-left">
                   <input
@@ -502,14 +511,38 @@ function AllUsers() {
                     </span>
                   </td>
 
-                  <td className="px-3 py-3 text-gray-600 dark:text-gray-300">
-                    {user.user_type === "admin"
-                      ? t("all_users.view_modal.labels.system_admin")
-                      : user?.client
-                        ? `${t("all_users.view_modal.labels.client")} #${user.client.id}`
-                        : user?.worker
-                          ? `${t("all_users.view_modal.labels.worker")} #${user.worker.id}`
-                          : t("all_users.view_modal.labels.not_linked")}
+                  <td className="px-3 py-3">
+                    {user.user_type === "admin" ? (
+                      <span className="inline-flex items-center rounded-full bg-purple-50 px-2.5 py-1 text-xs font-medium text-purple-700 dark:bg-purple-500/10 dark:text-purple-300">
+                        {t("all_users.view_modal.labels.system_admin")}
+                      </span>
+                    ) : user?.client ? (
+                      <div className="flex items-center gap-2">
+                        <span className="inline-flex items-center gap-1.5 rounded-full bg-blue-50 px-2.5 py-1 text-xs font-medium text-blue-700 dark:bg-blue-500/10 dark:text-blue-300">
+                          <span className="h-1.5 w-1.5 rounded-full bg-blue-500" />
+                          {t("all_users.view_modal.labels.client")}
+                        </span>
+
+                        <span className="font-mono text-[11px] font-medium text-gray-400 dark:text-gray-500">
+                          #{user.client.id}
+                        </span>
+                      </div>
+                    ) : user?.worker ? (
+                      <div className="flex items-center gap-2">
+                        <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 px-2.5 py-1 text-xs font-medium text-emerald-700 dark:bg-emerald-500/10 dark:text-emerald-300">
+                          <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
+                          {t("all_users.view_modal.labels.worker")}
+                        </span>
+
+                        <span className="font-mono text-[11px] font-medium text-gray-400 dark:text-gray-500">
+                          #{user.worker.id}
+                        </span>
+                      </div>
+                    ) : (
+                      <span className="inline-flex items-center rounded-full bg-gray-100 px-2.5 py-1 text-xs font-medium text-gray-500 dark:bg-gray-800 dark:text-gray-400">
+                        {t("all_users.view_modal.labels.not_linked")}
+                      </span>
+                    )}
                   </td>
 
                   <td
@@ -522,6 +555,8 @@ function AllUsers() {
                       onEdit={(user) => handleEditUser(user)}
                       onDelete={handleDeleteUser}
                       onPrint={(user) => handleUserPrint(user, t)}
+                      boundaryRef={tableContainerRef}
+
                     />
                   </td>
                 </tr>

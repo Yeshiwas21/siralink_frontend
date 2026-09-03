@@ -14,6 +14,7 @@ import ActionMenu from "../../../components/common/ActionMenu";
 import { handlePrintWorker } from "../../../utils/workerPrint";
 import WorkerViewModal from "./WorkerViewModal";
 import EditWorkerModal from "./EditWorkerModal";
+import { useRef } from "react";
 
 function Workers() {
   const { t } = useTranslation();
@@ -37,6 +38,8 @@ function Workers() {
   const [editFormData, setEditFormData] = useState(null);
   const [editErrors, setEditErrors] = useState({});
 
+  // Reference to the table container used as the positioning boundary for the ActionMenu.
+  const tableContainerRef = useRef(null);
 
   /* fetch */
   const fetchWorkers = useCallback(async () => {
@@ -141,10 +144,10 @@ function Workers() {
   };
 
   /* delete */
-  const handleDeleteWorker = async (id) => {
+  const handleDeleteWorker = async (worker) => {
     if (!window.confirm(t("workers.confirmations.deleteSingle"))) return;
-    await deleteWorker(id);
-    setWorkers((prev) => prev.filter((w) => w.id !== id));
+    await deleteWorker(worker.id);
+    setWorkers((prev) => prev.filter((w) => w.id !== worker.id));
     toast.success(t("workers.toasts.deleted"));
   };
 
@@ -351,7 +354,10 @@ function Workers() {
 
       {/* TABLE */}
       <div className="bg-white dark:bg-gray-900 rounded-xl shadow overflow-hidden border border-gray-200 dark:border-gray-800">
-        <div className="overflow-x-auto">
+        <div
+          ref={tableContainerRef}
+          className="overflow-x-auto"
+        >
           <table className="w-full text-sm min-w-160">
             <thead className="bg-gray-50 dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
               <tr>
@@ -378,9 +384,7 @@ function Workers() {
                 <th className="px-4 py-3 text-left font-semibold text-gray-600 dark:text-gray-300 whitespace-nowrap">
                   {t("workers.table.phone")}
                 </th>
-                <th className="px-4 py-3 text-left font-semibold text-gray-600 dark:text-gray-300 whitespace-nowrap">
-                  {t("workers.table.location")}
-                </th>
+
                 <th className="px-4 py-3 text-left font-semibold text-gray-600 dark:text-gray-300 whitespace-nowrap">
                   {t("workers.table.status")}
                 </th>
@@ -425,7 +429,7 @@ function Workers() {
                       #{w.id}
                     </td>
 
-                    <td className="px-4 py-3 font-semibold text-gray-800 dark:text-gray-200 whitespace-nowrap">
+                    <td className="px-4 py-3 text-gray-800 dark:text-gray-200 whitespace-nowrap">
                       {[w.first_name, w.last_name].filter(Boolean).join(" ") || "—"}
                     </td>
 
@@ -435,10 +439,6 @@ function Workers() {
                     <td className="px-4 py-3 text-gray-600 dark:text-gray-300 whitespace-nowrap">
                       {w.phone || "—"}
                     </td>
-                    <td className="px-4 py-3 text-gray-600 dark:text-gray-300 whitespace-nowrap">
-                      {w.location || "—"}
-                    </td>
-
                     <td className="px-4 py-3">
                       <StatusBadge
                         status={w.verification_status}
@@ -453,10 +453,10 @@ function Workers() {
                       <ActionMenu
                         item={w}
                         onView={openViewModal}
-                        onEdit={(w) => handleEditWorker(w)
-                        }
+                        onEdit={(w) => handleEditWorker(w)}
                         onDelete={handleDeleteWorker}
                         onPrint={handlePrintWorker}
+                        boundaryRef={tableContainerRef}
                       />
                     </td>
                   </tr>

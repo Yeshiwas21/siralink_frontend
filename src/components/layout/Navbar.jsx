@@ -10,6 +10,7 @@ import {
   Sun,
   Moon,
   Globe,
+  ArrowRight,
 } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
@@ -453,10 +454,15 @@ function Navbar() {
                 </NavLink>
 
                 <Link
-                  className="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 transition-colors duration-200"
+                  className="group inline-flex items-center gap-1.5 bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 transition-colors duration-200"
                   to="/signup"
                 >
-                  {t("navbar.getStarted")}
+                  <span>{t("navbar.getStarted")}</span>
+
+                  <ArrowRight
+                    size={15}
+                    className="animate-[arrowWave_2s_ease-in-out_infinite]"
+                  />
                 </Link>
               </div>
             ) : (
@@ -651,9 +657,13 @@ function Navbar() {
                   <Link
                     onClick={closeMobile}
                     to="/signup"
-                    className="w-full text-center bg-blue-600 text-white py-2 rounded-lg text-sm font-medium hover:bg-blue-700 transition"
+                    className="group w-full inline-flex items-center justify-center gap-2 bg-blue-600 text-white py-2 rounded-lg text-sm font-medium hover:bg-blue-700 transition"
                   >
-                    {t("navbar.getStarted")}
+                    <span>{t("navbar.getStarted")}</span>
+                    <ArrowRight
+                      size={15}
+                      className="animate-[arrowWave_2s_ease-in-out_infinite]"
+                    />
                   </Link>
                 </div>
               </>

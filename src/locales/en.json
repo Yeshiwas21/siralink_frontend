@@ -72,7 +72,7 @@
     "workerTitle": "Join as Worker",
     "workerSubtitle": "Find jobs and offer services",
     "continue": "Continue",
-    "alreadyHaveAccount": "Already have an account?",
+    "alreadyHaveAccount": "Already have an account",
     "login": "Login"
   },
   "workerSignup": {
@@ -120,7 +120,7 @@
     "subtitle": "Create your account to start hiring",
     "lookingForWork": "Looking for work",
     "applyAsWorker": "Apply as a worker",
-    "accountType": "Account Type",
+    "clientType": "Client Type",
     "individual": "Individual",
     "company": "Company",
     "firstName": "First Name",
@@ -496,9 +496,9 @@
         "no": "No",
         "role_client": "Client",
         "role_worker": "Worker",
-        "client": "CLIENT",
-        "worker": "WORKER",
-        "admin": "ADMIN",
+        "client": "Client",
+        "worker": "Worker",
+        "admin": "Admin",
         "system_admin": "System Administrator",
         "not_linked": "Not linked",
         "no_linked_profile": "No linked profile",
@@ -918,5 +918,19 @@
     "errMinLength": "Password must be at least 6 characters long.",
     "errMismatch": "Passwords do not match.",
     "errDefault": "Failed to reset password. Please try again."
+  },
+  "email_verification": {
+    "title": "Verify Your Email",
+    "subtitle": "Confirm your email address to activate your SiraLink account",
+    "verifyingTitle": "Verifying Your Email",
+    "verifyingSubtitle": "Please wait while we confirm your email address.",
+    "successTitle": "Email Verified Successfully",
+    "successSubtitle": "Your email address has been verified and your SiraLink account is now active.",
+    "redirecting": "Redirecting you to login...",
+    "invalidTitle": "Verification Failed",
+    "errInvalidLink": "The verification link is missing or invalid.",
+    "errDefault": "The verification link is invalid or has expired.",
+    "goToLogin": "Go to Login",
+    "backToLogin": "Back to Login"
   }
 }

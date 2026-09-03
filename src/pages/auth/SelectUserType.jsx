@@ -107,7 +107,7 @@ function SelectUserType() {
 
         {/* LOGIN */}
         <p className="text-sm text-center mt-4 text-gray-600 dark:text-gray-400">
-          {t("signup.alreadyHaveAccount")}?
+          {t("signup.alreadyHaveAccount")}? {" "}
           <Link
             to="/login"
             className="text-blue-600 dark:text-blue-400 font-medium hover:underline"

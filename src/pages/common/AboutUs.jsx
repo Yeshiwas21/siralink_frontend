@@ -291,10 +291,13 @@ export default function AboutUs() {
                     <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
                         <a
                             href="/signup/worker"
-                            className="w-full sm:w-auto px-6 py-3.5 rounded-xl bg-white text-blue-600 font-bold hover:bg-blue-50 transition-colors duration-200 shadow-md flex items-center justify-center gap-2"
+                            className="group w-full sm:w-auto px-6 py-3.5 rounded-xl bg-white text-blue-600 font-bold hover:bg-blue-50 transition-colors duration-200 shadow-md flex items-center justify-center gap-2"
                         >
                             <span>Join as a Worker</span>
-                            <ArrowRight className="w-4 h-4" />
+
+                            <ArrowRight
+                                className="w-4 h-4 animate-[arrowWave_2s_ease-in-out_infinite]"
+                            />
                         </a>
                         <a
                             href="/workers"
