@@ -144,10 +144,10 @@ function Workers() {
   };
 
   /* delete */
-  const handleDeleteWorker = async (id) => {
+  const handleDeleteWorker = async (worker) => {
     if (!window.confirm(t("workers.confirmations.deleteSingle"))) return;
-    await deleteWorker(id);
-    setWorkers((prev) => prev.filter((w) => w.id !== id));
+    await deleteWorker(worker.id);
+    setWorkers((prev) => prev.filter((w) => w.id !== worker.id));
     toast.success(t("workers.toasts.deleted"));
   };
 

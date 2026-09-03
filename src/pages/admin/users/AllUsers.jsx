@@ -176,12 +176,14 @@ function AllUsers() {
     setIsEditModalOpen(true);
   };
 
-  const handleDeleteUser = async (id) => {
-    if (!window.confirm(t("all_users.messages.confirm_delete_user"))) return;
+  const handleDeleteUser = async (user) => {
+    if (!window.confirm(t("all_users.messages.confirm_delete_user"))) {
+      return;
+    }
 
     try {
-      await deleteUser(id);
-      setUsers((prev) => prev.filter((u) => u.id !== id));
+      await deleteUser(user.id);
+      setUsers((prev) => prev.filter((u) => u.id !== user.id));
       closeModal();
       toast.success(t("all_users.messages.user_deleted"));
       navigate("/admin/users");

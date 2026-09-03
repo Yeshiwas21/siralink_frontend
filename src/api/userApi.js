@@ -119,3 +119,13 @@ export const setPasswordResetApi = (data) => {
   // data: { password, token, uidb64 }
   return api.patch('/users/set-new-password/', data);
 };
+
+
+
+export const requestEmailVerificationApi = async (data) => {
+  return api.post("/users/email-verification/request/", data);
+};
+
+export const verifyEmailApi = async (data) => {
+  return api.post("/users/email-verification/verify/", data);
+};

@@ -166,12 +166,12 @@ function Clients() {
   };
 
   /* Delete client */
-  const handleDeleteClient = async (id) => {
+  const handleDeleteClient = async (client) => {
     if (!window.confirm(t("clients.confirm_delete"))) return;
     try {
-      await deleteClient(id);
-      setClients((prev) => prev.filter((c) => c.id !== id));
-      setSelectedRows((prev) => prev.filter((rowId) => rowId !== id));
+      await deleteClient(client.id);
+      setClients((prev) => prev.filter((c) => c.id !== client.id));
+      setSelectedRows((prev) => prev.filter((rowId) => rowId !== client.id));
       toast.success(t("clients.toast_deleted"));
     } catch (err) {
       toast.error(err?.response?.data?.detail || t("clients.error_delete"));
