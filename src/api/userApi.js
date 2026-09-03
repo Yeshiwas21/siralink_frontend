@@ -122,8 +122,8 @@ export const setPasswordResetApi = (data) => {
 
 
 
-export const requestEmailVerificationApi = async (data) => {
-  return api.post("/users/email-verification/request/", data);
+export const requestEmailVerificationApi = async (email) => {
+  return api.post("/users/email-verification/request/", { email });
 };
 
 export const verifyEmailApi = async (data) => {

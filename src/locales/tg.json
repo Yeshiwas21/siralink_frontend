@@ -915,5 +915,19 @@
     "errMinLength": "ሕልፊ ቓል እንተወሓደ 6 ፊደላት ክኾኑ ኣለዎም።",
     "errMismatch": "ዝእተዉዎ ሕልፊ ቓላት ኣይተመሳሰሉን።",
     "errDefault": "ሕልፊ ቓል ምቕያር ኣይተኻእለን። እባኽኹም ደጊምኩም  myተኑ።"
+  },
+  "email_verification": {
+    "title": "ኢመይልኩም ኣረጋግጹ",
+    "subtitle": "ኣካውንት SiraLink ንምንቃሕ ኣድራሻ ኢመይልኩም ኣረጋግጹ",
+    "verifyingTitle": "ኢመይልኩም ይረጋገጽ ኣሎ",
+    "verifyingSubtitle": "ኣድራሻ ኢመይልኩም እናረጋገጽና በጃኹም ተጸበዩ።",
+    "successTitle": "ኢመይል ብዓወት ተረጋጊጹ",
+    "successSubtitle": "ኣድራሻ ኢመይልኩም ተረጋጊጹ እና ኣካውንት SiraLink ሕጂ ንቑሕ እዩ።",
+    "redirecting": "ናብ መእተዊ ገጽ ይመለስ ኣሎ...",
+    "invalidTitle": "ምርግጋጽ ኣይተዓወተን",
+    "errInvalidLink": "እቲ መረጋገጺ ሊንክ የለን ወይ ቅኑዕ ኣይኮነን።",
+    "errDefault": "እቲ መረጋገጺ ሊንክ ቅኑዕ ኣይኮነን ወይ ግዜኡ ሓሊፉ።",
+    "goToLogin": "ናብ መእተዊ ሂዱ",
+    "backToLogin": "ናብ መእተዊ ተመለስ"
   }
 }

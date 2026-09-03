@@ -3,7 +3,7 @@ import { useNavigate, Link } from "react-router-dom";
 import toast from "react-hot-toast";
 import { useTranslation } from "react-i18next";
 
-import { signupWorker } from "../../services/userServices";
+import { requestEmailVerification, signupWorker } from "../../services/userServices";
 import { listWorkerCategory } from "../../services/categoryServices";
 import { translateApiError } from "../../utils/translateApiError";
 import { WorkerCategoryPicker } from "./WorkerCategoryPicker";
@@ -202,13 +202,20 @@ function WorkerSignup() {
         date_of_birth: ethiopianToGregorian(form.date_of_birth),
         national_id: form.national_id?.trim(),
         location: form.location?.trim() || null,
-        category: form.category ? Number(form.category) : null, // Sends PK integer/ID
+        category: form.category ? Number(form.category) : null,
       };
 
+      // 1. Create the worker account
       await signupWorker(payload);
 
+      // 2. Send email verification link
+      await requestEmailVerification(payload.email);
+
+      // 3. Tell the user to check their email
       toast.success(t("workerSignup.accountCreatedSuccess"));
+
       navigate("/login");
+
     } catch (err) {
       const backendErrors = parseErrors(err?.response?.data);
 

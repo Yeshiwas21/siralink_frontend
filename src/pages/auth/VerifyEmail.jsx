@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import {
-    ArrowLeft,
     CheckCircle2,
     AlertCircle,
     Loader2,
@@ -29,6 +28,7 @@ export default function VerifyEmail() {
 
                 setIsSuccess(true);
 
+                // Redirect to login after successful verification
                 setTimeout(() => {
                     navigate("/login");
                 }, 2500);
@@ -117,7 +117,6 @@ export default function VerifyEmail() {
 
                             <div className="flex items-center justify-center gap-2 text-xs text-gray-500 dark:text-gray-500">
                                 <Loader2 className="w-3.5 h-3.5 animate-spin" />
-
                                 {t("email_verification.redirecting")}
                             </div>
                         </div>
@@ -148,21 +147,6 @@ export default function VerifyEmail() {
                             </button>
                         </div>
                     )}
-
-                    {/* FOOTER */}
-                    <div className="mt-6 pt-6 border-t border-gray-100 dark:border-gray-800 text-center">
-                        <button
-                            type="button"
-                            onClick={() => navigate("/login")}
-                            className="inline-flex items-center text-xs font-semibold text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white transition-colors gap-1.5 cursor-pointer"
-                        >
-                            <ArrowLeft className="w-3.5 h-3.5" />
-
-                            <span>
-                                {t("email_verification.backToLogin")}
-                            </span>
-                        </button>
-                    </div>
                 </div>
             </div>
         </div>

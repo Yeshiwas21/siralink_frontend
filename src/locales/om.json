@@ -915,5 +915,19 @@
     "errMinLength": "Jechi icchitii yoo xiqqaate arfiilee 6 ta'uu qaba.",
     "errMismatch": "Jechooni icchitii wal hin simne.",
     "errDefault": "Jecha icchitii jijjiiruun hin danda'amne. Maaloo irra deebi'aatii try godhaa."
+  },
+  "email_verification": {
+    "title": "Imeelii Keessan Mirkaneessaa",
+    "subtitle": "Akkaawuntii SiraLink keessan hojii irra oolchuuf teessoo imeelii keessan mirkaneessaa",
+    "verifyingTitle": "Imeelii Keessan Mirkaneessaa Jira",
+    "verifyingSubtitle": "Teessoo imeelii keessan yeroo mirkaneessinu maaloo eegaa.",
+    "successTitle": "Imeeliin Milkaa'inaan Mirkanaa'eera",
+    "successSubtitle": "Teessoon imeelii keessan mirkanaa'eera, akkasumas akkaawuntiin SiraLink keessan amma hojii irra jira.",
+    "redirecting": "Gara seensaatti isin geessaa jira...",
+    "invalidTitle": "Mirkaneessuun Hin Milkoofne",
+    "errInvalidLink": "Liinkiin mirkaneessaa dhabameera ykn sirrii miti.",
+    "errDefault": "Liinkiin mirkaneessaa sirrii miti ykn yeroon isaa darbeera.",
+    "goToLogin": "Gara Seensaatti Deemaa",
+    "backToLogin": "Gara Seensaatti Deebi'aa"
   }
 }

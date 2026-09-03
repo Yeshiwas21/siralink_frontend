@@ -3,7 +3,7 @@ import { useNavigate, Link } from "react-router-dom";
 import toast from "react-hot-toast";
 import { useTranslation } from "react-i18next";
 
-import { signupClient } from "../../services/userServices";
+import { requestEmailVerification, signupClient } from "../../services/userServices";
 import { translateApiError } from "../../utils/translateApiError";
 import EthiopianDatePicker from "../../components/common/EthiopianDatePicker";
 import { ethiopianToGregorian } from "../../utils/ethiopianToGregorian";
@@ -208,9 +208,15 @@ function ClientSignup() {
         location: form.location?.trim() || null,
       };
 
+      // 1. create Account
       await signupClient(payload);
 
+      // 2. verify email
+      await requestEmailVerification(payload.email)
+
+      // 3. Tell the user to check their email
       toast.success(t("clientSignup.accountCreatedSuccess"));
+
       navigate("/login");
     } catch (err) {
       const backendErrors = parseErrors(err?.response?.data);

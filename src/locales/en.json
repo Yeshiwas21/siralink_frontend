@@ -918,5 +918,19 @@
     "errMinLength": "Password must be at least 6 characters long.",
     "errMismatch": "Passwords do not match.",
     "errDefault": "Failed to reset password. Please try again."
+  },
+  "email_verification": {
+    "title": "Verify Your Email",
+    "subtitle": "Confirm your email address to activate your SiraLink account",
+    "verifyingTitle": "Verifying Your Email",
+    "verifyingSubtitle": "Please wait while we confirm your email address.",
+    "successTitle": "Email Verified Successfully",
+    "successSubtitle": "Your email address has been verified and your SiraLink account is now active.",
+    "redirecting": "Redirecting you to login...",
+    "invalidTitle": "Verification Failed",
+    "errInvalidLink": "The verification link is missing or invalid.",
+    "errDefault": "The verification link is invalid or has expired.",
+    "goToLogin": "Go to Login",
+    "backToLogin": "Back to Login"
   }
 }
