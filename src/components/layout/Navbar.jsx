@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Link, NavLink, useNavigate } from "react-router-dom";
+import { Link, NavLink, useNavigate, useLocation } from "react-router-dom";
 import {
   Menu,
   X,
@@ -47,7 +47,15 @@ function Navbar() {
   const { theme, toggleTheme } = useTheme();
   const { user, logout } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation()
   const isAuth = user?.isAuthenticated;
+
+  const isAuthPage =
+    location.pathname === "/login" ||
+    location.pathname == "/signup" ||
+    location.pathname === "/signup/client" ||
+    location.pathname == "/signup/worker";
+
 
   const currentLangCode = i18n.resolvedLanguage?.split("-")[0] || "en";
   const currentLanguage =
@@ -453,17 +461,18 @@ function Navbar() {
                   {t("navbar.login")}
                 </NavLink>
 
-                <Link
-                  className="group inline-flex items-center gap-1.5 bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 transition-colors duration-200"
-                  to="/signup"
-                >
-                  <span>{t("navbar.getStarted")}</span>
-
-                  <ArrowRight
-                    size={15}
-                    className="animate-[arrowWave_2s_ease-in-out_infinite]"
-                  />
-                </Link>
+                {!isAuthPage && (
+                  <Link
+                    className="group inline-flex items-center gap-1.5 bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 transition-colors duration-200"
+                    to="/signup"
+                  >
+                    <span>{t("navbar.getStarted")}</span>
+                    <ArrowRight
+                      size={15}
+                      className="animate-[arrowWave_2s_ease-in-out_infinite]"
+                    />
+                  </Link>
+                )}
               </div>
             ) : (
               <div className="relative" ref={profileDropdownRef}>

@@ -261,7 +261,7 @@ function WorkerSignup() {
             <p className="text-sm text-gray-600 dark:text-gray-300">
               {t("workerSignup.lookingForHiring")}
               <Link
-                to="/signup/client/"
+                to="/signup/client"
                 className="ml-2 inline-flex items-center gap-1 font-medium text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 transition-colors duration-200"
               >
                 {t("workerSignup.joinAsClient")}
