@@ -918,14 +918,31 @@
     "title": "ኢሜይልዎን ያረጋግጡ",
     "subtitle": "የSiraLink መለያዎን ለማንቃት የኢሜይል አድራሻዎን ያረጋግጡ",
     "verifyingTitle": "ኢሜይልዎ በማረጋገጥ ላይ",
-    "verifyingSubtitle": "እባክዎ የኢሜይል አድራሻዎን ስናረጋግጥ ይጠብቁ።",
+    "verifyingSubtitle": "እባክዎ የኢሜይል አድራሻዎን እስክናረጋግጥ ድረስ ይጠብቁ።",
     "successTitle": "ኢሜይል በተሳካ ሁኔታ ተረጋግጧል",
-    "successSubtitle": "የኢሜይል አድራሻዎ ተረጋግጧል እና የSiraLink መለያዎ አሁን ንቁ ነው።",
-    "redirecting": "ወደ መግቢያ ገጽ በመመለስ ላይ...",
-    "invalidTitle": "ማረጋገጥ አልተሳካም",
-    "errInvalidLink": "የማረጋገጫ አገናኙ ጎድሏል ወይም ልክ ያልሆነ ነው።",
-    "errDefault": "የማረጋገጫ አገናኙ ልክ ያልሆነ ነው ወይም ጊዜው አልፏል።",
+    "successSubtitle": "የኢሜይል አድራሻዎ ተረጋግጧል፣ እና የSiraLink መለያዎ አሁን ንቁ ነው።",
+    "alreadyVerifiedTitle": "ኢሜይል አስቀድሞ ተረጋግጧል",
+    "alreadyVerifiedSubtitle": "የኢሜይል አድራሻዎ አስቀድሞ ተረጋግጧል። አሁን ወደ መለያዎ መግባት ይችላሉ።",
+    "alreadyVerifiedStatus": "አስቀድሞ ተረጋግጧል",
+    "redirecting": "ወደ መግቢያ ገጹ በማዘዋወር ላይ...",
+    "invalidTitle": "ማረጋገጫው አልተሳካም",
+    "errInvalidLink": "የማረጋገጫ ሊንኩ የጎደለ ወይም ልክ ያልሆነ ነው።",
+    "errDefault": "የማረጋገጫ ሊንኩ ልክ ያልሆነ ወይም ጊዜው ያለፈበት ነው።",
+    "goToLogin": "ወደ መግቢያ ይሂዱ"
+  },
+  "email_verification_required": {
+    "title": "ኢሜይልዎን ያረጋግጡ",
+    "subtitle": "መለያዎ በተሳካ ሁኔታ ተፈጥሯል። እባክዎ ከመግባትዎ በፊት የኢሜይል አድራሻዎን ያረጋግጡ።",
+    "emailSentTo": "የማረጋገጫ ኢሜይል የተላከው ወደ",
+    "step1": "ወደ ኢሜይል አድራሻዎ የላክንልዎትን የማረጋገጫ ኢሜይል ይክፈቱ።",
+    "step2": "በኢሜይሉ ውስጥ ያለውን የማረጋገጫ ሊንክ ይጫኑ።",
+    "step3": "ኢሜይልዎ ከተረጋገጠ በኋላ ወደ SiraLink መለያዎ መግባት ይችላሉ።",
+    "sending": "በመላክ ላይ...",
+    "resend": "ኢሜይሉን አልደረሰዎትም? እንደገና ይላኩ",
+    "resendAgain": "የማረጋገጫ ኢሜይልን እንደገና ይላኩ",
+    "resendSuccess": "አዲስ የማረጋገጫ ኢሜይል ተልኳል።",
+    "resendError": "የማረጋገጫ ኢሜይሉን እንደገና መላክ አልተቻለም።",
     "goToLogin": "ወደ መግቢያ ይሂዱ",
-    "backToLogin": "ወደ መግቢያ ተመለስ"
+    "spamNote": "ኢሜይሉ ካልደረሰዎት እባክዎ የSpam ወይም Junk አቃፊዎን ይመልከቱ።"
   }
 }

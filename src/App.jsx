@@ -35,6 +35,7 @@ import OurImpact from "./pages/common/OurImpact";
 import ContactUs from "./pages/common/ContactUs";
 import ResetPasswordForm from "./pages/account/ResetPasswordForm";
 import VerifyEmail from "./pages/auth/VerifyEmail";
+import EmailVerificationRequired from "./pages/auth/EmailVerificationRequired";
 
 export default function App() {
   const { user, loading } = useAuth();
@@ -108,6 +109,7 @@ export default function App() {
               <Route path="/contact-us" element={<ContactUs />} />
               <Route path="/reset-password/:uidb64/:token" element={<ResetPasswordForm />} />
               <Route path="/verify-email/:uidb64/:token/" element={<VerifyEmail />} />
+              <Route path="/email-verification-required" element={<EmailVerificationRequired />} />
             </Route>
 
             {/* ADMIN */}

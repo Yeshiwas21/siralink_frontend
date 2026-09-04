@@ -217,7 +217,12 @@ function ClientSignup() {
       // 3. Tell the user to check their email
       toast.success(t("clientSignup.accountCreatedSuccess"));
 
-      navigate("/login");
+      navigate("/email-verification-required", {
+        replace: true,
+        state: {
+          email: payload.email,
+        },
+      });
     } catch (err) {
       const backendErrors = parseErrors(err?.response?.data);
 

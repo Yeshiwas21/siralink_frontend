@@ -145,6 +145,7 @@ export const resetPasswordEmailRequest = async (email) => {
   return response.data
 }
 
+
 export const requestEmailVerification = async (email) => {
   const response = await requestEmailVerificationApi(email);
   return response.data;

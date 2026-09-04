@@ -918,16 +918,33 @@
   },
   "email_verification": {
     "title": "Imeelii Keessan Mirkaneessaa",
-    "subtitle": "Akkaawuntii SiraLink keessan hojii irra oolchuuf teessoo imeelii keessan mirkaneessaa",
-    "verifyingTitle": "Imeelii Keessan Mirkaneessaa Jira",
-    "verifyingSubtitle": "Teessoo imeelii keessan yeroo mirkaneessinu maaloo eegaa.",
+    "subtitle": "Akkaawuntii SiraLink keessan hojii irra oolchuuf teessoo imeelii keessanii mirkaneessaa",
+    "verifyingTitle": "Imeeliin Keessan Mirkanaa'aa Jira",
+    "verifyingSubtitle": "Teessoo imeelii keessan yeroo mirkaneessinu maaloo eeggadhaa.",
     "successTitle": "Imeeliin Milkaa'inaan Mirkanaa'eera",
-    "successSubtitle": "Teessoon imeelii keessan mirkanaa'eera, akkasumas akkaawuntiin SiraLink keessan amma hojii irra jira.",
-    "redirecting": "Gara seensaatti isin geessaa jira...",
+    "successSubtitle": "Teessoon imeelii keessanii mirkanaa'eera, akkasumas akkaawuntiin SiraLink keessanii amma hojii irra jira.",
+    "alreadyVerifiedTitle": "Imeeliin Duraan Mirkanaa'eera",
+    "alreadyVerifiedSubtitle": "Teessoon imeelii keessanii duraan mirkanaa'eera. Amma seenuu dandeessu.",
+    "alreadyVerifiedStatus": "Duraan Mirkanaa'eera",
+    "redirecting": "Gara fuula seensaa deemaa jira...",
     "invalidTitle": "Mirkaneessuun Hin Milkoofne",
     "errInvalidLink": "Liinkiin mirkaneessaa dhabameera ykn sirrii miti.",
     "errDefault": "Liinkiin mirkaneessaa sirrii miti ykn yeroon isaa darbeera.",
-    "goToLogin": "Gara Seensaatti Deemaa",
-    "backToLogin": "Gara Seensaatti Deebi'aa"
+    "goToLogin": "Gara Seensaatti Deebi'i"
+  },
+  "email_verification_required": {
+    "title": "Imeelii Keessan Mirkaneessaa",
+    "subtitle": "Akkaawuntiin keessan milkaa'inaan uumameera. Maaloo osoo hin seenin dura teessoo imeelii keessanii mirkaneessaa.",
+    "emailSentTo": "Imeeliin mirkaneessaa gara",
+    "step1": "Imeelii mirkaneessaa gara teessoo imeelii keessaniitti ergine banaa.",
+    "step2": "Liinkii mirkaneessaa imeelii keessa jiru cuqaasaa.",
+    "step3": "Imeeliin keessan erga mirkanaa'ee booda, gara akkaawuntii SiraLink keessaniitti seenuu dandeessu.",
+    "sending": "Ergaa jira...",
+    "resend": "Imeelii hin arganne? Irra deebi'ii ergi",
+    "resendAgain": "Imeelii mirkaneessaa irra deebi'ii ergi",
+    "resendSuccess": "Imeeliin mirkaneessaa haaraan ergameera.",
+    "resendError": "Imeelii mirkaneessaa irra deebi'anii erguun hin danda'amne.",
+    "goToLogin": "Gara Seensaatti Deebi'i",
+    "spamNote": "Imeelii hin arganne yoo ta'e, maaloo galmee Spam ykn Junk keessan ilaalaa."
   }
 }

@@ -917,17 +917,34 @@
     "errDefault": "ሕልፊ ቓል ምቕያር ኣይተኻእለን። እባኽኹም ደጊምኩም  myተኑ።"
   },
   "email_verification": {
-    "title": "ኢመይልኩም ኣረጋግጹ",
-    "subtitle": "ኣካውንት SiraLink ንምንቃሕ ኣድራሻ ኢመይልኩም ኣረጋግጹ",
-    "verifyingTitle": "ኢመይልኩም ይረጋገጽ ኣሎ",
-    "verifyingSubtitle": "ኣድራሻ ኢመይልኩም እናረጋገጽና በጃኹም ተጸበዩ።",
-    "successTitle": "ኢመይል ብዓወት ተረጋጊጹ",
-    "successSubtitle": "ኣድራሻ ኢመይልኩም ተረጋጊጹ እና ኣካውንት SiraLink ሕጂ ንቑሕ እዩ።",
-    "redirecting": "ናብ መእተዊ ገጽ ይመለስ ኣሎ...",
+    "title": "ኢሜይልካ ኣረጋግጽ",
+    "subtitle": "ኣካውንት SiraLink ንምንቃሕ ኣድራሻ ኢሜይልካ ኣረጋግጽ",
+    "verifyingTitle": "ኢሜይልካ ይረጋገጽ ኣሎ",
+    "verifyingSubtitle": "ኣድራሻ ኢሜይልካ ክንረጋግጽ እንከለና በጃኻ ተጸበ።",
+    "successTitle": "ኢሜይል ብዓወት ተረጋጊጹ",
+    "successSubtitle": "ኣድራሻ ኢሜይልካ ተረጋጊጹ፣ ኣካውንት SiraLink ድማ ሕጂ ንቁሕ እዩ።",
+    "alreadyVerifiedTitle": "ኢሜይል ድሮ ተረጋጊጹ",
+    "alreadyVerifiedSubtitle": "ኣድራሻ ኢሜይልካ ድሮ ተረጋጊጹ እዩ። ሕጂ ናብ ኣካውንትካ ክትኣቱ ትኽእል ኢኻ።",
+    "alreadyVerifiedStatus": "ድሮ ተረጋጊጹ",
+    "redirecting": "ናብ መእተዊ ገጽ ይመርሓካ ኣሎ...",
     "invalidTitle": "ምርግጋጽ ኣይተዓወተን",
-    "errInvalidLink": "እቲ መረጋገጺ ሊንክ የለን ወይ ቅኑዕ ኣይኮነን።",
-    "errDefault": "እቲ መረጋገጺ ሊንክ ቅኑዕ ኣይኮነን ወይ ግዜኡ ሓሊፉ።",
-    "goToLogin": "ናብ መእተዊ ሂዱ",
-    "backToLogin": "ናብ መእተዊ ተመለስ"
+    "errInvalidLink": "እቲ ናይ ምርግጋጽ ሊንክ ጎዲሉ ወይ ቅኑዕ ኣይኮነን።",
+    "errDefault": "እቲ ናይ ምርግጋጽ ሊንክ ቅኑዕ ኣይኮነን ወይ ግዜኡ ሓሊፉ እዩ።",
+    "goToLogin": "ናብ መእተዊ ኪድ"
+  },
+  "email_verification_required": {
+    "title": "ኢሜይልካ ኣረጋግጽ",
+    "subtitle": "ኣካውንትካ ብዓወት ተፈጢሩ እዩ። ቅድሚ ምእታውካ በጃኻ ኣድራሻ ኢሜይልካ ኣረጋግጽ።",
+    "emailSentTo": "ናይ ምርግጋጽ ኢሜይል ዝተላእከሉ",
+    "step1": "ናብ ኣድራሻ ኢሜይልካ ዝላእናልካ ናይ ምርግጋጽ ኢሜይል ክፈት።",
+    "step2": "ኣብቲ ኢሜይል ዘሎ ናይ ምርግጋጽ ሊንክ ጠውቕ።",
+    "step3": "ኢሜይልካ ምስ ተረጋገጸ፣ ናብ ኣካውንት SiraLink ክትኣቱ ትኽእል ኢኻ።",
+    "sending": "ይልኣኽ ኣሎ...",
+    "resend": "ኢሜይል ኣይበጽሓካን? እንደገና ልኣኽ",
+    "resendAgain": "ናይ ምርግጋጽ ኢሜይል እንደገና ልኣኽ",
+    "resendSuccess": "ሓድሽ ናይ ምርግጋጽ ኢሜይል ተላኢኹ እዩ።",
+    "resendError": "ናይ ምርግጋጽ ኢሜይል እንደገና ምልኣኽ ኣይተኻእለን።",
+    "goToLogin": "ናብ መእተዊ ኪድ",
+    "spamNote": "ኢሜይል እንተዘይበጺሑካ፣ በጃኻ ኣብ Spam ወይ Junk ኣቃፊ ርአ።"
   }
 }

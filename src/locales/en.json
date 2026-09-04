@@ -926,11 +926,28 @@
     "verifyingSubtitle": "Please wait while we confirm your email address.",
     "successTitle": "Email Verified Successfully",
     "successSubtitle": "Your email address has been verified and your SiraLink account is now active.",
+    "alreadyVerifiedTitle": "Email Already Verified",
+    "alreadyVerifiedSubtitle": "Your email address has already been verified. You can continue to sign in.",
+    "alreadyVerifiedStatus": "Already Verified",
     "redirecting": "Redirecting you to login...",
     "invalidTitle": "Verification Failed",
     "errInvalidLink": "The verification link is missing or invalid.",
     "errDefault": "The verification link is invalid or has expired.",
+    "goToLogin": "Go to Login"
+  },
+  "email_verification_required": {
+    "title": "Verify Your Email",
+    "subtitle": "Your account has been created successfully. Please verify your email address before signing in.",
+    "emailSentTo": "Verification email sent to",
+    "step1": "Open the verification email we sent to your email address.",
+    "step2": "Click the verification link inside the email.",
+    "step3": "Once your email is verified, you can sign in to your SiraLink account.",
+    "sending": "Sending...",
+    "resend": "Didn't receive the email? Resend",
+    "resendAgain": "Resend verification email",
+    "resendSuccess": "A new verification email has been sent.",
+    "resendError": "Unable to resend the verification email.",
     "goToLogin": "Go to Login",
-    "backToLogin": "Back to Login"
+    "spamNote": "Didn't receive the email? Please check your spam or junk folder."
   }
 }
